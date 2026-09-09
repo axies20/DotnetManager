@@ -134,4 +134,19 @@ if "$manager" remove --version 9.0.100 >/dev/null 2>&1; then
   exit 1
 fi
 
+if command -v zsh >/dev/null 2>&1; then
+  completion_function="$(
+    DOTNET_MANAGER_COMPLETION_DIR="$repo_root/completions" zsh -fc '
+      fpath=("$DOTNET_MANAGER_COMPLETION_DIR" $fpath)
+      autoload -Uz compinit
+      compinit -D
+      print -r -- "${_comps[dotnet-manager]}"
+    '
+  )"
+  if [ "$completion_function" != "_dotnet-manager" ]; then
+    echo "ERROR: Zsh completion was not registered" >&2
+    exit 1
+  fi
+fi
+
 echo "All DotnetManager tests passed."

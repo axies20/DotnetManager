@@ -23,6 +23,9 @@ if systemctl cat dotnet-sdk-update.timer >/dev/null 2>&1; then
 fi
 
 sudo install -Dm755 "$root/bin/dotnet-manager" /usr/local/bin/dotnet-manager
+sudo install -Dm644 \
+  "$root/completions/_dotnet-manager" \
+  /usr/local/share/zsh/site-functions/_dotnet-manager
 sudo install -d -m755 /etc/dotnet-manager
 if [ ! -f /etc/dotnet-manager/sources.conf ]; then
   sudo install -m644 "$root/config/sources.conf" /etc/dotnet-manager/sources.conf
@@ -41,3 +44,6 @@ sudo systemctl enable --now dotnet-manager-update.timer
 echo
 echo "DotnetManager installed successfully."
 echo "Run: dotnet-manager list"
+if [ -n "${ZSH_VERSION:-}" ] || [ -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}" ]; then
+  echo "Zsh completion installed. Restart Zsh or run: exec zsh"
+fi

@@ -35,6 +35,8 @@ sources.conf                 Microsoft release metadata
 - Rebuild the managed SDK set cleanly without accumulating obsolete patches.
 - Stage, validate, and atomically activate every update with automatic rollback.
 - Use one `dotnet` executable from the terminal, Rider, and other IDEs.
+- Complete commands, options, channels, policies, and configured sources in Zsh
+  and Oh My Zsh by pressing `Tab`.
 
 ## Quick start
 
@@ -65,6 +67,37 @@ The default configuration follows the latest stable .NET 10 SDK:
 ```text
 channel 10.0 ga
 ```
+
+## Zsh and Oh My Zsh completion
+
+`./install.sh` installs the completion definition into the standard Zsh path:
+
+```text
+/usr/local/share/zsh/site-functions/_dotnet-manager
+```
+
+This path is part of the default `fpath` on supported Linux distributions. Oh
+My Zsh initializes the same native Zsh completion system, so no additional Oh
+My Zsh plugin or `plugins=(...)` entry is required.
+
+Restart the shell after installation:
+
+```bash
+exec zsh
+```
+
+You can then type commands such as the following and press `Tab`:
+
+```bash
+dotnet-manager <Tab>
+dotnet-manager install --<Tab>
+dotnet-manager install --policy <Tab>
+dotnet-manager remove --channel <Tab>
+```
+
+Channel removal suggestions are read from
+`/etc/dotnet-manager/sources.conf`, so completion only offers channels that are
+actually configured.
 
 ## Commands
 
@@ -272,6 +305,7 @@ second installation under `~/.dotnet`.
 | Purpose | Path |
 |---|---|
 | Manager CLI | `/usr/local/bin/dotnet-manager` |
+| Zsh completion | `/usr/local/share/zsh/site-functions/_dotnet-manager` |
 | .NET CLI | `/usr/local/bin/dotnet` |
 | SDKs and runtimes | `/usr/local/share/dotnet` |
 | Source configuration | `/etc/dotnet-manager/sources.conf` |

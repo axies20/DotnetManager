@@ -10,6 +10,7 @@ sudo systemctl disable --now dotnet-manager-update.timer 2>/dev/null || true
 sudo rm -f \
   /etc/systemd/system/dotnet-manager-update.timer \
   /etc/systemd/system/dotnet-manager-update.service \
+  /usr/local/share/zsh/site-functions/_dotnet-manager \
   /usr/local/bin/dotnet-manager
 sudo systemctl daemon-reload
 

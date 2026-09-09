@@ -1,0 +1,93 @@
+#compdef dotnet-manager
+
+_dotnet_manager_config_values() {
+  local kind="$1"
+  local config_file="${DOTNET_MANAGER_CONFIG_FILE:-/etc/dotnet-manager/sources.conf}"
+  [[ -r "$config_file" ]] || return 0
+  awk -v kind="$kind" '$1 == kind { print $2 }' "$config_file"
+}
+
+_dotnet_manager_channels() {
+  local -a channels
+  channels=(
+    LTS
+    STS
+    6.0
+    7.0
+    8.0
+    9.0
+    10.0
+    11.0
+  )
+  _describe 'channel' channels
+}
+
+_dotnet_manager_configured_channels() {
+  local -a channels
+  channels=("${(@f)$(_dotnet_manager_config_values channel)}")
+  if (( ${#channels} )); then
+    _describe 'configured channel' channels
+  else
+    _message 'no configured channels'
+  fi
+}
+
+_dotnet_manager_configured_versions() {
+  local -a versions
+  versions=("${(@f)$(_dotnet_manager_config_values version)}")
+  if (( ${#versions} )); then
+    _describe 'configured SDK version' versions
+  else
+    _message 'no pinned SDK versions'
+  fi
+}
+
+_dotnet-manager() {
+  local context state line
+  local -a commands
+  commands=(
+    'available:List SDKs published in a channel'
+    'list:Show configured sources and installed SDKs'
+    'status:Show configured sources and installed SDKs'
+    'install:Add a channel or pinned SDK version'
+    'add:Add a channel or pinned SDK version'
+    'remove:Remove a configured channel or pinned SDK version'
+    'uninstall:Remove a configured channel or pinned SDK version'
+    'update:Update all configured SDK sources'
+    'version:Print the DotnetManager version'
+    'help:Show command help'
+  )
+
+  _arguments -C \
+    '1:command:->command' \
+    '*::argument:->arguments'
+
+  case "$state" in
+    command)
+      _describe 'command' commands
+      ;;
+    arguments)
+      case "${line[1]}" in
+        available)
+          _arguments '1:channel:_dotnet_manager_channels'
+          ;;
+        install|add)
+          _arguments \
+            '--channel[track an SDK channel]:channel:_dotnet_manager_channels' \
+            '--version[pin an exact SDK version]:SDK version:' \
+            '--policy[set the accepted release level]:policy:(ga go-live preview)'
+          ;;
+        remove|uninstall)
+          _arguments \
+            '--channel[remove a tracked channel]:channel:_dotnet_manager_configured_channels' \
+            '--version[remove a pinned SDK version]:SDK version:_dotnet_manager_configured_versions'
+          ;;
+        update)
+          _arguments '--force[rebuild even when resolved versions are unchanged]'
+          ;;
+      esac
+      ;;
+  esac
+}
+
+_dotnet-manager "$@"

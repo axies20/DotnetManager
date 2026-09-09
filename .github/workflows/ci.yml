@@ -21,7 +21,11 @@ jobs:
           command -v column
 
       - name: Check shell syntax
-        run: bash -n bin/dotnet-manager install.sh uninstall.sh tests/test.sh
+        run: |
+          bash -n bin/dotnet-manager install.sh uninstall.sh tests/test.sh
+          if command -v zsh >/dev/null 2>&1; then
+            zsh -n completions/_dotnet-manager
+          fi
 
       - name: Run ShellCheck
         run: shellcheck bin/dotnet-manager install.sh uninstall.sh tests/test.sh
