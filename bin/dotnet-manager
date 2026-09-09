@@ -211,7 +211,7 @@ validate_config() {
 
 resolve_all() {
   local work_dir="$1"
-  local kind value policy resolved resolved_channel
+  local kind value policy resolved
   local count=0
   validate_config
   while read -r kind value policy; do
@@ -220,7 +220,7 @@ resolve_all() {
       channel)
         validate_channel "$value"
         validate_policy "$policy"
-        IFS=$'\t' read -r resolved_channel resolved < <(
+        IFS=$'\t' read -r _ resolved < <(
           resolve_channel_version "$value" "$policy" "$work_dir"
         )
         printf '%s\t%s\t%s\t%s\n' "$kind" "$value" "$policy" "$resolved"
@@ -263,6 +263,8 @@ perform_update() (
   work_dir="$(mktemp -d)"
   stage_dir=""
   previous_root=""
+  # The function is invoked indirectly by the EXIT trap.
+  # shellcheck disable=SC2317,SC2329
   cleanup_update() {
     rm -rf -- "$work_dir"
     if [ -n "$stage_dir" ] && [ -d "$stage_dir" ]; then
@@ -438,8 +440,9 @@ command_install() {
       *) die "Unknown install option: $1" ;;
     esac
   done
-  [ -n "$kind" ] && [ -n "$value" ] ||
+  if [ -z "$kind" ] || [ -z "$value" ]; then
     die "Use either --channel <channel> or --version <version>."
+  fi
   if [ "$kind" = "channel" ]; then
     validate_channel "$value"; validate_policy "$policy"
   else
