@@ -1,0 +1,13 @@
+[Unit]
+Description=Update SDK channels managed by DotnetManager
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/dotnet-manager update
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/usr/local/bin /usr/local/share /run/lock

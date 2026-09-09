@@ -1,0 +1,500 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+readonly PROGRAM_NAME="dotnet-manager"
+readonly PROGRAM_VERSION="0.1.0"
+
+install_root="${DOTNET_MANAGER_INSTALL_ROOT:-/usr/local/share/dotnet}"
+config_dir="${DOTNET_MANAGER_CONFIG_DIR:-/etc/dotnet-manager}"
+config_file="${DOTNET_MANAGER_CONFIG_FILE:-$config_dir/sources.conf}"
+lock_file="${DOTNET_MANAGER_LOCK_FILE:-/run/lock/dotnet-manager.lock}"
+metadata_base="${DOTNET_MANAGER_METADATA_BASE:-https://builds.dotnet.microsoft.com/dotnet/release-metadata}"
+installer_url="${DOTNET_MANAGER_INSTALLER_URL:-https://dot.net/v1/dotnet-install.sh}"
+dotnet_link="${DOTNET_MANAGER_DOTNET_LINK:-/usr/local/bin/dotnet}"
+
+die() {
+  echo "ERROR: $*" >&2
+  exit 1
+}
+
+note() {
+  echo "==> $*"
+}
+
+usage() {
+  cat <<'EOF'
+DotnetManager installs and updates Microsoft .NET SDKs side by side.
+
+Usage:
+  dotnet-manager available <channel>
+  dotnet-manager list
+  dotnet-manager install --channel <channel> [--policy ga|go-live|preview]
+  dotnet-manager install --version <sdk-version>
+  dotnet-manager remove --channel <channel>
+  dotnet-manager remove --version <sdk-version>
+  dotnet-manager update [--force]
+  dotnet-manager help
+
+Examples:
+  dotnet-manager available 11.0
+  sudo dotnet-manager install --channel 11.0 --policy go-live
+  sudo dotnet-manager install --version 8.0.408
+  sudo dotnet-manager update
+
+Channels may be versioned (8.0, 10.0, 11.0) or the moving aliases LTS and STS.
+The default policy is ga. Mutating commands require root privileges.
+EOF
+}
+
+require_commands() {
+  local command_name
+  for command_name in "$@"; do
+    command -v "$command_name" >/dev/null 2>&1 ||
+      die "Required command is missing: $command_name"
+  done
+}
+
+require_root() {
+  if [ "${DOTNET_MANAGER_ALLOW_NON_ROOT:-0}" != "1" ] && [ "$EUID" -ne 0 ]; then
+    die "This command changes the system installation. Run it with sudo."
+  fi
+}
+
+validate_paths() {
+  case "$install_root" in
+    ""|/|/usr|/usr/local|/usr/local/share)
+      die "Unsafe installation root: ${install_root:-<empty>}"
+      ;;
+  esac
+  case "$config_dir" in
+    ""|/|/etc)
+      die "Unsafe configuration directory: ${config_dir:-<empty>}"
+      ;;
+  esac
+}
+
+validate_channel() {
+  [[ "$1" =~ ^([0-9]+\.[0-9]+|LTS|STS)$ ]] ||
+    die "Invalid channel '$1'. Expected a version such as 11.0, LTS, or STS."
+}
+
+validate_policy() {
+  case "$1" in
+    ga|go-live|preview) ;;
+    *) die "Invalid policy '$1'. Expected ga, go-live, or preview." ;;
+  esac
+}
+
+validate_version() {
+  [[ "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.]+)?$ ]] ||
+    die "Invalid SDK version '$1'."
+}
+
+channel_from_version() {
+  awk -F. '{print $1 "." $2}' <<<"$1"
+}
+
+fetch_to() {
+  local url="$1"
+  local destination="$2"
+  if ! curl -fsSL --connect-timeout 15 --retry 3 "$url" -o "$destination"; then
+    die "Could not download $url"
+  fi
+}
+
+resolve_alias() {
+  local requested="$1"
+  local work_dir="$2"
+  if [[ "$requested" =~ ^[0-9]+\.[0-9]+$ ]]; then
+    printf '%s\n' "$requested"
+    return
+  fi
+
+  local index_file="$work_dir/releases-index.json"
+  if [ ! -f "$index_file" ]; then
+    fetch_to "$metadata_base/releases-index.json" "$index_file"
+  fi
+
+  local release_type="${requested,,}"
+  local resolved
+  resolved="$(jq -er --arg release_type "$release_type" '
+    [."releases-index"[]
+      | select(."release-type" == $release_type)
+      | select(."support-phase" != "eol")][0]."channel-version"
+  ' "$index_file")" || die "No supported $requested channel was found."
+  printf '%s\n' "$resolved"
+}
+
+metadata_file_for() {
+  local channel="$1"
+  local work_dir="$2"
+  local destination="$work_dir/releases-$channel.json"
+  if [ ! -f "$destination" ]; then
+    fetch_to "$metadata_base/$channel/releases.json" "$destination"
+  fi
+  printf '%s\n' "$destination"
+}
+
+resolve_channel_version() {
+  local requested_channel="$1"
+  local policy="$2"
+  local work_dir="$3"
+  local channel metadata version
+  channel="$(resolve_alias "$requested_channel" "$work_dir")"
+  metadata="$(metadata_file_for "$channel" "$work_dir")"
+
+  version="$(jq -er --arg policy "$policy" '
+    [ .releases[]
+      | select(.sdk.version != null)
+      | select(
+          $policy == "preview" or
+          ($policy == "go-live" and
+            ((."release-version" | contains("-") | not) or
+             (."release-version" | test("-rc\\.")))) or
+          ($policy == "ga" and (."release-version" | contains("-") | not))
+        )
+      | .sdk.version
+    ][0]
+  ' "$metadata")" ||
+    die "Channel $requested_channel has no SDK allowed by policy $policy."
+
+  printf '%s\t%s\n' "$channel" "$version"
+}
+
+resolve_exact_version() {
+  local requested="$1"
+  local work_dir="$2"
+  local channel metadata version
+  channel="$(channel_from_version "$requested")"
+  metadata="$(metadata_file_for "$channel" "$work_dir")"
+
+  version="$(jq -er --arg requested "$requested" '
+    [ .releases[]
+      | ([.sdk] + (.sdks // []))[]
+      | select(. != null)
+      | select(.version == $requested or ."version-display" == $requested)
+      | .version
+    ][0]
+  ' "$metadata")" || die "SDK version $requested was not found in channel $channel."
+
+  printf '%s\n' "$version"
+}
+
+ensure_config() {
+  mkdir -p "$config_dir"
+  if [ ! -f "$config_file" ]; then
+    cat >"$config_file" <<'EOF'
+# Managed SDK sources. One entry per line:
+# channel <version|LTS|STS> <ga|go-live|preview>
+# version <exact-sdk-version>
+channel 10.0 ga
+EOF
+    chmod 0644 "$config_file"
+  fi
+}
+
+read_specs() {
+  [ -f "$config_file" ] || return 0
+  awk '
+    /^[[:space:]]*($|#)/ { next }
+    $1 == "channel" && NF == 3 { print $1, $2, $3; next }
+    $1 == "version" && NF == 2 { print $1, $2; next }
+    { print "Invalid configuration line " NR ": " $0 > "/dev/stderr"; exit 2 }
+  ' "$config_file"
+}
+
+validate_config() {
+  if ! read_specs >/dev/null; then
+    die "Fix the invalid entries in $config_file before continuing."
+  fi
+}
+
+resolve_all() {
+  local work_dir="$1"
+  local kind value policy resolved resolved_channel
+  local count=0
+  validate_config
+  while read -r kind value policy; do
+    [ -n "${kind:-}" ] || continue
+    case "$kind" in
+      channel)
+        validate_channel "$value"
+        validate_policy "$policy"
+        IFS=$'\t' read -r resolved_channel resolved < <(
+          resolve_channel_version "$value" "$policy" "$work_dir"
+        )
+        printf '%s\t%s\t%s\t%s\n' "$kind" "$value" "$policy" "$resolved"
+        ;;
+      version)
+        validate_version "$value"
+        resolved="$(resolve_exact_version "$value" "$work_dir")"
+        printf '%s\t%s\t%s\t%s\n' "$kind" "$value" pinned "$resolved"
+        ;;
+      *) die "Unsupported source kind '$kind' in $config_file." ;;
+    esac
+    count=$((count + 1))
+  done < <(read_specs)
+  [ "$count" -gt 0 ] || die "No SDK sources are configured in $config_file."
+}
+
+manifest_versions() {
+  cut -f4 "$1" | sort -Vu
+}
+
+same_manifest() {
+  local desired="$1"
+  local installed="$install_root/.dotnet-manager-manifest"
+  [ -x "$install_root/dotnet" ] && [ -f "$installed" ] &&
+    cmp -s "$desired" "$installed"
+}
+
+perform_update() (
+  local force="${1:-0}"
+  validate_paths
+  require_commands curl jq awk sort mktemp flock grep tar gzip
+  ensure_config
+  validate_config
+
+  mkdir -p "$(dirname "$lock_file")"
+  exec 9>"$lock_file"
+  flock -n 9 || die "Another DotnetManager operation is already running."
+
+  local work_dir stage_dir previous_root parent_dir
+  work_dir="$(mktemp -d)"
+  stage_dir=""
+  previous_root=""
+  cleanup_update() {
+    rm -rf -- "$work_dir"
+    if [ -n "$stage_dir" ] && [ -d "$stage_dir" ]; then
+      rm -rf -- "$stage_dir"
+    fi
+  }
+  trap cleanup_update EXIT INT TERM
+
+  local resolved_file="$work_dir/resolved.tsv"
+  resolve_all "$work_dir" | sort -t $'\t' -k4,4V -u >"$resolved_file"
+
+  if [ "$force" != "1" ] && same_manifest "$resolved_file"; then
+    note "All configured SDK channels are current."
+    exit 0
+  fi
+
+  note "Resolved SDK set:"
+  while IFS=$'\t' read -r kind source policy version; do
+    printf '  %-7s %-8s %-8s -> %s\n' "$kind" "$source" "$policy" "$version"
+  done <"$resolved_file"
+
+  fetch_to "$installer_url" "$work_dir/dotnet-install.sh"
+  parent_dir="$(dirname "$install_root")"
+  mkdir -p "$parent_dir"
+  stage_dir="$(mktemp -d "$parent_dir/.dotnet-stage.XXXXXX")"
+  chmod 0755 "$stage_dir"
+
+  local version staged_sdks
+  while read -r version; do
+    note "Installing SDK $version into staging"
+    bash "$work_dir/dotnet-install.sh" \
+      --version "$version" \
+      --install-dir "$stage_dir" \
+      --no-path
+  done < <(manifest_versions "$resolved_file")
+
+  [ -x "$stage_dir/dotnet" ] || die "The staged dotnet host is missing."
+  staged_sdks="$("$stage_dir/dotnet" --list-sdks | awk '{print $1}')"
+  while read -r version; do
+    grep -Fxq "$version" <<<"$staged_sdks" ||
+      die "Staged SDK verification failed for $version."
+  done < <(manifest_versions "$resolved_file")
+
+  cp "$resolved_file" "$stage_dir/.dotnet-manager-manifest"
+  chmod 0644 "$stage_dir/.dotnet-manager-manifest"
+
+  previous_root="$parent_dir/.dotnet-previous"
+  rm -rf -- "$previous_root"
+  if [ -d "$install_root" ]; then
+    mv -- "$install_root" "$previous_root"
+  fi
+  if ! mv -- "$stage_dir" "$install_root"; then
+    [ -d "$previous_root" ] && mv -- "$previous_root" "$install_root"
+    die "Could not activate the staged SDK installation."
+  fi
+  stage_dir=""
+
+  if ! "$install_root/dotnet" --list-sdks >/dev/null; then
+    rm -rf -- "$install_root"
+    [ -d "$previous_root" ] && mv -- "$previous_root" "$install_root"
+    die "Activated SDK verification failed; the previous installation was restored."
+  fi
+
+  if ! mkdir -p "$(dirname "$dotnet_link")" ||
+    ! ln -sfn "$install_root/dotnet" "$dotnet_link"; then
+    rm -rf -- "$install_root"
+    [ -d "$previous_root" ] && mv -- "$previous_root" "$install_root"
+    die "Could not activate $dotnet_link; the previous installation was restored."
+  fi
+  rm -rf -- "$previous_root"
+  note "The system .NET installation is current."
+  "$install_root/dotnet" --list-sdks
+)
+
+update_config() {
+  local operation="$1"
+  local kind="$2"
+  local value="$3"
+  local policy="${4:-}"
+  ensure_config
+
+  local temporary backup
+  validate_config
+  temporary="$(mktemp "$config_dir/.sources.XXXXXX")"
+  backup="$(mktemp "$config_dir/.sources-backup.XXXXXX")"
+  cp "$config_file" "$backup"
+
+  awk -v kind="$kind" -v value="$value" '
+    !($1 == kind && $2 == value) { print }
+  ' "$config_file" >"$temporary"
+
+  if [ "$operation" = "add" ]; then
+    if [ "$kind" = "channel" ]; then
+      printf 'channel %s %s\n' "$value" "$policy" >>"$temporary"
+    else
+      printf 'version %s\n' "$value" >>"$temporary"
+    fi
+  fi
+
+  local remaining
+  remaining="$(awk '!/^[[:space:]]*($|#)/ { count++ } END { print count+0 }' "$temporary")"
+  if [ "$remaining" -eq 0 ]; then
+    rm -f -- "$temporary" "$backup"
+    die "Refusing to remove the final SDK source. Add another source first."
+  fi
+
+  chmod 0644 "$temporary"
+  mv -- "$temporary" "$config_file"
+  if ! perform_update 0; then
+    mv -- "$backup" "$config_file"
+    die "Update failed; configuration was restored."
+  fi
+  rm -f -- "$backup"
+}
+
+command_available() (
+  [ "$#" -eq 1 ] || die "Usage: dotnet-manager available <channel>"
+  validate_channel "$1"
+  require_commands curl jq mktemp column
+
+  local work_dir channel metadata
+  work_dir="$(mktemp -d)"
+  trap 'rm -rf -- "$work_dir"' EXIT INT TERM
+  channel="$(resolve_alias "$1" "$work_dir")"
+  metadata="$(metadata_file_for "$channel" "$work_dir")"
+
+  echo "Available SDKs in channel $1 (resolved to $channel):"
+  jq -r '
+    .releases[]
+    | select(.sdk.version != null)
+    | [."release-date", ."release-version", .sdk.version,
+       (if .security then "security" else "" end)]
+    | @tsv
+  ' "$metadata" | column -t -s $'\t'
+)
+
+command_list() {
+  [ "$#" -eq 0 ] || die "Usage: dotnet-manager list"
+  echo "Configured sources ($config_file):"
+  if [ -f "$config_file" ]; then
+    read_specs | sed 's/^/  /'
+  else
+    echo "  none"
+  fi
+  echo
+  echo "Installed SDKs ($install_root):"
+  if [ -x "$install_root/dotnet" ]; then
+    "$install_root/dotnet" --list-sdks | sed 's/^/  /'
+  else
+    echo "  none"
+  fi
+}
+
+command_install() {
+  require_root
+  local kind="" value="" policy="ga"
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --channel)
+        [ "$#" -ge 2 ] || die "--channel requires a value."
+        [ -z "$kind" ] || die "Choose exactly one of --channel or --version."
+        kind="channel"; value="$2"; shift 2
+        ;;
+      --version)
+        [ "$#" -ge 2 ] || die "--version requires a value."
+        [ -z "$kind" ] || die "Choose exactly one of --channel or --version."
+        kind="version"; value="$2"; shift 2
+        ;;
+      --policy)
+        [ "$#" -ge 2 ] || die "--policy requires a value."
+        policy="$2"; shift 2
+        ;;
+      *) die "Unknown install option: $1" ;;
+    esac
+  done
+  [ -n "$kind" ] && [ -n "$value" ] ||
+    die "Use either --channel <channel> or --version <version>."
+  if [ "$kind" = "channel" ]; then
+    validate_channel "$value"; validate_policy "$policy"
+  else
+    validate_version "$value"
+    [ "$policy" = "ga" ] || die "--policy only applies to channels."
+  fi
+  update_config add "$kind" "$value" "$policy"
+}
+
+command_remove() {
+  require_root
+  [ "$#" -eq 2 ] || die "Use --channel <channel> or --version <version>."
+  local kind value
+  case "$1" in
+    --channel) kind="channel" ;;
+    --version) kind="version" ;;
+    *) die "Use --channel <channel> or --version <version>." ;;
+  esac
+  value="$2"
+  if [ "$kind" = "channel" ]; then
+    validate_channel "$value"
+  else
+    validate_version "$value"
+  fi
+  ensure_config
+  validate_config
+  if ! awk -v kind="$kind" -v value="$value" \
+    '$1 == kind && $2 == value { found=1 } END { exit !found }' "$config_file"; then
+    die "Source '$kind $value' is not configured."
+  fi
+  update_config remove "$kind" "$value"
+}
+
+main() {
+  local command="${1:-help}"
+  [ "$#" -eq 0 ] || shift
+  case "$command" in
+    available) command_available "$@" ;;
+    list|status) command_list "$@" ;;
+    install|add) command_install "$@" ;;
+    remove|uninstall) command_remove "$@" ;;
+    update)
+      require_root
+      if [ "${1:-}" = "--force" ]; then
+        [ "$#" -eq 1 ] || die "Usage: dotnet-manager update [--force]"
+        perform_update 1
+      else
+        [ "$#" -eq 0 ] || die "Usage: dotnet-manager update [--force]"
+        perform_update 0
+      fi
+      ;;
+    version|--version|-V) echo "$PROGRAM_NAME $PROGRAM_VERSION" ;;
+    help|-h|--help) usage ;;
+    *) usage >&2; die "Unknown command: $command" ;;
+  esac
+}
+
+main "$@"
