@@ -1,0 +1,7 @@
+﻿services:
+  dotnetmanager:
+    image: dotnetmanager
+    build:
+      context: .
+      dockerfile: DotnetManager/Dockerfile
+
