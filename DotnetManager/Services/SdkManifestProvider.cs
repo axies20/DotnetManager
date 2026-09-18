@@ -23,10 +23,14 @@ public class SdkManifestProvider : ISdkManifestProvider
     public async Task<SdkReleaseIndex> GetReleaseIndexAsync(CancellationToken cancellationToken = default)
     {
         using var response = await _httpClient.GetAsync(_options.ReleaseIndexUrl, cancellationToken);
+
         response.EnsureSuccessStatusCode();
+
         var result = await response.Content.ReadFromJsonAsync(DotnetManifestJsonContext.Default.RawRootIndex,
-                         cancellationToken)
-                     ?? throw new InvalidDataException("The .NET release index response was null.");
+            cancellationToken);
+
+        if (result is null)
+            throw new InvalidDataException("The .NET release index response was null.");
 
         return SdkReleaseIndexMapper.Map(result);
     }
@@ -37,9 +41,11 @@ public class SdkManifestProvider : ISdkManifestProvider
         using var response = await _httpClient.GetAsync(manifestUri, cancellationToken);
         response.EnsureSuccessStatusCode();
         var result = await response.Content.ReadFromJsonAsync(DotnetManifestJsonContext.Default.RawReleasesRoot,
-                         cancellationToken)
-                     ?? throw new InvalidDataException("The .NET release manifest response was null.");
-
+            cancellationToken);
+        if (result is null)
+        {
+            throw new InvalidDataException("The .NET release manifest response was null.");
+        }
         return SdkReleaseManifestMapper.Map(result);
     }
 }
