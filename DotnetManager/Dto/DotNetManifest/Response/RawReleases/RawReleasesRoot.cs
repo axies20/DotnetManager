@@ -22,7 +22,8 @@ public class RawReleasesRoot
     public required string LatestSdk { get; set; }
 
     [JsonPropertyName("support-phase")]
-    public required string SupportPhase { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter<RawSupportPhases>))]
+    public required RawSupportPhases SupportPhase { get; set; }
 
     [JsonPropertyName("release-type")]
     public required string ReleaseType { get; set; }
