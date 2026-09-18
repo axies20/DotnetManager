@@ -2,11 +2,11 @@ using System.Text.Json.Serialization;
 
 namespace DotnetManager.Dto.DotnetManifest.Response.RawIndex;
 
-public class Signature
+public class RawIndexSignature
 {
     [JsonPropertyName("expiration")]
-    public DateTime expiration { get; set; }
+    public DateTime Expiration { get; init; }
 
     [JsonPropertyName("file")]
-    public string file { get; set; }
+    public required string File { get; init; }
 }

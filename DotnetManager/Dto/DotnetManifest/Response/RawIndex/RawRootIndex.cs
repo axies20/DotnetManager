@@ -4,12 +4,12 @@ namespace DotnetManager.Dto.DotnetManifest.Response.RawIndex;
 
 public class RawRootIndex
 {
-    [JsonPropertyName("$schema")] 
-    public string schema { get; set; }
+    [JsonPropertyName("$schema")]
+    public required string Schema { get; set; }
 
     [JsonPropertyName("releases-index")]
-    public List<ReleasesIndex> releasesindex { get; set; }
+    public required List<RawReleasesIndex> Releasesindex { get; set; }
 
     [JsonPropertyName("signature")]
-    public Signature signature { get; set; }
+    public required RawIndexSignature RawIndexSignature { get; set; }
 }
