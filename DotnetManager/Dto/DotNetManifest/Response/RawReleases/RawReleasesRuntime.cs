@@ -5,17 +5,17 @@ namespace DotnetManager.Dto.DotNetManifest.Response.RawReleases;
 public class RawReleasesRuntime
 {
     [JsonPropertyName("version")]
-    public required string Version { get; set; }
+    public string? Version { get; set; }
 
     [JsonPropertyName("version-display")]
-    public required string VersionDisplay { get; set; }
+    public string? VersionDisplay { get; set; }
 
     [JsonPropertyName("vs-version")]
-    public required string VsVersion { get; set; }
+    public string? VsVersion { get; set; }
 
     [JsonPropertyName("vs-mac-version")]
-    public required string VsMacVersion { get; set; }
+    public string? VsMacVersion { get; set; }
 
     [JsonPropertyName("files")]
-    public required List<RawReleasesFile> Files { get; set; }
+    public List<RawReleasesFile>? Files { get; set; }
 }

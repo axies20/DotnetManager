@@ -5,11 +5,11 @@ namespace DotnetManager.Dto.DotNetManifest.Response.RawReleases;
 public class RawReleasesWindowsDesktop
 {
     [JsonPropertyName("version")]
-    public required string Version { get; set; }
+    public string? Version { get; set; }
 
     [JsonPropertyName("version-display")]
-    public required string VersionDisplay { get; set; }
+    public string? VersionDisplay { get; set; }
 
     [JsonPropertyName("files")]
-    public required List<RawReleasesFile> Files { get; set; }
+    public List<RawReleasesFile>? Files { get; set; }
 }

@@ -5,35 +5,35 @@ namespace DotnetManager.Dto.DotNetManifest.Response.RawReleases;
 public class RawReleasesSDK
 {
     [JsonPropertyName("version")]
-    public required string Version { get; set; }
+    public string? Version { get; set; }
 
     [JsonPropertyName("version-display")]
-    public required string VersionDisplay { get; set; }
+    public string? VersionDisplay { get; set; }
 
     [JsonPropertyName("runtime-version")]
-    public required string RuntimeVersion { get; set; }
+    public string? RuntimeVersion { get; set; }
 
     [JsonPropertyName("vs-version")]
-    public required string VsVersion { get; set; }
+    public string? VsVersion { get; set; }
 
     [JsonPropertyName("vs-mac-version")]
-    public required string VsMacVersion { get; set; }
+    public string? VsMacVersion { get; set; }
 
     [JsonPropertyName("vs-support")]
-    public required string VsSupport { get; set; }
+    public string? VsSupport { get; set; }
 
     [JsonPropertyName("vs-mac-support")]
-    public required string VsMacSupport { get; set; }
+    public string? VsMacSupport { get; set; }
 
     [JsonPropertyName("csharp-version")]
-    public required string CsharpVersion { get; set; }
+    public string? CsharpVersion { get; set; }
 
     [JsonPropertyName("fsharp-version")]
-    public required string FsharpVersion { get; set; }
+    public string? FsharpVersion { get; set; }
 
     [JsonPropertyName("vb-version")]
-    public required string VbVersion { get; set; }
+    public string? VbVersion { get; set; }
 
     [JsonPropertyName("files")]
-    public required List<RawReleasesFile> Files { get; set; }
+    public List<RawReleasesFile>? Files { get; set; }
 }

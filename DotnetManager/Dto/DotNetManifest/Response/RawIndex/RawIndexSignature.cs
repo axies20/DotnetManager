@@ -5,8 +5,8 @@ namespace DotnetManager.Dto.DotNetManifest.Response.RawIndex;
 public class RawIndexSignature
 {
     [JsonPropertyName("expiration")]
-    public DateTime Expiration { get; init; }
+    public DateTime? Expiration { get; init; }
 
     [JsonPropertyName("file")]
-    public required string File { get; init; }
+    public string? File { get; init; }
 }
