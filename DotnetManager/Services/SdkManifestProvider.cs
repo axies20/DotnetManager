@@ -11,8 +11,8 @@ namespace DotnetManager.Services;
 
 public class SdkManifestProvider : ISdkManifestProvider
 {
-    private readonly DotnetManagerOptions _options;
     private readonly HttpClient _httpClient;
+    private readonly DotnetManagerOptions _options;
 
     public SdkManifestProvider(IOptions<DotnetManagerOptions> options, HttpClient httpClient)
     {
@@ -25,7 +25,7 @@ public class SdkManifestProvider : ISdkManifestProvider
         using var response = await _httpClient.GetAsync(_options.ReleaseIndexUrl, cancellationToken);
         response.EnsureSuccessStatusCode();
         var result = await response.Content.ReadFromJsonAsync(DotnetManifestJsonContext.Default.RawRootIndex,
-                         cancellationToken: cancellationToken)
+                         cancellationToken)
                      ?? throw new InvalidDataException("The .NET release index response was null.");
 
         return SdkReleaseIndexMapper.Map(result);
