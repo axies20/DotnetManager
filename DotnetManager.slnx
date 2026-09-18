@@ -1,6 +1,6 @@
 <Solution>
-  <Folder Name="/Solution Items/">
-    <File Path="compose.yaml" />
-  </Folder>
-  <Project Path="DotnetManager/DotnetManager.csproj" />
+    <Folder Name="/Solution Items/">
+        <File Path="compose.yaml"/>
+    </Folder>
+    <Project Path="DotnetManager/DotnetManager.csproj"/>
 </Solution>

@@ -8,5 +8,5 @@ public enum RawReleaseTypes
     Sts,
 
     [JsonStringEnumMemberName("lts")]
-    Lts,
+    Lts
 }

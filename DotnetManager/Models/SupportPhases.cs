@@ -6,5 +6,5 @@ public enum SupportPhases
     GoLive,
     Active,
     Maintenance,
-    Eol,
+    Eol
 }
