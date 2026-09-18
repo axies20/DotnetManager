@@ -3,7 +3,7 @@ using DotnetManager.Models;
 
 namespace DotnetManager.Mapper;
 
-public class ReleaseTypeMapper
+public static class ReleaseTypeMapper
 {
     public static ReleaseTypes Map(RawReleaseTypes rawReleaseTypes)
     {
