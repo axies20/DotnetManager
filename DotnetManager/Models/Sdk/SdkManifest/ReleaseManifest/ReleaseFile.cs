@@ -1,6 +1,6 @@
 namespace DotnetManager.Models.Sdk.SdkManifest.ReleaseManifest;
 
-public sealed record SdkReleaseArtifact
+public sealed record ReleaseFile
 {
     public required string Rid { get; init; }
     public required Uri Url { get; init; }

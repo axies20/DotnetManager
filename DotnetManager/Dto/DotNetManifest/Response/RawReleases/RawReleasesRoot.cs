@@ -7,33 +7,34 @@ namespace DotnetManager.Dto.DotNetManifest.Response.RawReleases;
 public class RawReleasesRoot
 {
     [JsonPropertyName("channel-version")]
-    public required string ChannelVersion { get; set; }
+    public string? ChannelVersion { get; set; }
 
     [JsonPropertyName("latest-release")]
-    public required string LatestRelease { get; set; }
+    public string? LatestRelease { get; set; }
 
     [JsonPropertyName("latest-release-date")]
-    public required string LatestReleaseDate { get; set; }
+    public string? LatestReleaseDate { get; set; }
 
     [JsonPropertyName("latest-runtime")]
-    public required string LatestRuntime { get; set; }
+    public string? LatestRuntime { get; set; }
 
     [JsonPropertyName("latest-sdk")]
-    public required string LatestSdk { get; set; }
+    public string? LatestSdk { get; set; }
 
     [JsonPropertyName("support-phase")]
     [JsonConverter(typeof(JsonStringEnumConverter<RawSupportPhases>))]
-    public required RawSupportPhases SupportPhase { get; set; }
+    public RawSupportPhases? SupportPhase { get; set; }
 
     [JsonPropertyName("release-type")]
-    public required string ReleaseType { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter<RawReleaseTypes>))]
+    public RawReleaseTypes? ReleaseType { get; set; }
 
     [JsonPropertyName("lifecycle-policy")]
-    public required string LifecyclePolicy { get; set; }
+    public string? LifecyclePolicy { get; set; }
 
     [JsonPropertyName("releases")]
-    public required List<RawReleasesRelease> Releases { get; set; }
+    public List<RawReleases>? Releases { get; set; }
 
     [JsonPropertyName("signature")]
-    public required RawReleasesSignature Signature { get; set; }
+    public RawReleasesSignature? Signature { get; set; }
 }
