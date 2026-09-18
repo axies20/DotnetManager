@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace DotnetManager.Dto.DotnetManifest.Response.RawIndex;
+namespace DotnetManager.Dto.DotNetManifest.Response.RawIndex;
 
 public class RawRootIndex
 {

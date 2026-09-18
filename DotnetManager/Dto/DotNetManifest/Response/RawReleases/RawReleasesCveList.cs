@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace DotnetManager.Dto.DotnetManifest.Response.RawReleases;
+namespace DotnetManager.Dto.DotNetManifest.Response.RawReleases;
 
 public class RawReleasesCveList
 {

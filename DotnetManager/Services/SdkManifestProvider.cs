@@ -1,10 +1,11 @@
 using System.Net.Http.Json;
 using DotnetManager.Abstraction.SDK;
-using DotnetManager.Dto.DotnetManifest;
+using DotnetManager.Mapper;
 using DotnetManager.Models.Sdk.SdkManifest.ReleaseIndex;
 using DotnetManager.Models.Sdk.SdkManifest.ReleaseManifest;
 using DotnetManager.Options;
 using Microsoft.Extensions.Options;
+using DotnetManifestJsonContext = DotnetManager.Dto.DotNetManifest.DotnetManifestJsonContext;
 
 namespace DotnetManager.Services;
 

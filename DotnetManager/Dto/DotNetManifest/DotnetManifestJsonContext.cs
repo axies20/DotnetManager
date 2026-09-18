@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
-using DotnetManager.Dto.DotnetManifest.Response.RawIndex;
-using DotnetManager.Dto.DotnetManifest.Response.RawReleases;
+using DotnetManager.Dto.DotNetManifest.Response.RawIndex;
+using DotnetManager.Dto.DotNetManifest.Response.RawReleases;
 
-namespace DotnetManager.Dto.DotnetManifest;
+namespace DotnetManager.Dto.DotNetManifest;
 
 [JsonSerializable(typeof(RawRootIndex))]
 [JsonSerializable(typeof(RawReleasesRoot))]

@@ -1,10 +1,8 @@
 using System.Text.Json.Serialization;
 
-namespace DotnetManager.Dto.DotnetManifest.Response.RawReleases;
+namespace DotnetManager.Dto.DotNetManifest.Response.RawIndex;
 
-// Root myDeserializedClass = JsonSerializer.Deserialize<Root>(myJsonResponse);
-
-public class RawReleasesRoot
+public class RawReleasesIndex
 {
     [JsonPropertyName("channel-version")]
     public required string ChannelVersion { get; set; }
@@ -15,11 +13,17 @@ public class RawReleasesRoot
     [JsonPropertyName("latest-release-date")]
     public required string LatestReleaseDate { get; set; }
 
+    [JsonPropertyName("security")]
+    public bool Security { get; set; }
+
     [JsonPropertyName("latest-runtime")]
     public required string LatestRuntime { get; set; }
 
     [JsonPropertyName("latest-sdk")]
     public required string LatestSdk { get; set; }
+
+    [JsonPropertyName("product")]
+    public required string Product { get; set; }
 
     [JsonPropertyName("support-phase")]
     public required string SupportPhase { get; set; }
@@ -27,12 +31,12 @@ public class RawReleasesRoot
     [JsonPropertyName("release-type")]
     public required string ReleaseType { get; set; }
 
-    [JsonPropertyName("lifecycle-policy")]
-    public required string LifecyclePolicy { get; set; }
+    [JsonPropertyName("releases.json")]
+    public required string ReleasesJson { get; set; }
 
-    [JsonPropertyName("releases")]
-    public required List<RawReleasesRelease> Releases { get; set; }
+    [JsonPropertyName("supported-os.json")]
+    public required string SupportedOsJson { get; set; }
 
-    [JsonPropertyName("signature")]
-    public required RawReleasesSignature Signature { get; set; }
+    [JsonPropertyName("eol-date")]
+    public required string EolDate { get; set; }
 }
