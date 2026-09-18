@@ -1,4 +1,5 @@
-using DotnetManager.Models.Sdk.SdkManifest;
+using DotnetManager.Models.Sdk.SdkManifest.ReleaseIndex;
+using DotnetManager.Models.Sdk.SdkManifest.ReleaseManifest;
 
 namespace DotnetManager.Abstraction.SDK;
 
