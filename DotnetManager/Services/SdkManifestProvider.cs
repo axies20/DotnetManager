@@ -31,8 +31,15 @@ public class SdkManifestProvider : ISdkManifestProvider
         return SdkReleaseIndexMapper.Map(result);
     }
 
-    public Task<SdkReleaseManifest> GetReleasesAsync(Uri manifestUri, CancellationToken cancellationToken = default)
+    public async Task<SdkReleaseManifest> GetReleasesAsync(Uri manifestUri,
+        CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        using var response = await _httpClient.GetAsync(manifestUri, cancellationToken);
+        response.EnsureSuccessStatusCode();
+        var result = await response.Content.ReadFromJsonAsync(DotnetManifestJsonContext.Default.RawReleasesRoot,
+                         cancellationToken)
+                     ?? throw new InvalidDataException("The .NET release manifest response was null.");
+
+        return SdkReleaseManifestMapper.Map(result);
     }
 }
