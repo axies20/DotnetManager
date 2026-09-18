@@ -28,21 +28,7 @@ public class SdkManifestProvider : ISdkManifestProvider
                          cancellationToken: cancellationToken)
                      ?? throw new InvalidDataException("The .NET release index response was null.");
 
-
-        var channels = new List<SdkChannel>();
-        foreach (var release in result.Releasesindex)
-        {
-            var channel = new SdkChannel
-            {
-                ChannelVersion = release.ChannelVersion,
-                LatestSdk = release.LatestSdk,
-                SupportPhase = release.SupportPhase,
-                ReleasesUri = new Uri(release.ReleasesJson)
-            };
-            channels.Add(channel);
-        }
-
-        return new SdkReleaseIndex(channels);
+        return SdkReleaseIndexMapper.Map(result);
     }
 
     public Task<SdkReleaseManifest> GetReleasesAsync(Uri manifestUri, CancellationToken cancellationToken = default)
