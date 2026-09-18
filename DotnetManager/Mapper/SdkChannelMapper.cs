@@ -3,7 +3,7 @@ using DotnetManager.Models.Sdk.SdkManifest.ReleaseIndex;
 
 namespace DotnetManager.Mapper;
 
-public class SdkChannelMapper
+public static class SdkChannelMapper
 {
     public static SdkChannel Map(RawReleasesIndex releasesIndex)
     {

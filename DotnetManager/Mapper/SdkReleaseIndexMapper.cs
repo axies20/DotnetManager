@@ -3,7 +3,7 @@ using DotnetManager.Models.Sdk.SdkManifest.ReleaseIndex;
 
 namespace DotnetManager.Mapper;
 
-public class SdkReleaseIndexMapper
+public static class SdkReleaseIndexMapper
 {
     public static SdkReleaseIndex Map(RawRootIndex index)
     {
