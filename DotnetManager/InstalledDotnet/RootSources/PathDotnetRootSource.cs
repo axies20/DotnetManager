@@ -15,6 +15,7 @@ public class PathDotnetRootSource : IDotnetRootSource
 
         return [];
     }
+
     private static IEnumerable<string> GetRootsFromPath(string path)
     {
         var directories = path.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries);
@@ -28,7 +29,7 @@ public class PathDotnetRootSource : IDotnetRootSource
             if (!File.Exists(executablePath))
                 continue;
 
-            var target = File.ResolveLinkTarget(executablePath, returnFinalTarget: true);
+            var target = File.ResolveLinkTarget(executablePath, true);
 
             var actualPath = target?.FullName ?? executablePath;
             var root = Path.GetDirectoryName(actualPath);
