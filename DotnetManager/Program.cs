@@ -1,8 +1,6 @@
 ﻿using System.CommandLine;
-using DotnetManager.Abstraction.SDK;
 using DotnetManager.Cli;
-using DotnetManager.Options;
-using DotnetManager.Services;
+using DotnetManager.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -13,12 +11,16 @@ internal abstract class Program
     private static async Task<int> Main(string[] args)
     {
         var builder = Host.CreateApplicationBuilder(args);
-        builder.Services.AddOptions<DotnetManagerOptions>()
-            .BindConfiguration("DotnetManager")
-            .ValidateOnStart();
-        builder.Services.AddHttpClient<ISdkDownloader, SdkDownloader>();
+        builder.Services.AddDotnetManager();
 
-        var rootCommand = new RootCommand("Microsoft .NET SDK manager for Linux");
+        using var host = builder.Build();
+
+        var rootCommand = new RootCommand("Discover, install, update, and remove .NET SDKs from multiple " +
+                                          "release channels, while managing tracked channels and pinned SDK versions from a " +
+                                          "single command-line interface.");
+
+        var commandRegistration = host.Services.GetRequiredService<CommandRegistration>();
+        commandRegistration.AddSubCommands(rootCommand);
 
         return await rootCommand.Parse(args).InvokeAsync();
     }
