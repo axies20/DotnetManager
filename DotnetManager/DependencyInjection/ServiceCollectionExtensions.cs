@@ -1,5 +1,7 @@
 using DotnetManager.Cli;
 using DotnetManager.Cli.Commands;
+using DotnetManager.Cli.Commands.List;
+using DotnetManager.Cli.Commands.List.Abstraction;
 using DotnetManager.Configuration;
 using DotnetManager.InstalledDotnet.Abstractions;
 using DotnetManager.InstalledDotnet.Models;
@@ -38,11 +40,19 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<AvailableCommand>();
         services.AddSingleton<HelpCommand>();
         services.AddSingleton<InstallCommand>();
-        services.AddSingleton<ListCommand>();
+        services.AddListCommand();
         services.AddSingleton<RemoveCommand>();
         services.AddSingleton<UpdateCommand>();
         services.AddSingleton<VersionCommand>();
         services.AddSingleton<CommandRegistration>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddListCommand(this IServiceCollection services)
+    {
+        services.AddSingleton<IListOutput, SpectreListOutput>();
+        services.AddSingleton<ListCommand>();
 
         return services;
     }
