@@ -43,9 +43,7 @@ public class SdkManifestProvider : ISdkManifestProvider
         var result = await response.Content.ReadFromJsonAsync(DotnetManifestJsonContext.Default.RawReleasesRoot,
             cancellationToken);
         if (result is null)
-        {
             throw new InvalidDataException("The .NET release manifest response was null.");
-        }
         return SdkReleaseManifestMapper.Map(result);
     }
 }

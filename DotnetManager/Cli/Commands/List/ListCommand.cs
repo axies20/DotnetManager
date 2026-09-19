@@ -3,18 +3,18 @@ using DotnetManager.Cli.Commands.List.Abstraction;
 using DotnetManager.InstalledDotnet.Abstractions;
 using DotnetManager.InstalledDotnet.Models;
 
-namespace DotnetManager.Cli.Commands;
+namespace DotnetManager.Cli.Commands.List;
 
 public sealed class ListCommand
 {
-    private readonly IDotnetInstallationLocator<SdkInstallation> _sdkLocator;
-    private readonly IDotnetInstallationLocator<RuntimeInstallation> _runtimeLocator;
-    private readonly IDotnetInstallationLocator<HostInstallation> _hostLocator;
     private readonly IListOutput _output;
+    private readonly IDotnetInstallationLocator<HostInstallation> _hostLocator;
+    private readonly IDotnetInstallationLocator<RuntimeInstallation> _runtimeLocator;
+    private readonly IDotnetInstallationLocator<SdkInstallation> _sdkLocator;
 
-    private readonly Option<bool> _sdkOption = new("--sdk")
+    private readonly Option<bool> _hostOption = new("--host")
     {
-        Description = "Show installed .NET SDKs"
+        Description = "Show installed .NET hosts"
     };
 
     private readonly Option<bool> _runtimeOption = new("--runtime")
@@ -22,13 +22,12 @@ public sealed class ListCommand
         Description = "Show installed .NET runtimes"
     };
 
-    private readonly Option<bool> _hostOption = new("--host")
+    private readonly Option<bool> _sdkOption = new("--sdk")
     {
-        Description = "Show installed .NET hosts"
+        Description = "Show installed .NET SDKs"
     };
 
-    public ListCommand(
-        IDotnetInstallationLocator<SdkInstallation> sdkLocator,
+    public ListCommand(IDotnetInstallationLocator<SdkInstallation> sdkLocator,
         IDotnetInstallationLocator<RuntimeInstallation> runtimeLocator,
         IDotnetInstallationLocator<HostInstallation> hostLocator,
         IListOutput output)

@@ -1,5 +1,6 @@
 using System.CommandLine;
 using DotnetManager.Cli.Commands;
+using DotnetManager.Cli.Commands.List;
 
 namespace DotnetManager.Cli;
 

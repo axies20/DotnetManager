@@ -17,7 +17,7 @@ public static class SdkReleaseManifestMapper
             LatestSdk = NuGetVersion.Parse(MappingGuard.Required(rawReleasesRoot.LatestSdk)),
             SupportPhase = SupportPhasesMapper.Map(MappingGuard.Required(rawReleasesRoot.SupportPhase)),
             ReleaseType = ReleaseTypeMapper.Map(MappingGuard.Required(rawReleasesRoot.ReleaseType)),
-            Releases = MappingGuard.Required(rawReleasesRoot.Releases).Select(MapRelease).ToList(),
+            Releases = MappingGuard.Required(rawReleasesRoot.Releases).Select(MapRelease).ToList()
         };
     }
 
@@ -36,7 +36,7 @@ public static class SdkReleaseManifestMapper
             Security = MappingGuard.Required(rawReleases.Security),
             Runtime = runtime,
             Sdks = sdks,
-            AspNetCoreRuntime = aspNetCoreRuntime,
+            AspNetCoreRuntime = aspNetCoreRuntime
         };
     }
 

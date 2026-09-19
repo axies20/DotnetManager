@@ -32,7 +32,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IDotnetRootSource, UnixInstallLocationDotnetRootSource>();
         services.AddSingleton<IDotnetRootSource, WindowsRegistryDotnetRootSource>();
         services.AddSingleton<IDotnetRootLocator, DotnetRootLocator>();
-        
+
         services.AddSingleton<IDotnetInstallationLocator<SdkInstallation>, SdkLocator>();
         services.AddSingleton<IDotnetInstallationLocator<RuntimeInstallation>, RuntimeLocator>();
         services.AddSingleton<IDotnetInstallationLocator<HostInstallation>, HostLocator>();
