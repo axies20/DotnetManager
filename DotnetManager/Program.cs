@@ -19,7 +19,6 @@ internal abstract class Program
         builder.Services.AddHttpClient<ISdkDownloader, SdkDownloader>();
 
         var rootCommand = new RootCommand("Microsoft .NET SDK manager for Linux");
-        rootCommand.Subcommands.Add(InstallCommand.Create());
 
         return await rootCommand.Parse(args).InvokeAsync();
     }
