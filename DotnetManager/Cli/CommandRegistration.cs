@@ -17,7 +17,7 @@ public sealed class CommandRegistration(
         rootCommand.Subcommands.Add(availableCommand.Create());
         rootCommand.Subcommands.Add(helpCommand.Create());
         rootCommand.Subcommands.Add(installCommand.Create());
-        rootCommand.Subcommands.Add(listCommand.Create());
+        rootCommand.Subcommands.Add(listCommand.Initialize());
         rootCommand.Subcommands.Add(removeCommand.Create());
         rootCommand.Subcommands.Add(updateCommand.Create());
         rootCommand.Subcommands.Add(versionCommand.Create());
