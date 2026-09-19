@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using DotnetManager.InstalledDotnet.Abstractions;
 using Microsoft.Win32;
 
