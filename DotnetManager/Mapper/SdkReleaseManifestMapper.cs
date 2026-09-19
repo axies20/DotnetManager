@@ -2,6 +2,7 @@ using System.Globalization;
 using DotnetManager.Dto.DotNetManifest.Response.RawReleases;
 using DotnetManager.Helper;
 using DotnetManager.Models.Sdk.SdkManifest.ReleaseManifest;
+using NuGet.Versioning;
 
 namespace DotnetManager.Mapper;
 
@@ -13,8 +14,8 @@ public static class SdkReleaseManifestMapper
 
         return new SdkReleaseManifest
         {
-            ChannelVersion = MappingGuard.Required(rawReleasesRoot.ChannelVersion),
-            LatestSdk = MappingGuard.Required(rawReleasesRoot.LatestSdk),
+            ChannelVersion = NuGetVersion.Parse(MappingGuard.Required(rawReleasesRoot.ChannelVersion)),
+            LatestSdk = NuGetVersion.Parse(MappingGuard.Required(rawReleasesRoot.LatestSdk)),
             SupportPhase = SupportPhasesMapper.Map(MappingGuard.Required(rawReleasesRoot.SupportPhase)),
             ReleaseType = ReleaseTypeMapper.Map(MappingGuard.Required(rawReleasesRoot.ReleaseType)),
             Releases = MappingGuard.Required(rawReleasesRoot.Releases).Select(MapRelease).ToList(),
@@ -31,7 +32,7 @@ public static class SdkReleaseManifestMapper
 
         return new SdkRelease
         {
-            ReleaseVersion = MappingGuard.Required(rawReleases.ReleaseVersion),
+            ReleaseVersion = NuGetVersion.Parse(MappingGuard.Required(rawReleases.ReleaseVersion)),
             ReleaseDate = MapDate(rawReleases.ReleaseDate),
             Security = MappingGuard.Required(rawReleases.Security),
             Runtime = runtime,
@@ -44,7 +45,7 @@ public static class SdkReleaseManifestMapper
     {
         return new DotnetVersion
         {
-            Version = MappingGuard.Required(rawReleasesAspNetCoreRuntime.Version),
+            Version = NuGetVersion.Parse(MappingGuard.Required(rawReleasesAspNetCoreRuntime.Version)),
             Artifacts = MappingGuard.Required(rawReleasesAspNetCoreRuntime.Files)
                 .Select(MapArtifact).ToList()
         };
@@ -57,7 +58,7 @@ public static class SdkReleaseManifestMapper
 
         return new DotnetVersion
         {
-            Version = MappingGuard.Required(rawReleasesSdk.Version),
+            Version = NuGetVersion.Parse(MappingGuard.Required(rawReleasesSdk.Version)),
             Artifacts = artifacts
         };
     }
@@ -80,7 +81,7 @@ public static class SdkReleaseManifestMapper
 
         return new DotnetVersion
         {
-            Version = MappingGuard.Required(rawReleasesRuntime.Version),
+            Version = NuGetVersion.Parse(MappingGuard.Required(rawReleasesRuntime.Version)),
             Artifacts = artifacts
         };
     }

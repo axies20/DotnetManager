@@ -1,6 +1,7 @@
 using DotnetManager.Dto.DotNetManifest.Response.RawIndex;
 using DotnetManager.Helper;
 using DotnetManager.Models.Sdk.SdkManifest.ReleaseIndex;
+using NuGet.Versioning;
 
 namespace DotnetManager.Mapper;
 
@@ -11,7 +12,7 @@ public static class SdkChannelMapper
         ArgumentNullException.ThrowIfNull(releasesIndex);
         return new SdkChannel
         {
-            ChannelVersion = MappingGuard.Required(releasesIndex.ChannelVersion),
+            ChannelVersion = NuGetVersion.Parse(MappingGuard.Required(releasesIndex.ChannelVersion)),
             LatestSdk = MappingGuard.Required(releasesIndex.LatestSdk),
             ReleasesUri = new Uri(MappingGuard.Required(releasesIndex.ReleasesJson)),
             SupportPhase = SupportPhasesMapper.Map(MappingGuard.Required(releasesIndex.SupportPhase)),
