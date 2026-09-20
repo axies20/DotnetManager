@@ -44,7 +44,6 @@ public static class ServiceCollectionExtensions
         services.AddTransient<ICommand, ListCommand>();
         services.AddTransient<ICommand, RemoveCommand>();
         services.AddTransient<ICommand, UpdateCommand>();
-        services.AddTransient<ICommand, VersionCommand>();
 
         services.AddSingleton<CommandRegistration>();
         return services;
