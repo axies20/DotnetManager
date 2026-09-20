@@ -1,5 +1,7 @@
 using DotnetManager.Cli;
+using DotnetManager.Cli.Abstractions;
 using DotnetManager.Cli.Commands;
+using DotnetManager.Cli.Commands.Available;
 using DotnetManager.Cli.Commands.List;
 using DotnetManager.Cli.Commands.List.Abstraction;
 using DotnetManager.Configuration;
@@ -37,23 +39,14 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IDotnetInstallationLocator<RuntimeInstallation>, RuntimeLocator>();
         services.AddSingleton<IDotnetInstallationLocator<HostInstallation>, HostLocator>();
 
-        services.AddSingleton<AvailableCommand>();
-        services.AddSingleton<HelpCommand>();
-        services.AddSingleton<InstallCommand>();
-        services.AddListCommand();
-        services.AddSingleton<RemoveCommand>();
-        services.AddSingleton<UpdateCommand>();
-        services.AddSingleton<VersionCommand>();
-        services.AddSingleton<CommandRegistration>();
+        services.AddTransient<ICommand, AvailableCommand>();
+        services.AddTransient<ICommand, InstallCommand>();
+        services.AddTransient<ICommand, ListCommand>();
+        services.AddTransient<ICommand, RemoveCommand>();
+        services.AddTransient<ICommand, UpdateCommand>();
+        services.AddTransient<ICommand, VersionCommand>();
 
-        return services;
-    }
-
-    private static IServiceCollection AddListCommand(this IServiceCollection services)
-    {
         services.AddSingleton<IListOutput, SpectreListOutput>();
-        services.AddSingleton<ListCommand>();
-
         return services;
     }
 }
