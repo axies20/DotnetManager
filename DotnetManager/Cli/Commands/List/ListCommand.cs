@@ -1,11 +1,12 @@
 using System.CommandLine;
+using DotnetManager.Cli.Abstractions;
 using DotnetManager.Cli.Commands.List.Abstraction;
 using DotnetManager.InstalledDotnet.Abstractions;
 using DotnetManager.InstalledDotnet.Models;
 
 namespace DotnetManager.Cli.Commands.List;
 
-public sealed class ListCommand
+public sealed class ListCommand : ICommand
 {
     private readonly IListOutput _output;
     private readonly IDotnetInstallationLocator<HostInstallation> _hostLocator;
@@ -40,9 +41,7 @@ public sealed class ListCommand
 
     public Command Initialize()
     {
-        var command = new Command(
-            "list",
-            "Show installed .NET SDKs, runtimes, and hosts.");
+        var command = new Command("list", "Show installed .NET SDKs, runtimes, and hosts.");
 
         command.Options.Add(_sdkOption);
         command.Options.Add(_runtimeOption);

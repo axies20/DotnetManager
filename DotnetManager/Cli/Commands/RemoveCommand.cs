@@ -1,8 +1,9 @@
 using System.CommandLine;
+using DotnetManager.Cli.Abstractions;
 
 namespace DotnetManager.Cli.Commands;
 
-public class RemoveCommand
+public class RemoveCommand : ICommand
 {
     public Command Create()
     {
@@ -10,5 +11,10 @@ public class RemoveCommand
             "remove",
             "Stop tracking a .NET SDK channel or exact pinned version and remove its managed installation when it is no longer required.");
         return command;
+    }
+
+    public Command Initialize()
+    {
+        throw new NotImplementedException();
     }
 }
