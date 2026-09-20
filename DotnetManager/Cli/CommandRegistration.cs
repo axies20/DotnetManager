@@ -1,8 +1,5 @@
 using System.CommandLine;
 using DotnetManager.Cli.Abstractions;
-using DotnetManager.Cli.Commands;
-using DotnetManager.Cli.Commands.Available;
-using DotnetManager.Cli.Commands.List;
 
 namespace DotnetManager.Cli;
 

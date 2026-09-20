@@ -46,7 +46,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<ICommand, UpdateCommand>();
         services.AddTransient<ICommand, VersionCommand>();
 
-        services.AddSingleton<IListOutput, SpectreListOutput>();
+        services.AddSingleton<CommandRegistration>();
         return services;
     }
 }
