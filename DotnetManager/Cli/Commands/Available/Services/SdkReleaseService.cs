@@ -1,0 +1,42 @@
+using DotnetManager.Cli.Commands.Available.Abstraction;
+using DotnetManager.Exception;
+using DotnetManager.ReleaseMetadata.Abstractions;
+using DotnetManager.ReleaseMetadata.Models.Index;
+using DotnetManager.ReleaseMetadata.Models.Releases;
+using NuGet.Versioning;
+
+namespace DotnetManager.Cli.Commands.Available.Services;
+
+public class SdkReleaseService : ISdkReleaseService
+{
+    private readonly ISdkManifestProvider _manifestProvider;
+
+    public SdkReleaseService(ISdkManifestProvider manifestProvider)
+    {
+        _manifestProvider = manifestProvider;
+    }
+
+    public async Task<IReadOnlyCollection<SdkChannel>> GetChannelsAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return (await _manifestProvider.GetReleaseIndexAsync(cancellationToken)).Releases;
+    }
+
+    public async Task<IReadOnlyCollection<SdkRelease>> GetReleasesAsync(NuGetVersion channelVersion,
+        CancellationToken cancellationToken = default)
+    {
+        var index = await _manifestProvider.GetReleaseIndexAsync(cancellationToken);
+
+        var channel = index.Releases.FirstOrDefault(r => r.ChannelVersion == channelVersion);
+
+        if (channel is null)
+        {
+            throw new SdkChannelNotFoundException(channelVersion);
+        }
+
+        var manifest = await _manifestProvider.GetReleasesAsync(channel.ReleasesUri,
+            cancellationToken);
+
+        return manifest.Releases;
+    }
+}

@@ -2,6 +2,8 @@ using DotnetManager.Cli;
 using DotnetManager.Cli.Abstractions;
 using DotnetManager.Cli.Commands;
 using DotnetManager.Cli.Commands.Available;
+using DotnetManager.Cli.Commands.Available.Abstraction;
+using DotnetManager.Cli.Commands.Available.Services;
 using DotnetManager.Cli.Commands.List;
 using DotnetManager.Configuration;
 using DotnetManager.InstalledDotnet.Abstractions;
@@ -37,6 +39,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IDotnetInstallationLocator<SdkInstallation>, SdkLocator>();
         services.AddSingleton<IDotnetInstallationLocator<RuntimeInstallation>, RuntimeLocator>();
         services.AddSingleton<IDotnetInstallationLocator<HostInstallation>, HostLocator>();
+        services.AddSingleton<ISdkReleaseService, SdkReleaseService>();
 
         services.AddTransient<ICommand, AvailableCommand>();
         services.AddTransient<ICommand, InstallCommand>();
