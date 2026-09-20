@@ -12,7 +12,7 @@ public class UnixInstallLocationDotnetRootSource : IDotnetRootSource
         {
             yield break;
         }
-        
+
         if (!Directory.Exists(DotnetConfigDirectory))
             yield break;
 
