@@ -12,6 +12,7 @@ public static class SdkChannelMapper
         return new SdkChannel
         {
             ChannelVersion = NuGetVersion.Parse(MappingGuard.Required(releasesIndex.ChannelVersion)),
+            Security = MappingGuard.Required(releasesIndex.Security),
             LatestSdk = MappingGuard.Required(releasesIndex.LatestSdk),
             ReleasesUri = new Uri(MappingGuard.Required(releasesIndex.ReleasesJson)),
             SupportPhase = SupportPhasesMapper.Map(MappingGuard.Required(releasesIndex.SupportPhase)),
