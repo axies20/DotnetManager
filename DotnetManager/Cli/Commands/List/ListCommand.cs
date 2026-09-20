@@ -1,6 +1,6 @@
 using System.CommandLine;
 using DotnetManager.Cli.Abstractions;
-using DotnetManager.Cli.Commands.List.Abstraction;
+using DotnetManager.Cli.Output;
 using DotnetManager.InstalledDotnet.Abstractions;
 using DotnetManager.InstalledDotnet.Models;
 
@@ -8,7 +8,6 @@ namespace DotnetManager.Cli.Commands.List;
 
 public sealed class ListCommand : ICommand
 {
-    private readonly IListOutput _output;
     private readonly IDotnetInstallationLocator<HostInstallation> _hostLocator;
     private readonly IDotnetInstallationLocator<RuntimeInstallation> _runtimeLocator;
     private readonly IDotnetInstallationLocator<SdkInstallation> _sdkLocator;
@@ -30,13 +29,11 @@ public sealed class ListCommand : ICommand
 
     public ListCommand(IDotnetInstallationLocator<SdkInstallation> sdkLocator,
         IDotnetInstallationLocator<RuntimeInstallation> runtimeLocator,
-        IDotnetInstallationLocator<HostInstallation> hostLocator,
-        IListOutput output)
+        IDotnetInstallationLocator<HostInstallation> hostLocator)
     {
         _sdkLocator = sdkLocator;
         _runtimeLocator = runtimeLocator;
         _hostLocator = hostLocator;
-        _output = output;
     }
 
     public Command Initialize()
@@ -52,6 +49,40 @@ public sealed class ListCommand : ICommand
         return command;
     }
 
+    private static void PrintSdks(IReadOnlyCollection<SdkInstallation> sdks)
+    {
+        TableColumn<SdkInstallation>[] columns =
+        [
+            new("Version", x => x.Version.ToString()),
+            new("Path", x => x.Path)
+        ];
+
+        TablePrinter.Print("Installed SDKs", sdks, columns);
+    }
+
+    private static void PrintRuntimes(IReadOnlyCollection<RuntimeInstallation> runtimes)
+    {
+        TableColumn<RuntimeInstallation>[] columns =
+        [
+            new("Framework", x => x.Framework),
+            new("Version", x => x.Version.ToString()),
+            new("Path", x => x.Path)
+        ];
+
+        TablePrinter.Print("Installed Runtimes", runtimes, columns);
+    }
+
+    private static void PrintHosts(IReadOnlyCollection<HostInstallation> hosts)
+    {
+        TableColumn<HostInstallation>[] columns =
+        [
+            new("Version", x => x.Version.ToString()),
+            new("Path", x => x.Path)
+        ];
+
+        TablePrinter.Print("Installed Hosts", hosts, columns);
+    }
+
     private void Execute(ParseResult result)
     {
         var showSdk = result.GetValue(_sdkOption);
@@ -61,12 +92,12 @@ public sealed class ListCommand : ICommand
         var showAll = !showSdk && !showRuntime && !showHost;
 
         if (showAll || showSdk)
-            _output.PrintSdks(_sdkLocator.Find());
+            PrintSdks(_sdkLocator.Find());
 
         if (showAll || showRuntime)
-            _output.PrintRuntimes(_runtimeLocator.Find());
+            PrintRuntimes(_runtimeLocator.Find());
 
         if (showAll || showHost)
-            _output.PrintHosts(_hostLocator.Find());
+            PrintHosts(_hostLocator.Find());
     }
 }

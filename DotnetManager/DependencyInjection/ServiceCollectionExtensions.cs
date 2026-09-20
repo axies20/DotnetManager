@@ -3,7 +3,6 @@ using DotnetManager.Cli.Abstractions;
 using DotnetManager.Cli.Commands;
 using DotnetManager.Cli.Commands.Available;
 using DotnetManager.Cli.Commands.List;
-using DotnetManager.Cli.Commands.List.Abstraction;
 using DotnetManager.Configuration;
 using DotnetManager.InstalledDotnet.Abstractions;
 using DotnetManager.InstalledDotnet.Models;
