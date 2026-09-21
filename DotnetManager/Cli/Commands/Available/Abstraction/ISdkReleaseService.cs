@@ -8,6 +8,6 @@ public interface ISdkReleaseService
 {
     Task<IReadOnlyCollection<SdkChannel>> GetChannelsAsync(CancellationToken cancellationToken = default);
 
-    Task<IReadOnlyCollection<SdkRelease>> GetReleasesAsync(NuGetVersion channelVersion,
+    Task<SdkReleaseManifest> GetReleasesAsync(NuGetVersion channelVersion,
         CancellationToken cancellationToken = default);
 }

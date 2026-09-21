@@ -22,7 +22,7 @@ public class SdkReleaseService : ISdkReleaseService
         return (await _manifestProvider.GetReleaseIndexAsync(cancellationToken)).Releases;
     }
 
-    public async Task<IReadOnlyCollection<SdkRelease>> GetReleasesAsync(NuGetVersion channelVersion,
+    public async Task<SdkReleaseManifest> GetReleasesAsync(NuGetVersion channelVersion,
         CancellationToken cancellationToken = default)
     {
         var index = await _manifestProvider.GetReleaseIndexAsync(cancellationToken);
@@ -34,9 +34,7 @@ public class SdkReleaseService : ISdkReleaseService
             throw new SdkChannelNotFoundException(channelVersion);
         }
 
-        var manifest = await _manifestProvider.GetReleasesAsync(channel.ReleasesUri,
+        return await _manifestProvider.GetReleasesAsync(channel.ReleasesUri,
             cancellationToken);
-
-        return manifest.Releases;
     }
 }
