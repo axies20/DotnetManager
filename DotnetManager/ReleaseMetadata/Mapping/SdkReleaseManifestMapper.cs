@@ -15,6 +15,8 @@ public static class SdkReleaseManifestMapper
         {
             ChannelVersion = NuGetVersion.Parse(MappingGuard.Required(rawReleasesRoot.ChannelVersion)),
             LatestSdk = NuGetVersion.Parse(MappingGuard.Required(rawReleasesRoot.LatestSdk)),
+            LatestRelease = NuGetVersion.Parse(MappingGuard.Required(rawReleasesRoot.LatestRelease)),
+            LatestRuntime = NuGetVersion.Parse(MappingGuard.Required(rawReleasesRoot.LatestRuntime)),
             SupportPhase = SupportPhasesMapper.Map(MappingGuard.Required(rawReleasesRoot.SupportPhase)),
             ReleaseType = ReleaseTypeMapper.Map(MappingGuard.Required(rawReleasesRoot.ReleaseType)),
             Releases = MappingGuard.Required(rawReleasesRoot.Releases).Select(MapRelease).ToList()
@@ -89,7 +91,7 @@ public static class SdkReleaseManifestMapper
     {
         return new ReleaseFile
         {
-            Rid = MappingGuard.Required(rawReleasesFile.Rid),
+            Rid = rawReleasesFile.Rid ?? string.Empty,
             Url = new Uri(MappingGuard.Required(rawReleasesFile.Url), UriKind.Absolute),
             FileName = MappingGuard.Required(rawReleasesFile.Name),
             Hash = MappingGuard.Required(rawReleasesFile.Hash)
