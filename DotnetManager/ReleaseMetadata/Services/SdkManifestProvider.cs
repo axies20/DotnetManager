@@ -1,4 +1,3 @@
-using System.Net.Http.Json;
 using DotnetManager.ReleaseMetadata.Abstractions;
 using DotnetManager.ReleaseMetadata.Mapping;
 using DotnetManager.ReleaseMetadata.Models.Index;
