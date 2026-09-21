@@ -4,6 +4,7 @@ using DotnetManager.Cli.Commands;
 using DotnetManager.Cli.Commands.Available;
 using DotnetManager.Cli.Commands.Available.Abstraction;
 using DotnetManager.Cli.Commands.Available.Services;
+using DotnetManager.Cli.Commands.Install;
 using DotnetManager.Cli.Commands.List;
 using DotnetManager.Configuration;
 using DotnetManager.InstalledDotnet.Abstractions;
@@ -12,8 +13,16 @@ using DotnetManager.InstalledDotnet.RootSources;
 using DotnetManager.InstalledDotnet.Services;
 using DotnetManager.ReleaseMetadata.Abstractions;
 using DotnetManager.ReleaseMetadata.Services;
-using DotnetManager.SdkManagement.Abstractions;
-using DotnetManager.SdkManagement.Services;
+using DotnetManager.SdkManagement.Abstractions.Archives;
+using DotnetManager.SdkManagement.Abstractions.Downloads;
+using DotnetManager.SdkManagement.Abstractions.Installation;
+using DotnetManager.SdkManagement.Abstractions.InstallPaths;
+using DotnetManager.SdkManagement.Abstractions.UserEnvironment;
+using DotnetManager.SdkManagement.InstallPaths;
+using DotnetManager.SdkManagement.Services.Archives;
+using DotnetManager.SdkManagement.Services.Downloads;
+using DotnetManager.SdkManagement.Services.Installation;
+using DotnetManager.SdkManagement.Services.UserEnvironment;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DotnetManager.DependencyInjection;
@@ -26,9 +35,12 @@ public static class ServiceCollectionExtensions
             .BindConfiguration("DotnetManager")
             .ValidateOnStart();
 
-        services.AddHttpClient<ISdkDownloader, SdkDownloader>();
+        services.AddHttpClient<IDotnetDownloader, DotnetDownloader>();
         services.AddHttpClient<ISdkManifestProvider, SdkManifestProvider>();
-        services.AddSingleton<ISdkInstaller, SdkInstaller>();
+        services.AddSingleton<IArchiveExtractor, ArchiveExtractor>();
+        services.AddSingleton<IDotnetInstallPathProvider, UnixDotnetInstallPathProvider>();
+        services.AddSingleton<IUserEnvironmentConfigurator, UnixUserEnvironmentConfigurator>();
+        services.AddSingleton<IDotnetInstaller, DotnetInstaller>();
 
         services.AddSingleton<IDotnetRootSource, EnvironmentDotnetRootSource>();
         services.AddSingleton<IDotnetRootSource, PathDotnetRootSource>();
