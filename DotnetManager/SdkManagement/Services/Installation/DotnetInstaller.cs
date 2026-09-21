@@ -16,27 +16,24 @@ public class DotnetInstaller : IDotnetInstaller
         _userEnvironmentConfigurator = userEnvironmentConfigurator;
     }
 
-    public async Task InstallAsync(string sourcePath, CancellationToken cancellationToken)
+    public async Task InstallAsync(CancellationToken cancellationToken = default)
     {
         var installRoot = _pathProvider.GetInstallDirectory();
-
-        var linkPath = _pathProvider.GetExecutableLinkPath();
-
-        if (linkPath is not null)
-        {
-            var targetPath = Path.Combine(installRoot, "dotnet");
-
-            EnsureExecutableLink(linkPath, targetPath);
-        }
-
-        await _userEnvironmentConfigurator.ConfigureAsync(installRoot, cancellationToken);
-
         var executable = Path.Combine(installRoot, "dotnet");
 
         if (!File.Exists(executable))
             throw new InvalidDataException(
                 "The extracted .NET archive does not contain the dotnet executable.");
 
+        var linkPath = _pathProvider.GetExecutableLinkPath();
+
+        if (linkPath is not null)
+        {
+            EnsureExecutableLink(linkPath, executable);
+            return;
+        }
+
+        await _userEnvironmentConfigurator.ConfigureAsync(installRoot, cancellationToken);
     }
 
     private static void EnsureExecutableLink(string linkPath, string targetPath)
