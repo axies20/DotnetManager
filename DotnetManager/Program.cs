@@ -10,11 +10,14 @@ internal abstract class Program
 {
     private static async Task<int> Main(string[] args)
     {
-        var builder = Host.CreateApplicationBuilder(args);
+        var builder = Host.CreateApplicationBuilder(new HostApplicationBuilderSettings
+        {
+            Args = args,
+            ContentRootPath = AppContext.BaseDirectory
+        });
         builder.Services.AddDotnetManager();
 
         using var host = builder.Build();
-
         var rootCommand = new RootCommand("Discover, install, update, and remove .NET SDKs from multiple " +
                                           "release channels, while managing tracked channels and pinned SDK versions from a " +
                                           "single command-line interface.");
