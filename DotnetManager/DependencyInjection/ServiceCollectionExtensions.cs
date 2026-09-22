@@ -43,6 +43,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IDotnetInstallPathProvider, UnixDotnetInstallPathProvider>();
         services.AddSingleton<IUserEnvironmentConfigurator, UnixUserEnvironmentConfigurator>();
         services.AddSingleton<IDotnetInstaller, DotnetInstaller>();
+        services.AddTransient<DotnetInstallPlanner>();
         services.AddTransient<IDotnetInstallResolver, DotnetInstallResolver>();
 
         services.AddSingleton<IDotnetRootSource, EnvironmentDotnetRootSource>();
