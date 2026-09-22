@@ -4,13 +4,6 @@ namespace DotnetManager.SdkManagement.Services.UserEnvironment;
 
 public class UnixUserEnvironmentConfigurator : IUserEnvironmentConfigurator
 {
-    private static readonly HashSet<string> SupportedShells =
-    [
-        "bash",
-        "zsh",
-        "fish"
-    ];
-
     public async Task ConfigureAsync(string dotnetRoot, CancellationToken cancellationToken = default)
     {
         var shells = GetInstalledShells().ToHashSet();
