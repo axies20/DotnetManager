@@ -1,3 +1,3 @@
 namespace DotnetManager.SdkManagement.Models.Installation;
 
-public union InstallTarget(VersionSelector, LatestSelector);
+public abstract record InstallTarget;

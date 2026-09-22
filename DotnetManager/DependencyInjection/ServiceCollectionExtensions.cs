@@ -17,11 +17,13 @@ using DotnetManager.SdkManagement.Abstractions.Archives;
 using DotnetManager.SdkManagement.Abstractions.Downloads;
 using DotnetManager.SdkManagement.Abstractions.Installation;
 using DotnetManager.SdkManagement.Abstractions.InstallPaths;
+using DotnetManager.SdkManagement.Abstractions.Resolver;
 using DotnetManager.SdkManagement.Abstractions.UserEnvironment;
 using DotnetManager.SdkManagement.InstallPaths;
 using DotnetManager.SdkManagement.Services.Archives;
 using DotnetManager.SdkManagement.Services.Downloads;
 using DotnetManager.SdkManagement.Services.Installation;
+using DotnetManager.SdkManagement.Services.Resolver;
 using DotnetManager.SdkManagement.Services.UserEnvironment;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -41,6 +43,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IDotnetInstallPathProvider, UnixDotnetInstallPathProvider>();
         services.AddSingleton<IUserEnvironmentConfigurator, UnixUserEnvironmentConfigurator>();
         services.AddSingleton<IDotnetInstaller, DotnetInstaller>();
+        services.AddTransient<IDotnetInstallResolver, DotnetInstallResolver>();
 
         services.AddSingleton<IDotnetRootSource, EnvironmentDotnetRootSource>();
         services.AddSingleton<IDotnetRootSource, PathDotnetRootSource>();
