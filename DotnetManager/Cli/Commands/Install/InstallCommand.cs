@@ -18,10 +18,22 @@ public class InstallCommand : ICommand
         "Install the latest version of the specified support phase");
 
     private readonly Option<bool> _runtime = new("--runtime",
-        "Install the .NET runtime instead of the SDK");
+        "Install the .NET runtime instead of the SDK")
+    {
+        Recursive = true
+    };
 
     private readonly Option<bool> _aspnet = new("--aspnet",
-        "Install the ASP.NET Core runtime instead of the SDK");
+        "Install the ASP.NET Core runtime instead of the SDK")
+    {
+        Recursive = true
+    };
+
+    private readonly Option<string?> _rid = new("--rid",
+        "Install the .NET runtime with the specified runtime identifier")
+    {
+        Recursive = true
+    };
 
     private readonly Argument<string> _version = new("version")
     {
