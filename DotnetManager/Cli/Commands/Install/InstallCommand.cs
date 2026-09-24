@@ -82,67 +82,6 @@ public class InstallCommand : ICommand
         return command;
     }
 
-    private Task<int> ExecuteLatest(ParseResult result, CancellationToken cancellationToken)
-    {
-        var rid = result.GetValue(_rid);
-        var includeNonSecurity = result.GetValue(_includeNonSecurity);
-        var release = result.GetValue(_releaseType);
-        var phase = result.GetValue(_supportPhase);
-        var installRequest = new InstallRequest()
-        {
-            Options = new InstallOptions()
-            {
-                Components = GetInstallComponents(result),
-                RuntimeIdentifier = rid
-            },
-            Target = new LatestSelector(release, phase, !includeNonSecurity)
-        };
-
-        return ExecuteAsync(installRequest, cancellationToken);
-    }
-
-    private Task<int> ExecuteInstall(ParseResult result, CancellationToken cancellationToken)
-    {
-        var rid = result.GetValue(_rid);
-        var value = result.GetValue(_version);
-
-        if (!NuGetVersion.TryParse(value, out var version))
-        {
-            Console.Error.WriteLine($"Invalid version: {value}");
-            return Task.FromResult(1);
-        }
-
-        var installRequest = new InstallRequest()
-        {
-            Options = new InstallOptions()
-            {
-                Components = GetInstallComponents(result),
-                RuntimeIdentifier = rid
-            },
-            Target = new VersionSelector(version)
-        };
-        return ExecuteAsync(installRequest, cancellationToken);
-    }
-
-    private async Task<int> ExecuteAsync(InstallRequest request, CancellationToken cancellationToken)
-    {
-        try
-        {
-            await _dotnetInstallOrchestrator.InstallAsync(request, cancellationToken);
-            return 0;
-        }
-        catch (DotnetInstallException exception)
-        {
-            Console.Error.WriteLine(GetErrorMessage(exception));
-            return 1;
-        }
-        catch (HttpRequestException exception)
-        {
-            Console.Error.WriteLine($"Unable to download .NET files: {exception.Message}");
-            return 1;
-        }
-    }
-
     private static string GetErrorMessage(DotnetInstallException exception)
     {
         return exception switch
@@ -181,6 +120,67 @@ public class InstallCommand : ICommand
         };
     }
 
+    private Task<int> ExecuteLatest(ParseResult result, CancellationToken cancellationToken)
+    {
+        var rid = result.GetValue(_rid);
+        var includeNonSecurity = result.GetValue(_includeNonSecurity);
+        var release = result.GetValue(_releaseType);
+        var phase = result.GetValue(_supportPhase);
+        var installRequest = new InstallRequest
+        {
+            Options = new InstallOptions
+            {
+                Components = GetInstallComponents(result),
+                RuntimeIdentifier = rid
+            },
+            Target = new LatestSelector(release, phase, !includeNonSecurity)
+        };
+
+        return ExecuteAsync(installRequest, cancellationToken);
+    }
+
+    private Task<int> ExecuteInstall(ParseResult result, CancellationToken cancellationToken)
+    {
+        var rid = result.GetValue(_rid);
+        var value = result.GetValue(_version);
+
+        if (!NuGetVersion.TryParse(value, out var version))
+        {
+            Console.Error.WriteLine($"Invalid version: {value}");
+            return Task.FromResult(1);
+        }
+
+        var installRequest = new InstallRequest
+        {
+            Options = new InstallOptions
+            {
+                Components = GetInstallComponents(result),
+                RuntimeIdentifier = rid
+            },
+            Target = new VersionSelector(version)
+        };
+        return ExecuteAsync(installRequest, cancellationToken);
+    }
+
+    private async Task<int> ExecuteAsync(InstallRequest request, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _dotnetInstallOrchestrator.InstallAsync(request, cancellationToken);
+            return 0;
+        }
+        catch (DotnetInstallException exception)
+        {
+            Console.Error.WriteLine(GetErrorMessage(exception));
+            return 1;
+        }
+        catch (HttpRequestException exception)
+        {
+            Console.Error.WriteLine($"Unable to download .NET files: {exception.Message}");
+            return 1;
+        }
+    }
+
     private IReadOnlyCollection<InstallComponent> GetInstallComponents(ParseResult result)
     {
         List<InstallComponent> components = [];
@@ -196,5 +196,4 @@ public class InstallCommand : ICommand
 
         return components;
     }
-
 }

@@ -3,4 +3,6 @@
         <File Path="compose.yaml"/>
     </Folder>
     <Project Path="DotnetManager/DotnetManager.csproj"/>
+    <Project Path="Tests/DotnetManager.UnitTests/DotnetManager.UnitTests.csproj"/>
+    <Project Path="Tests/DotnetManager.IntegrationTests/DotnetManager.IntegrationTests.csproj"/>
 </Solution>
