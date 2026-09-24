@@ -7,7 +7,7 @@ namespace DotnetManager.SdkManagement.Services.Downloads;
 public class DotnetDownloader(HttpClient client) : IDotnetDownloader
 {
     public async Task<DotnetDownload> DownloadAsync(DotnetDownloadSource downloadSource,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken)
     {
         var filePath = Path.Combine(Path.GetTempPath(), downloadSource.FileName);
 
@@ -24,12 +24,13 @@ public class DotnetDownloader(HttpClient client) : IDotnetDownloader
 
         var hash = Convert.ToHexString(hashBytes);
 
-        if (!string.Equals(hash, downloadSource.Hash, StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(hash, downloadSource.Hash, StringComparison.OrdinalIgnoreCase))
         {
-            File.Delete(filePath);
-            throw new InvalidDataException($"Hash mismatch for {downloadSource.FileName}.");
+            return new DotnetDownload(filePath);
         }
 
-        return new DotnetDownload(filePath);
+        File.Delete(filePath);
+        throw new InvalidDataException($"Hash mismatch for {downloadSource.FileName}.");
+
     }
 }
