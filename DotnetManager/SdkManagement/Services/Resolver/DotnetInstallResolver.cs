@@ -61,9 +61,10 @@ public class DotnetInstallResolver : IDotnetInstallResolver
         return component switch
         {
             InstallComponent.Sdk => ResolveLatestSdkFile(release, rid),
-            InstallComponent.Runtime => ResolveArtifact(release.Runtime, rid, "runtime"),
+            InstallComponent.Runtime => ResolveArtifact(
+                release.Runtime, rid, "runtime", "dotnet-runtime"),
             InstallComponent.AspNetRuntime => ResolveArtifact(
-                release.AspNetCoreRuntime, rid, "ASP.NET Core runtime"),
+                release.AspNetCoreRuntime, rid, "ASP.NET Core runtime", "aspnetcore-runtime"),
             _ => throw new ArgumentOutOfRangeException(nameof(component), component,
                 "Unsupported install component.")
         };
@@ -78,7 +79,7 @@ public class DotnetInstallResolver : IDotnetInstallResolver
             throw new InvalidOperationException(
                 $"Release {release.ReleaseVersion} contains no SDKs.");
 
-        return ResolveArtifact(sdk, rid, "SDK");
+        return ResolveArtifact(sdk, rid, "SDK", "dotnet-sdk");
     }
 
     private static ReleaseFile ResolveArtifact(DotnetVersion version, string rid, string componentName)
