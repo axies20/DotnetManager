@@ -1,3 +1,4 @@
+using DotnetManager.Exception.Installation;
 using DotnetManager.SdkManagement.Abstractions.Installation;
 using DotnetManager.SdkManagement.Abstractions.InstallPaths;
 using DotnetManager.SdkManagement.Abstractions.UserEnvironment;
@@ -22,9 +23,7 @@ public class DotnetInstallationFinalizer : IDotnetInstallationFinalizer
         var executable = Path.Combine(installRoot, "dotnet");
 
         if (!File.Exists(executable))
-        {
-            throw new InvalidDataException("The extracted .NET archive does not contain the dotnet executable.");
-        }
+            throw new InstalledDotnetExecutableNotFoundException(installRoot);
 
         var linkPath = _pathProvider.GetExecutableLinkPath();
 

@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using DotnetManager.Exception.Installation;
 using DotnetManager.ReleaseMetadata.Abstractions;
 using DotnetManager.ReleaseMetadata.Models.Index;
 using DotnetManager.ReleaseMetadata.Models.Releases;
@@ -76,8 +77,7 @@ public class DotnetInstallResolver : IDotnetInstallResolver
             VersionComparer.VersionRelease);
 
         if (sdk is null)
-            throw new InvalidOperationException(
-                $"Release {release.ReleaseVersion} contains no SDKs.");
+            throw new InstallSdkNotFoundException(release.ReleaseVersion);
 
         return ResolveArtifact(sdk, rid, "SDK", "dotnet-sdk");
     }
@@ -94,6 +94,8 @@ public class DotnetInstallResolver : IDotnetInstallResolver
         return version.Artifacts.FirstOrDefault(x =>
                    x.Rid == rid &&
                    (x.FileName.Equals(tarGzName, StringComparison.OrdinalIgnoreCase) ||
+                    x.FileName.Equals(zipName, StringComparison.OrdinalIgnoreCase))) ??
+               throw new InstallArtifactNotFoundException(componentName, version.Version, rid);
     }
 
     private Task<IReadOnlyCollection<DotnetDownloadSource>> CreateVersionAsync(
@@ -111,14 +113,13 @@ public class DotnetInstallResolver : IDotnetInstallResolver
             x.ChannelVersion.Minor == channelVersion.Minor);
 
         if (channel is null)
-        {
-            throw new InvalidOperationException($".NET channel {version.Major}.{version.Minor} was not found.");
-        }
+            throw new InstallChannelNotFoundException(channelVersion);
 
 
         return CreateDownloadsAsync(channel.ReleasesUri, options,
             releases =>
-                releases.FirstOrDefault(x => x.ReleaseVersion == version),
+                releases.FirstOrDefault(x => x.ReleaseVersion == version) ??
+                throw new InstallReleaseNotFoundException(version),
             cancellationToken);
     }
 
@@ -140,8 +141,9 @@ public class DotnetInstallResolver : IDotnetInstallResolver
             VersionComparer.VersionRelease);
 
         if (latestChannel is null)
-            throw new InvalidOperationException(
-                "No matching .NET channel was found.");
+            throw new InstallChannelNotFoundException(
+                latestSelector.ReleaseType,
+                latestSelector.SupportPhase);
 
         return CreateDownloadsAsync(latestChannel.ReleasesUri, options,
             releases =>
@@ -149,7 +151,10 @@ public class DotnetInstallResolver : IDotnetInstallResolver
                 if (latestSelector.SecurityOnly)
                     releases = releases.Where(x => x.Security);
 
-                return releases.MaxBy(x => x.ReleaseVersion, VersionComparer.VersionRelease);
+                return releases.MaxBy(x => x.ReleaseVersion, VersionComparer.VersionRelease) ??
+                       throw new InstallReleaseNotFoundException(
+                           latestChannel.ChannelVersion,
+                           latestSelector.SecurityOnly);
             },
             cancellationToken);
     }

@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using DotnetManager.Exception.Installation;
 using DotnetManager.SdkManagement.Abstractions.Downloads;
 using DotnetManager.SdkManagement.Models.Downloads;
 
@@ -30,7 +31,7 @@ public class DotnetDownloader(HttpClient client) : IDotnetDownloader
         }
 
         File.Delete(filePath);
-        throw new InvalidDataException($"Hash mismatch for {downloadSource.FileName}.");
+        throw new DownloadHashMismatchException(downloadSource.FileName, downloadSource.Hash, hash);
 
     }
 }
