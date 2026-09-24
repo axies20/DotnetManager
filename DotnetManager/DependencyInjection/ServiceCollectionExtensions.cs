@@ -61,8 +61,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IArchiveExtractor, ArchiveExtractor>();
         services.AddSingleton<IDotnetInstallPathProvider, UnixDotnetInstallPathProvider>();
         services.AddSingleton<IUserEnvironmentConfigurator, UnixUserEnvironmentConfigurator>();
-        services.AddSingleton<IDotnetInstaller, DotnetInstaller>();
-        services.AddTransient<DotnetInstallPlanner>();
+        services.AddSingleton<IDotnetInstallationFinalizer, DotnetInstallationFinalizer>();
         services.AddTransient<IDotnetInstallResolver, DotnetInstallResolver>();
     }
 
