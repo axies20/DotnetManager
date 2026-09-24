@@ -158,13 +158,12 @@ public class DotnetInstallResolver : IDotnetInstallResolver
     private async Task<IReadOnlyCollection<DotnetDownloadSource>> CreateDownloadsAsync(
         Uri releaseUri,
         InstallOptions options,
-        Func<IEnumerable<SdkRelease>, SdkRelease?> selectRelease,
+        Func<IEnumerable<SdkRelease>, SdkRelease> selectRelease,
         CancellationToken cancellationToken)
     {
         var manifest = await _provider.GetReleasesAsync(releaseUri, cancellationToken);
 
-        var release = selectRelease(manifest.Releases) ??
-                      throw new InvalidOperationException("No matching .NET release was found.");
+        var release = selectRelease(manifest.Releases);
 
         return CreateDownloadSources(release, options);
     }
