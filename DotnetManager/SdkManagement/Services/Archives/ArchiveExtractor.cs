@@ -6,9 +6,7 @@ namespace DotnetManager.SdkManagement.Services.Archives;
 
 public class ArchiveExtractor : IArchiveExtractor
 {
-    public async Task ExtractAsync(string archivePath,
-        string destinationPath,
-        CancellationToken cancellationToken = default)
+    public async Task ExtractAsync(string archivePath, string destinationPath, CancellationToken cancellationToken)
     {
         Directory.CreateDirectory(destinationPath);
 
@@ -21,8 +19,8 @@ public class ArchiveExtractor : IArchiveExtractor
 
         if (archivePath.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
         {
-            await ZipFile.ExtractToDirectoryAsync(archivePath,
-                destinationPath, true, cancellationToken);
+            await ZipFile.ExtractToDirectoryAsync(archivePath, destinationPath,
+                true, cancellationToken);
             return;
         }
 
@@ -37,10 +35,7 @@ public class ArchiveExtractor : IArchiveExtractor
         await using var fileStream = File.OpenRead(archivePath);
         await using var gzipStream = new GZipStream(fileStream, CompressionMode.Decompress);
 
-        await TarFile.ExtractToDirectoryAsync(
-            gzipStream,
-            destinationPath,
-            true,
-            cancellationToken);
+        await TarFile.ExtractToDirectoryAsync(gzipStream, destinationPath,
+            true, cancellationToken);
     }
 }

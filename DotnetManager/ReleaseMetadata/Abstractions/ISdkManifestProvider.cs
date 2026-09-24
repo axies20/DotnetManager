@@ -5,7 +5,7 @@ namespace DotnetManager.ReleaseMetadata.Abstractions;
 
 public interface ISdkManifestProvider
 {
-    Task<SdkReleaseIndex> GetReleaseIndexAsync(CancellationToken cancellationToken = default);
+    Task<SdkReleaseIndex> GetReleaseIndexAsync(CancellationToken cancellationToken);
 
-    Task<SdkReleaseManifest> GetReleasesAsync(Uri manifestUri, CancellationToken cancellationToken = default);
+    Task<SdkReleaseManifest> GetReleasesAsync(Uri manifestUri, CancellationToken cancellationToken);
 }

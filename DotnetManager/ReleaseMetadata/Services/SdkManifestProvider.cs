@@ -20,7 +20,7 @@ public class SdkManifestProvider : ISdkManifestProvider
         _httpClient = httpClient;
     }
 
-    public async Task<SdkReleaseIndex> GetReleaseIndexAsync(CancellationToken cancellationToken = default)
+    public async Task<SdkReleaseIndex> GetReleaseIndexAsync(CancellationToken cancellationToken)
     {
         using var response = await _httpClient.GetAsync(_options.ReleaseIndexUrl, cancellationToken);
 
@@ -35,8 +35,7 @@ public class SdkManifestProvider : ISdkManifestProvider
         return SdkReleaseIndexMapper.Map(result);
     }
 
-    public async Task<SdkReleaseManifest> GetReleasesAsync(Uri manifestUri,
-        CancellationToken cancellationToken = default)
+    public async Task<SdkReleaseManifest> GetReleasesAsync(Uri manifestUri, CancellationToken cancellationToken)
     {
         using var response = await _httpClient.GetAsync(manifestUri, cancellationToken);
         response.EnsureSuccessStatusCode();

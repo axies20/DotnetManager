@@ -16,14 +16,15 @@ public class DotnetInstallationFinalizer : IDotnetInstallationFinalizer
         _userEnvironmentConfigurator = userEnvironmentConfigurator;
     }
 
-    public async Task FinalizeAsync(CancellationToken cancellationToken = default)
+    public async Task FinalizeAsync(CancellationToken cancellationToken)
     {
         var installRoot = _pathProvider.GetInstallDirectory();
         var executable = Path.Combine(installRoot, "dotnet");
 
         if (!File.Exists(executable))
-            throw new InvalidDataException(
-                "The extracted .NET archive does not contain the dotnet executable.");
+        {
+            throw new InvalidDataException("The extracted .NET archive does not contain the dotnet executable.");
+        }
 
         var linkPath = _pathProvider.GetExecutableLinkPath();
 

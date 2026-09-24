@@ -16,14 +16,13 @@ public class SdkReleaseService : ISdkReleaseService
         _manifestProvider = manifestProvider;
     }
 
-    public async Task<IReadOnlyCollection<SdkChannel>> GetChannelsAsync(
-        CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyCollection<SdkChannel>> GetChannelsAsync(CancellationToken cancellationToken)
     {
         return (await _manifestProvider.GetReleaseIndexAsync(cancellationToken)).Releases;
     }
 
     public async Task<SdkReleaseManifest> GetReleasesAsync(NuGetVersion channelVersion,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken)
     {
         var index = await _manifestProvider.GetReleaseIndexAsync(cancellationToken);
 

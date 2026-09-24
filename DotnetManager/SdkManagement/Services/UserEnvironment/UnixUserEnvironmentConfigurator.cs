@@ -4,7 +4,7 @@ namespace DotnetManager.SdkManagement.Services.UserEnvironment;
 
 public class UnixUserEnvironmentConfigurator : IUserEnvironmentConfigurator
 {
-    public async Task ConfigureAsync(string dotnetRoot, CancellationToken cancellationToken = default)
+    public async Task ConfigureAsync(string dotnetRoot, CancellationToken cancellationToken)
     {
         var shells = GetInstalledShells().ToHashSet();
         var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);

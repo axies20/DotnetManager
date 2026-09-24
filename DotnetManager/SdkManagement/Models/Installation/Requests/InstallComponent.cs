@@ -4,5 +4,5 @@ public enum InstallComponent
 {
     Sdk,
     Runtime,
-    AspNetRuntime,
+    AspNetRuntime
 }
