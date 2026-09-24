@@ -82,11 +82,18 @@ public class DotnetInstallResolver : IDotnetInstallResolver
         return ResolveArtifact(sdk, rid, "SDK", "dotnet-sdk");
     }
 
-    private static ReleaseFile ResolveArtifact(DotnetVersion version, string rid, string componentName)
+    private static ReleaseFile ResolveArtifact(
+        DotnetVersion version,
+        string rid,
+        string componentName,
+        string archiveName)
     {
-        return version.Artifacts.FirstOrDefault(x => x.Rid == rid) ??
-               throw new PlatformNotSupportedException(
-                   $"{componentName} {version.Version} is not available for RID '{rid}'.");
+        var tarGzName = $"{archiveName}-{rid}.tar.gz";
+        var zipName = $"{archiveName}-{rid}.zip";
+
+        return version.Artifacts.FirstOrDefault(x =>
+                   x.Rid == rid &&
+                   (x.FileName.Equals(tarGzName, StringComparison.OrdinalIgnoreCase) ||
     }
 
     private Task<IReadOnlyCollection<DotnetDownloadSource>> CreateVersionAsync(
