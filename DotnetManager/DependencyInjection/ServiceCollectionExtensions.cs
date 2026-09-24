@@ -63,6 +63,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IUserEnvironmentConfigurator, UnixUserEnvironmentConfigurator>();
         services.AddSingleton<IDotnetInstallationFinalizer, DotnetInstallationFinalizer>();
         services.AddTransient<IDotnetInstallResolver, DotnetInstallResolver>();
+        services.AddTransient<IDotnetInstallOrchestrator, DotnetInstallOrchestrator>();
     }
 
     private static void AddInstalledDotnet(IServiceCollection services)
