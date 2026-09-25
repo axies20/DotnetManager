@@ -45,10 +45,7 @@ public class DotnetRemovalService : IDotnetRemovalService
 
     private IReadOnlyCollection<string> GetComponentPaths(string dotnetVersion, DotnetComponent component)
     {
-        if (!VersionRange.TryParse(dotnetVersion, out var version))
-        {
-            throw new ArgumentException("Invalid dotnet version");
-        }
+        var version = ParseVersionRange(dotnetVersion);
 
         return component switch
         {
@@ -78,5 +75,23 @@ public class DotnetRemovalService : IDotnetRemovalService
         };
     }
 
+    private static VersionRange ParseVersionRange(string value)
+    {
+        if (!NuGetVersion.TryParse(value, out var version))
+            throw new ArgumentException($"Invalid .NET version: {value}");
+
+        var components = value.Split('-', 2)[0].Split('.').Length;
+
+        return components switch
+        {
+            1 => new VersionRange(new NuGetVersion(version.Major, 0, 0), true,
+                new NuGetVersion(version.Major + 1, 0, 0)),
+
+            2 => new VersionRange(new NuGetVersion(version.Major, version.Minor, 0), true,
+                new NuGetVersion(version.Major, version.Minor + 1, 0)),
+
+            _ => new VersionRange(version, true, version, true)
+        };
+    }
 
 }
