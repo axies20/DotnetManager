@@ -12,12 +12,12 @@ Linux and macOS on x64 and ARM64 are supported. The installer does not need `sud
 curl -fsSL https://raw.githubusercontent.com/axies20/DotnetManager/master/install.sh | sh
 ```
 
-The utility is stored in `~/.dotnet-manager`, with a command symlink at `~/.local/bin/dotnet-manager`. If `~/.local/bin` is not already in `PATH`, the installer adds a clearly marked block to the active Bash, Zsh, or Fish configuration file. Restart the shell after the first installation if the command is not found immediately.
+The utility is stored in `~/.dotnet-manager`, with a command symlink at `~/.local/bin/dnm`. If `~/.local/bin` is not already in `PATH`, the installer adds a clearly marked block to the active Bash, Zsh, or Fish configuration file. Restart the shell after the first installation if the command is not found immediately.
 
 Check the installation:
 
 ```sh
-dotnet-manager --help
+dnm --help
 ```
 
 ## What it can do
@@ -36,13 +36,13 @@ dotnet-manager --help
 Show all available .NET channels:
 
 ```sh
-dotnet-manager available
+dnm available
 ```
 
 Show releases in one channel:
 
 ```sh
-dotnet-manager available 10.0
+dnm available 10.0
 ```
 
 ### List installed .NET components
@@ -50,15 +50,15 @@ dotnet-manager available 10.0
 Show every discovered SDK, runtime, and host:
 
 ```sh
-dotnet-manager list
+dnm list
 ```
 
 Limit the output to one or more component types:
 
 ```sh
-dotnet-manager list --sdk
-dotnet-manager list --runtime
-dotnet-manager list --host
+dnm list --sdk
+dnm list --runtime
+dnm list --host
 ```
 
 ### Install an exact release
@@ -66,15 +66,15 @@ dotnet-manager list --host
 With no component option, DotnetManager installs the SDK associated with the selected .NET release:
 
 ```sh
-dotnet-manager install 10.0.12
+dnm install 10.0.12
 ```
 
 Install runtimes instead:
 
 ```sh
-dotnet-manager install 10.0.12 --runtime
-dotnet-manager install 10.0.12 --aspnet
-dotnet-manager install 10.0.12 --runtime --aspnet
+dnm install 10.0.12 --runtime
+dnm install 10.0.12 --aspnet
+dnm install 10.0.12 --runtime --aspnet
 ```
 
 An exact version refers to the .NET **release version**, not directly to an SDK version. For example, a release such as `10.0.12` may contain an SDK such as `10.0.401`.
@@ -84,30 +84,30 @@ An exact version refers to the .NET **release version**, not directly to an SDK 
 By default, `latest` selects a security release and installs its SDK:
 
 ```sh
-dotnet-manager install latest
+dnm install latest
 ```
 
 Filter by release type or support phase:
 
 ```sh
-dotnet-manager install latest --release-type Lts
-dotnet-manager install latest --release-type Sts
-dotnet-manager install latest --support-phase Active
+dnm install latest --release-type Lts
+dnm install latest --release-type Sts
+dnm install latest --support-phase Active
 ```
 
 Allow non-security releases when no security-only selection is required:
 
 ```sh
-dotnet-manager install latest --include-non-security
+dnm install latest --include-non-security
 ```
 
 All installation forms accept an explicit RID:
 
 ```sh
-dotnet-manager install latest --rid linux-arm64
+dnm install latest --rid linux-arm64
 ```
 
-Use `dotnet-manager install latest --help` to see the values accepted by the current version.
+Use `dnm install latest --help` to see the values accepted by the current version.
 
 ## How installation works
 
@@ -140,7 +140,7 @@ Running DotnetManager without root privileges is recommended. For a user install
 curl -fsSL https://raw.githubusercontent.com/axies20/DotnetManager/master/uninstall.sh | sh
 ```
 
-The uninstall script removes only the managed `~/.dotnet-manager` directory, its `~/.local/bin/dotnet-manager` symlink, and the marked PATH block created by the bootstrap installer. It does **not** remove SDKs or runtimes installed by DotnetManager.
+The uninstall script removes only the managed `~/.dotnet-manager` directory, its `~/.local/bin/dnm` symlink, and the marked PATH block created by the bootstrap installer. It does **not** remove SDKs or runtimes installed by DotnetManager.
 
 ## Install a specific DotnetManager release
 
