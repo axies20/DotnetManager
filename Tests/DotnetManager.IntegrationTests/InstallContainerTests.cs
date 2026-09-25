@@ -38,9 +38,7 @@ public class InstallContainerTests
     {
         var directory = new DirectoryInfo(AppContext.BaseDirectory);
 
-        while (directory is not null &&
-               !File.Exists(Path.Combine(directory.FullName,
-                   "DotnetManager.slnx")))
+        while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "DotnetManager.slnx")))
         {
             directory = directory.Parent;
         }
