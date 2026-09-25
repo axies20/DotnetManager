@@ -1,4 +1,6 @@
+using DotnetManager.Installation.Abstractions.InstallPaths;
 using DotnetManager.Installation.Abstractions.Removal;
+using DotnetManager.Installation.Abstractions.UserEnvironment;
 using DotnetManager.Installation.Models;
 using DotnetManager.InstalledDotnet.Abstractions;
 using DotnetManager.InstalledDotnet.Models;
@@ -11,24 +13,39 @@ public class DotnetRemovalService : IDotnetRemovalService
     private readonly IDotnetInstallationLocatorService<HostInstallation> _hostLocator;
     private readonly IDotnetInstallationLocatorService<RuntimeInstallation> _runtimeLocator;
     private readonly IDotnetInstallationLocatorService<SdkInstallation> _sdkLocator;
+    private readonly IDotnetInstallPathProviderService _pathProvider;
+    private readonly IUserEnvironmentConfiguratorService _userEnvironmentConfigurator;
 
 
     public DotnetRemovalService(IDotnetInstallationLocatorService<HostInstallation> hostLocator,
         IDotnetInstallationLocatorService<RuntimeInstallation> runtimeLocator,
-        IDotnetInstallationLocatorService<SdkInstallation> sdkLocator)
+        IDotnetInstallationLocatorService<SdkInstallation> sdkLocator,
+        IDotnetInstallPathProviderService pathProvider,
+        IUserEnvironmentConfiguratorService userEnvironmentConfigurator)
     {
         _hostLocator = hostLocator;
         _runtimeLocator = runtimeLocator;
         _sdkLocator = sdkLocator;
+        _pathProvider = pathProvider;
+        _userEnvironmentConfigurator = userEnvironmentConfigurator;
     }
 
 
-    public void RemoveAsync(string dotnetVersion)
+    public async Task RemoveAsync(string dotnetVersion, bool cleanupPath, CancellationToken cancellationToken)
     {
         foreach (var component in Enum.GetValues<DotnetComponent>())
-        {
-            RemoveAsync(dotnetVersion, component);
-        }
+            Remove(dotnetVersion, component);
+
+
+    public async Task RemoveAsync(string dotnetVersion,
+        DotnetComponent component,
+        bool cleanupPath,
+        CancellationToken cancellationToken)
+    {
+        Remove(dotnetVersion, component);
+
+        if (cleanupPath)
+            await CleanupPathAsync(cancellationToken);
     }
 
 
