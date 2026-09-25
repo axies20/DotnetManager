@@ -1,5 +1,3 @@
-using DotnetManager.SdkManagement.Models;
-
 namespace DotnetManager.SdkManagement.Models.Installation.Requests;
 
 public sealed record InstallOptions

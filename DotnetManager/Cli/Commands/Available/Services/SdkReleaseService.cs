@@ -33,7 +33,6 @@ public class SdkReleaseService : ISdkReleaseService
             throw new SdkChannelNotFoundException(channelVersion);
         }
 
-        return await _manifestProvider.GetReleasesAsync(channel.ReleasesUri,
-            cancellationToken);
+        return await _manifestProvider.GetReleasesAsync(channel.ReleasesUri, cancellationToken);
     }
 }
