@@ -4,8 +4,6 @@ using DotnetManager.Cli.Commands;
 using DotnetManager.Cli.Commands.Available;
 using DotnetManager.Cli.Commands.Available.Abstraction;
 using DotnetManager.Cli.Commands.Available.Services;
-using DotnetManager.Cli.Commands.Install;
-using DotnetManager.Cli.Commands.List;
 using DotnetManager.Configuration;
 using DotnetManager.InstalledDotnet.Abstractions;
 using DotnetManager.InstalledDotnet.Models;
@@ -17,12 +15,14 @@ using DotnetManager.SdkManagement.Abstractions.Archives;
 using DotnetManager.SdkManagement.Abstractions.Downloads;
 using DotnetManager.SdkManagement.Abstractions.Installation;
 using DotnetManager.SdkManagement.Abstractions.InstallPaths;
+using DotnetManager.SdkManagement.Abstractions.Removal;
 using DotnetManager.SdkManagement.Abstractions.Resolver;
 using DotnetManager.SdkManagement.Abstractions.UserEnvironment;
 using DotnetManager.SdkManagement.InstallPaths;
 using DotnetManager.SdkManagement.Services.Archives;
 using DotnetManager.SdkManagement.Services.Downloads;
 using DotnetManager.SdkManagement.Services.Installation;
+using DotnetManager.SdkManagement.Services.Removal;
 using DotnetManager.SdkManagement.Services.Resolver;
 using DotnetManager.SdkManagement.Services.UserEnvironment;
 using Microsoft.Extensions.DependencyInjection;
@@ -64,6 +64,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IDotnetInstallationFinalizerService, DotnetInstallationFinalizer>();
         services.AddTransient<IDotnetInstallResolverService, DotnetInstallResolver>();
         services.AddTransient<IDotnetInstallOrchestratorService, DotnetInstallOrchestrator>();
+        services.AddTransient<IDotnetRemovalService, DotnetRemovalService>();
     }
 
     private static void AddInstalledDotnet(IServiceCollection services)

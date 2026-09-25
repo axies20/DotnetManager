@@ -1,5 +1,4 @@
 using DotnetManager.SdkManagement.Models;
-using NuGet.Versioning;
 
 namespace DotnetManager.SdkManagement.Abstractions.Removal;
 
