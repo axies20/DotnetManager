@@ -36,6 +36,10 @@ public class DotnetRemovalService : IDotnetRemovalService
         foreach (var component in Enum.GetValues<DotnetComponent>())
             Remove(dotnetVersion, component);
 
+        if (cleanupPath)
+            await CleanupPathAsync(cancellationToken);
+    }
+
 
     public async Task RemoveAsync(string dotnetVersion,
         DotnetComponent component,
@@ -48,15 +52,85 @@ public class DotnetRemovalService : IDotnetRemovalService
             await CleanupPathAsync(cancellationToken);
     }
 
-
-    public void RemoveAsync(string dotnetVersion, DotnetComponent component)
+    private void Remove(string dotnetVersion, DotnetComponent component)
     {
         var paths = GetComponentPaths(dotnetVersion, component);
 
         foreach (var path in paths)
-        {
             Directory.Delete(path, true);
+    }
+
+    private async Task CleanupPathAsync(CancellationToken cancellationToken)
+    {
+        var installRoot = Path.GetFullPath(_pathProvider.GetInstallDirectory());
+
+        if (HasInstallationsInRoot(installRoot))
+            return;
+
+        var linkPath = _pathProvider.GetExecutableLinkPath();
+
+        if (linkPath is not null)
+        {
+            RemoveManagedExecutableLink(linkPath, Path.Combine(installRoot, "dotnet"));
+            return;
         }
+
+        await _userEnvironmentConfigurator.RemoveConfigurationAsync(installRoot, cancellationToken);
+    }
+
+    private bool HasInstallationsInRoot(string installRoot)
+    {
+        if (_sdkLocator.Find().Any(x => IsPathInRoot(x.Path, installRoot)))
+            return true;
+
+        if (_runtimeLocator.Find().Any(x => IsPathInRoot(x.Path, installRoot)))
+            return true;
+
+        return _hostLocator.Find().Any(x => IsPathInRoot(x.Path, installRoot));
+    }
+
+    private static bool IsPathInRoot(string path, string installRoot)
+    {
+        var relativePath = Path.GetRelativePath(installRoot, Path.GetFullPath(path));
+
+        if (relativePath == "..")
+            return false;
+
+        if (relativePath.StartsWith($"..{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
+            return false;
+
+        return !Path.IsPathRooted(relativePath);
+    }
+
+    private static void RemoveManagedExecutableLink(string linkPath, string expectedTargetPath)
+    {
+        var link = new FileInfo(linkPath);
+
+        if (link.LinkTarget is null)
+            return;
+
+        var linkDirectory = link.DirectoryName;
+
+        if (linkDirectory == null)
+        {
+            throw new InvalidOperationException(
+                $"Unable to determine the directory containing symbolic link '{linkPath}'.");
+        }
+
+        string targetPath;
+        if (Path.IsPathRooted(link.LinkTarget))
+            targetPath = Path.GetFullPath(link.LinkTarget);
+        else
+            targetPath = Path.GetFullPath(link.LinkTarget, linkDirectory);
+
+        StringComparison comparison;
+        if (OperatingSystem.IsWindows())
+            comparison = StringComparison.OrdinalIgnoreCase;
+        else
+            comparison = StringComparison.Ordinal;
+
+        if (string.Equals(targetPath, Path.GetFullPath(expectedTargetPath), comparison))
+            File.Delete(linkPath);
     }
 
 
