@@ -3,6 +3,7 @@ using DotnetManager.SdkManagement.Abstractions.Downloads;
 using DotnetManager.SdkManagement.Abstractions.Installation;
 using DotnetManager.SdkManagement.Abstractions.InstallPaths;
 using DotnetManager.SdkManagement.Abstractions.Resolver;
+using DotnetManager.SdkManagement.Models;
 using DotnetManager.SdkManagement.Models.Downloads;
 using DotnetManager.SdkManagement.Models.Installation.Requests;
 using DotnetManager.SdkManagement.Models.Installation.Targets;
@@ -47,7 +48,7 @@ public class DotnetInstallOrchestratorTests
             Target = new VersionSelector(NuGetVersion.Parse("10.0.1")),
             Options = new InstallOptions
             {
-                Components = [InstallComponent.Sdk]
+                Components = [DotnetComponent.Sdk]
             }
         };
     }

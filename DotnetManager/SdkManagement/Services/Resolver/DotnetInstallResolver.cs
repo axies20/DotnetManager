@@ -4,6 +4,7 @@ using DotnetManager.ReleaseMetadata.Abstractions;
 using DotnetManager.ReleaseMetadata.Models.Index;
 using DotnetManager.ReleaseMetadata.Models.Releases;
 using DotnetManager.SdkManagement.Abstractions.Resolver;
+using DotnetManager.SdkManagement.Models;
 using DotnetManager.SdkManagement.Models.Downloads;
 using DotnetManager.SdkManagement.Models.Installation.Requests;
 using DotnetManager.SdkManagement.Models.Installation.Targets;
@@ -57,14 +58,14 @@ public class DotnetInstallResolver : IDotnetInstallResolverService
     }
 
 
-    private static ReleaseFile ResolveFile(SdkRelease release, InstallComponent component, string rid)
+    private static ReleaseFile ResolveFile(SdkRelease release, DotnetComponent component, string rid)
     {
         return component switch
         {
-            InstallComponent.Sdk => ResolveLatestSdkFile(release, rid),
-            InstallComponent.Runtime => ResolveArtifact(
+            DotnetComponent.Sdk => ResolveLatestSdkFile(release, rid),
+            DotnetComponent.Runtime => ResolveArtifact(
                 release.Runtime, rid, "runtime", "dotnet-runtime"),
-            InstallComponent.AspNetRuntime => ResolveArtifact(
+            DotnetComponent.AspNetRuntime => ResolveArtifact(
                 release.AspNetCoreRuntime, rid, "ASP.NET Core runtime", "aspnetcore-runtime"),
             _ => throw new ArgumentOutOfRangeException(nameof(component), component,
                 "Unsupported install component.")

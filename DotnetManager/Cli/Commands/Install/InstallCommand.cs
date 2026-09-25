@@ -3,6 +3,7 @@ using DotnetManager.Cli.Abstractions;
 using DotnetManager.Exception.Installation;
 using DotnetManager.ReleaseMetadata.Models;
 using DotnetManager.SdkManagement.Abstractions.Installation;
+using DotnetManager.SdkManagement.Models;
 using DotnetManager.SdkManagement.Models.Installation.Requests;
 using DotnetManager.SdkManagement.Models.Installation.Targets;
 using NuGet.Versioning;
@@ -181,18 +182,18 @@ public class InstallCommand : ICommand
         }
     }
 
-    private IReadOnlyCollection<InstallComponent> GetInstallComponents(ParseResult result)
+    private IReadOnlyCollection<DotnetComponent> GetInstallComponents(ParseResult result)
     {
-        List<InstallComponent> components = [];
+        List<DotnetComponent> components = [];
 
         if (result.GetValue(_runtime))
-            components.Add(InstallComponent.Runtime);
+            components.Add(DotnetComponent.Runtime);
 
         if (result.GetValue(_aspnet))
-            components.Add(InstallComponent.AspNetRuntime);
+            components.Add(DotnetComponent.AspNetRuntime);
 
         if (components.Count == 0)
-            components.Add(InstallComponent.Sdk);
+            components.Add(DotnetComponent.Sdk);
 
         return components;
     }

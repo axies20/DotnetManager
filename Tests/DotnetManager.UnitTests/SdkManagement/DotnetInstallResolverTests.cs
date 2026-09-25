@@ -3,6 +3,7 @@ using DotnetManager.ReleaseMetadata.Abstractions;
 using DotnetManager.ReleaseMetadata.Models;
 using DotnetManager.ReleaseMetadata.Models.Index;
 using DotnetManager.ReleaseMetadata.Models.Releases;
+using DotnetManager.SdkManagement.Models;
 using DotnetManager.SdkManagement.Models.Installation.Requests;
 using DotnetManager.SdkManagement.Models.Installation.Targets;
 using DotnetManager.SdkManagement.Services.Resolver;
@@ -21,7 +22,7 @@ public class DotnetInstallResolverTests
 
         var sources = await resolver.ResolveAsync(CreateRequest(
             new VersionSelector(NuGetVersion.Parse("10.0.2")),
-            [InstallComponent.Sdk], "linux-x64"), CancellationToken.None);
+            [DotnetComponent.Sdk], "linux-x64"), CancellationToken.None);
 
         var source = Assert.Single(sources);
         Assert.Equal("dotnet-sdk-linux-x64.tar.gz", source.FileName);
@@ -46,7 +47,7 @@ public class DotnetInstallResolverTests
 
         var sources = await resolver.ResolveAsync(CreateRequest(
             new LatestSelector(ReleaseTypes.Lts, SupportPhases.Active, true),
-            [InstallComponent.Runtime], "linux-x64"), CancellationToken.None);
+            [DotnetComponent.Runtime], "linux-x64"), CancellationToken.None);
 
         Assert.Contains("10.0.1", Assert.Single(sources).Uri.AbsoluteUri);
     }
@@ -60,7 +61,7 @@ public class DotnetInstallResolverTests
 
         var sources = await resolver.ResolveAsync(CreateRequest(
                 new VersionSelector(NuGetVersion.Parse("10.0.2")),
-                [InstallComponent.Runtime, InstallComponent.AspNetRuntime], "linux-x64"),
+                [DotnetComponent.Runtime, DotnetComponent.AspNetRuntime], "linux-x64"),
             CancellationToken.None);
 
         Assert.Equal(2, sources.Count);
@@ -77,7 +78,7 @@ public class DotnetInstallResolverTests
 
         var sources = await resolver.ResolveAsync(CreateRequest(
             new VersionSelector(NuGetVersion.Parse("10.0.2")),
-            [InstallComponent.Sdk], "linux-x64"), CancellationToken.None);
+            [DotnetComponent.Sdk], "linux-x64"), CancellationToken.None);
 
         Assert.Single(sources);
     }
@@ -91,7 +92,7 @@ public class DotnetInstallResolverTests
 
         await Assert.ThrowsAsync<InstallArtifactNotFoundException>(() => resolver.ResolveAsync(
             CreateRequest(new VersionSelector(NuGetVersion.Parse("10.0.2")),
-                [InstallComponent.Sdk], "freebsd-x64"), CancellationToken.None));
+                [DotnetComponent.Sdk], "freebsd-x64"), CancellationToken.None));
     }
 
     [Fact]
@@ -103,7 +104,7 @@ public class DotnetInstallResolverTests
 
         await Assert.ThrowsAsync<InstallReleaseNotFoundException>(() => resolver.ResolveAsync(
             CreateRequest(new LatestSelector(null, null, true),
-                [InstallComponent.Sdk], "linux-x64"), CancellationToken.None));
+                [DotnetComponent.Sdk], "linux-x64"), CancellationToken.None));
     }
 
     private static DotnetInstallResolver CreateResolver(SdkChannel channel, params SdkRelease[] releases)
@@ -117,7 +118,7 @@ public class DotnetInstallResolverTests
     }
 
     private static InstallRequest CreateRequest(InstallTarget target,
-        IReadOnlyCollection<InstallComponent> components,
+        IReadOnlyCollection<DotnetComponent> components,
         string rid)
     {
         return new InstallRequest
