@@ -175,11 +175,13 @@ public class DotnetRemovalService : IDotnetRemovalService
 
         return components switch
         {
-            1 => new VersionRange(new NuGetVersion(version.Major, 0, 0), true,
-                new NuGetVersion(version.Major + 1, 0, 0)),
+            1 => new VersionRange(
+                NuGetVersion.Parse($"{version.Major}.0.0-0"), true,
+                NuGetVersion.Parse($"{version.Major + 1}.0.0-0")),
 
-            2 => new VersionRange(new NuGetVersion(version.Major, version.Minor, 0), true,
-                new NuGetVersion(version.Major, version.Minor + 1, 0)),
+            2 => new VersionRange(
+                NuGetVersion.Parse($"{version.Major}.{version.Minor}.0-0"), true,
+                NuGetVersion.Parse($"{version.Major}.{version.Minor + 1}.0-0")),
 
             _ => new VersionRange(version, true, version, true)
         };

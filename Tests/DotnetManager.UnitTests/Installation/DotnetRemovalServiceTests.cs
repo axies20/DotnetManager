@@ -25,6 +25,20 @@ public class DotnetRemovalServiceTests
     }
 
     [Fact]
+    public async Task RemoveMajorDeletesPrereleaseVersion()
+    {
+        using var directory = new TestDirectory();
+        var sdk11Preview = directory.CreateDirectory("sdk", "11.0.100-rc.1");
+        var environment = new RemovalRecordingEnvironmentConfigurator();
+        var service = CreateService(directory.Path, environment,
+            new SdkInstallation(NuGetVersion.Parse("11.0.100-rc.1"), sdk11Preview));
+
+        await service.RemoveAsync("11", false, CancellationToken.None);
+
+        Assert.False(Directory.Exists(sdk11Preview));
+    }
+
+    [Fact]
     public async Task CleanupPathRemovesConfigurationAfterLastInstallation()
     {
         using var directory = new TestDirectory();
