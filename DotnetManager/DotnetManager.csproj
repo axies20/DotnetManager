@@ -3,6 +3,7 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <PublishAot>true</PublishAot>
+        <AssemblyName>dnm</AssemblyName>
         <InvariantGlobalization>true</InvariantGlobalization>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
