@@ -12,12 +12,12 @@ public sealed class ListCommand : ICommand
     private readonly IDotnetInstallationLocatorService<RuntimeInstallation> _runtimeLocator;
     private readonly IDotnetInstallationLocatorService<SdkInstallation> _sdkLocator;
 
-    private readonly Option<bool> _hostOption = new("--host")
+    private readonly Option<bool> _hostOption = new("--host", "-ht")
     {
         Description = "Show installed .NET hosts"
     };
 
-    private readonly Option<bool> _runtimeOption = new("--runtime")
+    private readonly Option<bool> _runtimeOption = new("--runtime", "-rt")
     {
         Description = "Show installed .NET runtimes"
     };

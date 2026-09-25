@@ -8,7 +8,7 @@ using DotnetManager.SdkManagement.Models.Installation.Requests;
 using DotnetManager.SdkManagement.Models.Installation.Targets;
 using NuGet.Versioning;
 
-namespace DotnetManager.Cli.Commands.Install;
+namespace DotnetManager.Cli.Commands;
 
 public class InstallCommand : ICommand
 {
@@ -17,28 +17,28 @@ public class InstallCommand : ICommand
     private readonly Command _latest = new("latest",
         "Install the latest version of the specified release type and support phase");
 
-    private readonly Option<ReleaseTypes?> _releaseType = new("--release-type")
+    private readonly Option<ReleaseTypes?> _releaseType = new("--release-type", "-rt")
     {
         Description = "Install the latest version of the specified release type"
     };
 
-    private readonly Option<SupportPhases?> _supportPhase = new("--support-phase")
+    private readonly Option<SupportPhases?> _supportPhase = new("--support-phase", "-sp")
     {
         Description = "Install the latest version of the specified support phase"
     };
 
-    private readonly Option<bool> _includeNonSecurity = new("--include-non-security")
+    private readonly Option<bool> _includeNonSecurity = new("--include-non-security", "-ins")
     {
         Description = "Allow installation of non-security releases"
     };
 
-    private readonly Option<bool> _runtime = new("--runtime")
+    private readonly Option<bool> _runtime = new("--runtime", "-rt")
     {
         Description = "Install the .NET runtime instead of the SDK",
         Recursive = true
     };
 
-    private readonly Option<bool> _aspnet = new("--aspnet")
+    private readonly Option<bool> _aspnet = new("--aspnet", "-asp")
     {
         Description = "Install the ASP.NET Core runtime instead of the SDK",
         Recursive = true
@@ -172,12 +172,12 @@ public class InstallCommand : ICommand
         }
         catch (DotnetInstallException exception)
         {
-            Console.Error.WriteLine(GetErrorMessage(exception));
+            await Console.Error.WriteLineAsync(GetErrorMessage(exception));
             return 1;
         }
         catch (HttpRequestException exception)
         {
-            Console.Error.WriteLine($"Unable to download .NET files: {exception.Message}");
+            await Console.Error.WriteLineAsync($"Unable to download .NET files: {exception.Message}");
             return 1;
         }
     }
