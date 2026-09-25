@@ -1,6 +1,5 @@
 using DotnetManager.Cli.Commands.Available.Services;
 using DotnetManager.Exception;
-using DotnetManager.ReleaseMetadata.Abstractions;
 using DotnetManager.ReleaseMetadata.Models;
 using DotnetManager.ReleaseMetadata.Models.Index;
 using DotnetManager.ReleaseMetadata.Models.Releases;
@@ -14,7 +13,7 @@ public class SdkReleaseServiceTests
     public async Task GetChannelsAsyncReturnsProviderChannels()
     {
         var channel = CreateChannel();
-        var service = new SdkReleaseService(new StubProvider(channel, CreateManifest()));
+        var service = new SdkReleaseService(new SdkReleaseStubProvider(channel, CreateManifest()));
 
         var channels = await service.GetChannelsAsync(CancellationToken.None);
 
@@ -26,7 +25,7 @@ public class SdkReleaseServiceTests
     {
         var channel = CreateChannel();
         var manifest = CreateManifest();
-        var provider = new StubProvider(channel, manifest);
+        var provider = new SdkReleaseStubProvider(channel, manifest);
         var service = new SdkReleaseService(provider);
 
         var result = await service.GetReleasesAsync(NuGetVersion.Parse("10.0"),
@@ -39,7 +38,7 @@ public class SdkReleaseServiceTests
     [Fact]
     public async Task GetReleasesAsyncRejectsUnknownChannel()
     {
-        var service = new SdkReleaseService(new StubProvider(CreateChannel(), CreateManifest()));
+        var service = new SdkReleaseService(new SdkReleaseStubProvider(CreateChannel(), CreateManifest()));
 
         await Assert.ThrowsAsync<SdkChannelNotFoundException>(() =>
             service.GetReleasesAsync(NuGetVersion.Parse("9.0"), CancellationToken.None));
@@ -73,21 +72,4 @@ public class SdkReleaseServiceTests
         };
     }
 
-    private sealed class StubProvider(SdkChannel channel, SdkReleaseManifest manifest)
-        : ISdkManifestProviderService
-    {
-        public Uri? RequestedManifestUri { get; private set; }
-
-        public Task<SdkReleaseIndex> GetReleaseIndexAsync(CancellationToken cancellationToken)
-        {
-            return Task.FromResult(new SdkReleaseIndex([channel]));
-        }
-
-        public Task<SdkReleaseManifest> GetReleasesAsync(Uri manifestUri,
-            CancellationToken cancellationToken)
-        {
-            RequestedManifestUri = manifestUri;
-            return Task.FromResult(manifest);
-        }
-    }
 }

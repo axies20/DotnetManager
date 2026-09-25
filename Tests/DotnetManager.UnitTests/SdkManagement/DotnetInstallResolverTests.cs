@@ -3,7 +3,6 @@ using DotnetManager.Installation.Models;
 using DotnetManager.Installation.Models.Installation.Requests;
 using DotnetManager.Installation.Models.Installation.Targets;
 using DotnetManager.Installation.Services.Resolver;
-using DotnetManager.ReleaseMetadata.Abstractions;
 using DotnetManager.ReleaseMetadata.Models;
 using DotnetManager.ReleaseMetadata.Models.Index;
 using DotnetManager.ReleaseMetadata.Models.Releases;
@@ -34,7 +33,7 @@ public class DotnetInstallResolverTests
     {
         var sts = CreateChannel("11.0", ReleaseTypes.Sts, SupportPhases.Preview);
         var lts = CreateChannel("10.0", ReleaseTypes.Lts, SupportPhases.Active);
-        var provider = new StubManifestProvider(
+        var provider = new InstallResolverStubManifestProvider(
             new SdkReleaseIndex([sts, lts]),
             new Dictionary<Uri, SdkReleaseManifest>
             {
@@ -109,7 +108,7 @@ public class DotnetInstallResolverTests
 
     private static DotnetInstallResolver CreateResolver(SdkChannel channel, params SdkRelease[] releases)
     {
-        return new DotnetInstallResolver(new StubManifestProvider(
+        return new DotnetInstallResolver(new InstallResolverStubManifestProvider(
             new SdkReleaseIndex([channel]),
             new Dictionary<Uri, SdkReleaseManifest>
             {
@@ -203,19 +202,4 @@ public class DotnetInstallResolverTests
         };
     }
 
-    private sealed class StubManifestProvider(
-        SdkReleaseIndex index,
-        IReadOnlyDictionary<Uri, SdkReleaseManifest> manifests) : ISdkManifestProviderService
-    {
-        public Task<SdkReleaseIndex> GetReleaseIndexAsync(CancellationToken cancellationToken)
-        {
-            return Task.FromResult(index);
-        }
-
-        public Task<SdkReleaseManifest> GetReleasesAsync(Uri manifestUri,
-            CancellationToken cancellationToken)
-        {
-            return Task.FromResult(manifests[manifestUri]);
-        }
-    }
 }
