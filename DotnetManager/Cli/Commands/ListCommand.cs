@@ -4,7 +4,7 @@ using DotnetManager.Cli.Output;
 using DotnetManager.InstalledDotnet.Abstractions;
 using DotnetManager.InstalledDotnet.Models;
 
-namespace DotnetManager.Cli.Commands.List;
+namespace DotnetManager.Cli.Commands;
 
 public sealed class ListCommand : ICommand
 {
