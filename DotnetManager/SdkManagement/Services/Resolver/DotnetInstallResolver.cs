@@ -11,11 +11,11 @@ using NuGet.Versioning;
 
 namespace DotnetManager.SdkManagement.Services.Resolver;
 
-public class DotnetInstallResolver : IDotnetInstallResolver
+public class DotnetInstallResolver : IDotnetInstallResolverService
 {
-    private readonly ISdkManifestProvider _provider;
+    private readonly ISdkManifestProviderService _provider;
 
-    public DotnetInstallResolver(ISdkManifestProvider provider)
+    public DotnetInstallResolver(ISdkManifestProviderService provider)
     {
         _provider = provider;
     }

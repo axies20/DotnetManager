@@ -53,7 +53,7 @@ public class DotnetInstallOrchestratorTests
     }
 
     private sealed class StubResolver(IReadOnlyCollection<DotnetDownloadSource> sources)
-        : IDotnetInstallResolver
+        : IDotnetInstallResolverService
     {
         public Task<IReadOnlyCollection<DotnetDownloadSource>> ResolveAsync(InstallRequest request,
             CancellationToken cancellationToken)
@@ -62,7 +62,7 @@ public class DotnetInstallOrchestratorTests
         }
     }
 
-    private sealed class StubDownloader(string directory) : IDotnetDownloader
+    private sealed class StubDownloader(string directory) : IDotnetDownloaderService
     {
         public List<string> Downloaded { get; } = [];
 
@@ -75,7 +75,7 @@ public class DotnetInstallOrchestratorTests
         }
     }
 
-    private sealed class RecordingExtractor : IArchiveExtractor
+    private sealed class RecordingExtractor : IArchiveExtractorService
     {
         public List<(string Archive, string Destination)> Extractions { get; } = [];
 
@@ -88,7 +88,7 @@ public class DotnetInstallOrchestratorTests
         }
     }
 
-    private sealed class StubPathProvider(string path) : IDotnetInstallPathProvider
+    private sealed class StubPathProvider(string path) : IDotnetInstallPathProviderService
     {
         public string GetInstallDirectory()
         {
@@ -101,7 +101,7 @@ public class DotnetInstallOrchestratorTests
         }
     }
 
-    private sealed class RecordingFinalizer : IDotnetInstallationFinalizer
+    private sealed class RecordingFinalizer : IDotnetInstallationFinalizerService
     {
         public bool Called { get; private set; }
 

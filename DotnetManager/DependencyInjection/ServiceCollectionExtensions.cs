@@ -51,19 +51,19 @@ public static class ServiceCollectionExtensions
 
     private static void AddReleaseMetadata(IServiceCollection services)
     {
-        services.AddHttpClient<ISdkManifestProvider, SdkManifestProvider>();
+        services.AddHttpClient<ISdkManifestProviderService, SdkManifestProvider>();
         services.AddSingleton<ISdkReleaseService, SdkReleaseService>();
     }
 
     private static void AddSdkManagement(IServiceCollection services)
     {
-        services.AddHttpClient<IDotnetDownloader, DotnetDownloader>();
-        services.AddSingleton<IArchiveExtractor, ArchiveExtractor>();
-        services.AddSingleton<IDotnetInstallPathProvider, UnixDotnetInstallPathProvider>();
-        services.AddSingleton<IUserEnvironmentConfigurator, UnixUserEnvironmentConfigurator>();
-        services.AddSingleton<IDotnetInstallationFinalizer, DotnetInstallationFinalizer>();
-        services.AddTransient<IDotnetInstallResolver, DotnetInstallResolver>();
-        services.AddTransient<IDotnetInstallOrchestrator, DotnetInstallOrchestrator>();
+        services.AddHttpClient<IDotnetDownloaderService, DotnetDownloader>();
+        services.AddSingleton<IArchiveExtractorService, ArchiveExtractor>();
+        services.AddSingleton<IDotnetInstallPathProviderService, UnixDotnetInstallPathProvider>();
+        services.AddSingleton<IUserEnvironmentConfiguratorService, UnixUserEnvironmentConfigurator>();
+        services.AddSingleton<IDotnetInstallationFinalizerService, DotnetInstallationFinalizer>();
+        services.AddTransient<IDotnetInstallResolverService, DotnetInstallResolver>();
+        services.AddTransient<IDotnetInstallOrchestratorService, DotnetInstallOrchestrator>();
     }
 
     private static void AddInstalledDotnet(IServiceCollection services)
@@ -72,11 +72,11 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IDotnetRootSource, PathDotnetRootSource>();
         services.AddSingleton<IDotnetRootSource, UnixInstallLocationDotnetRootSource>();
         services.AddSingleton<IDotnetRootSource, WindowsRegistryDotnetRootSource>();
-        services.AddSingleton<IDotnetRootLocator, DotnetRootLocator>();
+        services.AddSingleton<IDotnetRootLocatorService, DotnetRootLocator>();
 
-        services.AddSingleton<IDotnetInstallationLocator<SdkInstallation>, SdkLocator>();
-        services.AddSingleton<IDotnetInstallationLocator<RuntimeInstallation>, RuntimeLocator>();
-        services.AddSingleton<IDotnetInstallationLocator<HostInstallation>, HostLocator>();
+        services.AddSingleton<IDotnetInstallationLocatorService<SdkInstallation>, SdkLocator>();
+        services.AddSingleton<IDotnetInstallationLocatorService<RuntimeInstallation>, RuntimeLocator>();
+        services.AddSingleton<IDotnetInstallationLocatorService<HostInstallation>, HostLocator>();
     }
 
     private static void AddCli(IServiceCollection services)

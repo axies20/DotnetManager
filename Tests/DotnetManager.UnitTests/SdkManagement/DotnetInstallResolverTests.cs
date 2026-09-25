@@ -204,7 +204,7 @@ public class DotnetInstallResolverTests
 
     private sealed class StubManifestProvider(
         SdkReleaseIndex index,
-        IReadOnlyDictionary<Uri, SdkReleaseManifest> manifests) : ISdkManifestProvider
+        IReadOnlyDictionary<Uri, SdkReleaseManifest> manifests) : ISdkManifestProviderService
     {
         public Task<SdkReleaseIndex> GetReleaseIndexAsync(CancellationToken cancellationToken)
         {

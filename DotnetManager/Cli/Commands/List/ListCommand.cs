@@ -8,9 +8,9 @@ namespace DotnetManager.Cli.Commands.List;
 
 public sealed class ListCommand : ICommand
 {
-    private readonly IDotnetInstallationLocator<HostInstallation> _hostLocator;
-    private readonly IDotnetInstallationLocator<RuntimeInstallation> _runtimeLocator;
-    private readonly IDotnetInstallationLocator<SdkInstallation> _sdkLocator;
+    private readonly IDotnetInstallationLocatorService<HostInstallation> _hostLocator;
+    private readonly IDotnetInstallationLocatorService<RuntimeInstallation> _runtimeLocator;
+    private readonly IDotnetInstallationLocatorService<SdkInstallation> _sdkLocator;
 
     private readonly Option<bool> _hostOption = new("--host")
     {
@@ -27,9 +27,9 @@ public sealed class ListCommand : ICommand
         Description = "Show installed .NET SDKs"
     };
 
-    public ListCommand(IDotnetInstallationLocator<SdkInstallation> sdkLocator,
-        IDotnetInstallationLocator<RuntimeInstallation> runtimeLocator,
-        IDotnetInstallationLocator<HostInstallation> hostLocator)
+    public ListCommand(IDotnetInstallationLocatorService<SdkInstallation> sdkLocator,
+        IDotnetInstallationLocatorService<RuntimeInstallation> runtimeLocator,
+        IDotnetInstallationLocatorService<HostInstallation> hostLocator)
     {
         _sdkLocator = sdkLocator;
         _runtimeLocator = runtimeLocator;

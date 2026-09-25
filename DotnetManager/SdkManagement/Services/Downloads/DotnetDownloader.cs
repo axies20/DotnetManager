@@ -5,7 +5,7 @@ using DotnetManager.SdkManagement.Models.Downloads;
 
 namespace DotnetManager.SdkManagement.Services.Downloads;
 
-public class DotnetDownloader(HttpClient client) : IDotnetDownloader
+public class DotnetDownloader(HttpClient client) : IDotnetDownloaderService
 {
     public async Task<DotnetDownload> DownloadAsync(DotnetDownloadSource downloadSource,
         CancellationToken cancellationToken)

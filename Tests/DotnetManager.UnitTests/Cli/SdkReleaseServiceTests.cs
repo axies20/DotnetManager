@@ -74,7 +74,7 @@ public class SdkReleaseServiceTests
     }
 
     private sealed class StubProvider(SdkChannel channel, SdkReleaseManifest manifest)
-        : ISdkManifestProvider
+        : ISdkManifestProviderService
     {
         public Uri? RequestedManifestUri { get; private set; }
 

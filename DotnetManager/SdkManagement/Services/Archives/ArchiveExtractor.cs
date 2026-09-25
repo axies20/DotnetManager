@@ -4,7 +4,7 @@ using DotnetManager.SdkManagement.Abstractions.Archives;
 
 namespace DotnetManager.SdkManagement.Services.Archives;
 
-public class ArchiveExtractor : IArchiveExtractor
+public class ArchiveExtractor : IArchiveExtractorService
 {
     public async Task ExtractAsync(string archivePath, string destinationPath, CancellationToken cancellationToken)
     {

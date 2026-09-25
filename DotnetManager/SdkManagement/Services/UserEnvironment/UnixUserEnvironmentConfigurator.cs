@@ -2,7 +2,7 @@ using DotnetManager.SdkManagement.Abstractions.UserEnvironment;
 
 namespace DotnetManager.SdkManagement.Services.UserEnvironment;
 
-public class UnixUserEnvironmentConfigurator : IUserEnvironmentConfigurator
+public class UnixUserEnvironmentConfigurator : IUserEnvironmentConfiguratorService
 {
     public async Task ConfigureAsync(string dotnetRoot, CancellationToken cancellationToken)
     {

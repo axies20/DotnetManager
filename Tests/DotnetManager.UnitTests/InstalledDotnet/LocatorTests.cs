@@ -48,7 +48,7 @@ public class LocatorTests
         }
     }
 
-    private sealed class StubRootLocator(params string[] roots) : IDotnetRootLocator
+    private sealed class StubRootLocator(params string[] roots) : IDotnetRootLocatorService
     {
         public IReadOnlyCollection<string> GetRoots()
         {

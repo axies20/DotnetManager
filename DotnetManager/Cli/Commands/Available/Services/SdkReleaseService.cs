@@ -9,9 +9,9 @@ namespace DotnetManager.Cli.Commands.Available.Services;
 
 public class SdkReleaseService : ISdkReleaseService
 {
-    private readonly ISdkManifestProvider _manifestProvider;
+    private readonly ISdkManifestProviderService _manifestProvider;
 
-    public SdkReleaseService(ISdkManifestProvider manifestProvider)
+    public SdkReleaseService(ISdkManifestProviderService manifestProvider)
     {
         _manifestProvider = manifestProvider;
     }

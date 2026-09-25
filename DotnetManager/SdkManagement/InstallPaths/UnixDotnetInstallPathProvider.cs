@@ -3,7 +3,7 @@ using DotnetManager.SdkManagement.Abstractions.InstallPaths;
 
 namespace DotnetManager.SdkManagement.InstallPaths;
 
-public partial class UnixDotnetInstallPathProvider : IDotnetInstallPathProvider
+public partial class UnixDotnetInstallPathProvider : IDotnetInstallPathProviderService
 {
     public string GetInstallDirectory()
     {

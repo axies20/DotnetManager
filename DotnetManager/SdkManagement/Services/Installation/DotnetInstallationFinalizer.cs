@@ -5,13 +5,13 @@ using DotnetManager.SdkManagement.Abstractions.UserEnvironment;
 
 namespace DotnetManager.SdkManagement.Services.Installation;
 
-public class DotnetInstallationFinalizer : IDotnetInstallationFinalizer
+public class DotnetInstallationFinalizer : IDotnetInstallationFinalizerService
 {
-    private readonly IDotnetInstallPathProvider _pathProvider;
-    private readonly IUserEnvironmentConfigurator _userEnvironmentConfigurator;
+    private readonly IDotnetInstallPathProviderService _pathProvider;
+    private readonly IUserEnvironmentConfiguratorService _userEnvironmentConfigurator;
 
-    public DotnetInstallationFinalizer(IDotnetInstallPathProvider pathProvider,
-        IUserEnvironmentConfigurator userEnvironmentConfigurator)
+    public DotnetInstallationFinalizer(IDotnetInstallPathProviderService pathProvider,
+        IUserEnvironmentConfiguratorService userEnvironmentConfigurator)
     {
         _pathProvider = pathProvider;
         _userEnvironmentConfigurator = userEnvironmentConfigurator;

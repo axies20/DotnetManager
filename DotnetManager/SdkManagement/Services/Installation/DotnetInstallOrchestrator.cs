@@ -7,19 +7,19 @@ using DotnetManager.SdkManagement.Models.Installation.Requests;
 
 namespace DotnetManager.SdkManagement.Services.Installation;
 
-public sealed class DotnetInstallOrchestrator : IDotnetInstallOrchestrator
+public sealed class DotnetInstallOrchestrator : IDotnetInstallOrchestratorService
 {
-    private readonly IDotnetInstallResolver _resolver;
-    private readonly IDotnetDownloader _downloader;
-    private readonly IArchiveExtractor _extractor;
-    private readonly IDotnetInstallPathProvider _pathProvider;
-    private readonly IDotnetInstallationFinalizer _finalizer;
+    private readonly IDotnetInstallResolverService _resolver;
+    private readonly IDotnetDownloaderService _downloader;
+    private readonly IArchiveExtractorService _extractor;
+    private readonly IDotnetInstallPathProviderService _pathProvider;
+    private readonly IDotnetInstallationFinalizerService _finalizer;
 
-    public DotnetInstallOrchestrator(IDotnetInstallResolver resolver,
-        IDotnetDownloader downloader,
-        IArchiveExtractor extractor,
-        IDotnetInstallPathProvider pathProvider,
-        IDotnetInstallationFinalizer finalizer)
+    public DotnetInstallOrchestrator(IDotnetInstallResolverService resolver,
+        IDotnetDownloaderService downloader,
+        IArchiveExtractorService extractor,
+        IDotnetInstallPathProviderService pathProvider,
+        IDotnetInstallationFinalizerService finalizer)
     {
         _resolver = resolver;
         _downloader = downloader;

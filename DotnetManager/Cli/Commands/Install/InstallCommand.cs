@@ -11,7 +11,7 @@ namespace DotnetManager.Cli.Commands.Install;
 
 public class InstallCommand : ICommand
 {
-    private readonly IDotnetInstallOrchestrator _dotnetInstallOrchestrator;
+    private readonly IDotnetInstallOrchestratorService _dotnetInstallOrchestrator;
 
     private readonly Command _latest = new("latest",
         "Install the latest version of the specified release type and support phase");
@@ -56,7 +56,7 @@ public class InstallCommand : ICommand
     };
 
 
-    public InstallCommand(IDotnetInstallOrchestrator dotnetInstallOrchestrator)
+    public InstallCommand(IDotnetInstallOrchestratorService dotnetInstallOrchestrator)
     {
         _dotnetInstallOrchestrator = dotnetInstallOrchestrator;
     }

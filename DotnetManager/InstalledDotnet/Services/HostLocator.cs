@@ -4,7 +4,7 @@ using NuGet.Versioning;
 
 namespace DotnetManager.InstalledDotnet.Services;
 
-public class HostLocator(IDotnetRootLocator rootLocator) : IDotnetInstallationLocator<HostInstallation>
+public class HostLocator(IDotnetRootLocatorService rootLocator) : IDotnetInstallationLocatorService<HostInstallation>
 {
     public IReadOnlyCollection<HostInstallation> Find()
     {
@@ -24,7 +24,6 @@ public class HostLocator(IDotnetRootLocator rootLocator) : IDotnetInstallationLo
             return [];
 
         return Directory.EnumerateDirectories(hostRoot)
-            .Select(path => new HostInstallation(NuGetVersion.Parse(Path.GetFileName(path)),
-                path));
+            .Select(path => new HostInstallation(NuGetVersion.Parse(Path.GetFileName(path)), path));
     }
 }

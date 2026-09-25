@@ -4,7 +4,7 @@ using NuGet.Versioning;
 
 namespace DotnetManager.InstalledDotnet.Services;
 
-public class RuntimeLocator(IDotnetRootLocator rootLocator) : IDotnetInstallationLocator<RuntimeInstallation>
+public class RuntimeLocator(IDotnetRootLocatorService rootLocator) : IDotnetInstallationLocatorService<RuntimeInstallation>
 {
     public IReadOnlyCollection<RuntimeInstallation> Find()
     {
@@ -23,17 +23,14 @@ public class RuntimeLocator(IDotnetRootLocator rootLocator) : IDotnetInstallatio
         if (!Directory.Exists(sharedRoot))
             return [];
 
-        return Directory
-            .EnumerateDirectories(sharedRoot)
+        return Directory.EnumerateDirectories(sharedRoot)
             .SelectMany(frameworkPath =>
             {
                 var framework = Path.GetFileName(frameworkPath);
 
-                return Directory
-                    .EnumerateDirectories(frameworkPath)
-                    .Select(versionPath => new RuntimeInstallation(
-                        framework, NuGetVersion.Parse(Path.GetFileName(versionPath)),
-                        versionPath));
+                return Directory.EnumerateDirectories(frameworkPath)
+                    .Select(versionPath => new RuntimeInstallation(framework,
+                        NuGetVersion.Parse(Path.GetFileName(versionPath)), versionPath));
             });
     }
 }
