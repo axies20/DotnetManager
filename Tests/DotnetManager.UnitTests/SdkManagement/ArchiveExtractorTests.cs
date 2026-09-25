@@ -1,5 +1,5 @@
 using System.IO.Compression;
-using DotnetManager.SdkManagement.Services.Archives;
+using DotnetManager.Installation.Services.Archives;
 
 namespace DotnetManager.UnitTests.SdkManagement;
 

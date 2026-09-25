@@ -1,7 +1,7 @@
 using System.CommandLine;
 using DotnetManager.Cli.Abstractions;
-using DotnetManager.SdkManagement.Abstractions.Removal;
-using DotnetManager.SdkManagement.Models;
+using DotnetManager.Installation.Abstractions.Removal;
+using DotnetManager.Installation.Models;
 
 namespace DotnetManager.Cli.Commands;
 

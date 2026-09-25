@@ -1,12 +1,12 @@
 using DotnetManager.Exception.Installation;
+using DotnetManager.Installation.Models;
+using DotnetManager.Installation.Models.Installation.Requests;
+using DotnetManager.Installation.Models.Installation.Targets;
+using DotnetManager.Installation.Services.Resolver;
 using DotnetManager.ReleaseMetadata.Abstractions;
 using DotnetManager.ReleaseMetadata.Models;
 using DotnetManager.ReleaseMetadata.Models.Index;
 using DotnetManager.ReleaseMetadata.Models.Releases;
-using DotnetManager.SdkManagement.Models;
-using DotnetManager.SdkManagement.Models.Installation.Requests;
-using DotnetManager.SdkManagement.Models.Installation.Targets;
-using DotnetManager.SdkManagement.Services.Resolver;
 using NuGet.Versioning;
 
 namespace DotnetManager.UnitTests.SdkManagement;

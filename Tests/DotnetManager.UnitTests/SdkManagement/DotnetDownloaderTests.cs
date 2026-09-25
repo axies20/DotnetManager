@@ -1,8 +1,8 @@
 using System.Net;
 using System.Security.Cryptography;
 using DotnetManager.Exception.Installation;
-using DotnetManager.SdkManagement.Models.Downloads;
-using DotnetManager.SdkManagement.Services.Downloads;
+using DotnetManager.Installation.Models.Downloads;
+using DotnetManager.Installation.Services.Downloads;
 
 namespace DotnetManager.UnitTests.SdkManagement;
 

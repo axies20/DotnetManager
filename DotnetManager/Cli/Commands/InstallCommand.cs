@@ -1,11 +1,11 @@
 using System.CommandLine;
 using DotnetManager.Cli.Abstractions;
 using DotnetManager.Exception.Installation;
+using DotnetManager.Installation.Abstractions.Installation;
+using DotnetManager.Installation.Models;
+using DotnetManager.Installation.Models.Installation.Requests;
+using DotnetManager.Installation.Models.Installation.Targets;
 using DotnetManager.ReleaseMetadata.Models;
-using DotnetManager.SdkManagement.Abstractions.Installation;
-using DotnetManager.SdkManagement.Models;
-using DotnetManager.SdkManagement.Models.Installation.Requests;
-using DotnetManager.SdkManagement.Models.Installation.Targets;
 using NuGet.Versioning;
 
 namespace DotnetManager.Cli.Commands;

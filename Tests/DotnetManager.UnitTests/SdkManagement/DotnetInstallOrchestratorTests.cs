@@ -1,13 +1,13 @@
-using DotnetManager.SdkManagement.Abstractions.Archives;
-using DotnetManager.SdkManagement.Abstractions.Downloads;
-using DotnetManager.SdkManagement.Abstractions.Installation;
-using DotnetManager.SdkManagement.Abstractions.InstallPaths;
-using DotnetManager.SdkManagement.Abstractions.Resolver;
-using DotnetManager.SdkManagement.Models;
-using DotnetManager.SdkManagement.Models.Downloads;
-using DotnetManager.SdkManagement.Models.Installation.Requests;
-using DotnetManager.SdkManagement.Models.Installation.Targets;
-using DotnetManager.SdkManagement.Services.Installation;
+using DotnetManager.Installation.Abstractions.Archives;
+using DotnetManager.Installation.Abstractions.Downloads;
+using DotnetManager.Installation.Abstractions.Installation;
+using DotnetManager.Installation.Abstractions.InstallPaths;
+using DotnetManager.Installation.Abstractions.Resolver;
+using DotnetManager.Installation.Models;
+using DotnetManager.Installation.Models.Downloads;
+using DotnetManager.Installation.Models.Installation.Requests;
+using DotnetManager.Installation.Models.Installation.Targets;
+using DotnetManager.Installation.Services.Installation;
 using NuGet.Versioning;
 
 namespace DotnetManager.UnitTests.SdkManagement;
