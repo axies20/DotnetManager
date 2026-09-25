@@ -39,9 +39,8 @@ jobs:
             --runtime "${{ matrix.rid }}" \
             --self-contained true \
             --output publish
-          mv publish/DotnetManager publish/dotnet-manager
           tar -czf "dotnet-manager-${{ matrix.rid }}.tar.gz" \
-            -C publish dotnet-manager appsettings.json
+            -C publish dnm appsettings.json
           if command -v sha256sum >/dev/null 2>&1; then
             sha256sum "dotnet-manager-${{ matrix.rid }}.tar.gz" > \
               "dotnet-manager-${{ matrix.rid }}.tar.gz.sha256"
