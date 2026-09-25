@@ -4,9 +4,6 @@ namespace DotnetManager.Installation.Services.UserEnvironment;
 
 public class UnixUserEnvironmentConfigurator : IUserEnvironmentConfiguratorService
 {
-    private const string StartMarker = "# DotnetManager";
-    private const string EndMarker = "# /DotnetManager";
-
     public async Task ConfigureAsync(string dotnetRoot, CancellationToken cancellationToken)
     {
         var shells = GetInstalledShells().ToHashSet();
@@ -26,26 +23,6 @@ public class UnixUserEnvironmentConfigurator : IUserEnvironmentConfiguratorServi
 
         if (shells.Contains("fish"))
             await ConfigureFishAsync(dotnetRoot, cancellationToken);
-    }
-
-    public async Task RemoveConfigurationAsync(string dotnetRoot, CancellationToken cancellationToken)
-    {
-        var shells = GetInstalledShells().ToHashSet();
-        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-
-        if (shells.Contains("bash"))
-            await RemoveShellConfigurationAsync(Path.Combine(home, ".bashrc"), dotnetRoot, cancellationToken);
-
-        if (shells.Contains("zsh"))
-            await RemoveShellConfigurationAsync(Path.Combine(home, ".zshrc"), dotnetRoot, cancellationToken);
-
-        if (shells.Contains("fish"))
-        {
-            await RemoveShellConfigurationAsync(
-                Path.Combine(home, ".config", "fish", "config.fish"),
-                dotnetRoot,
-                cancellationToken);
-        }
     }
 
     private static IEnumerable<string?> GetInstalledShells()
@@ -98,10 +75,13 @@ public class UnixUserEnvironmentConfigurator : IUserEnvironmentConfiguratorServi
         string configuration,
         CancellationToken cancellationToken)
     {
+        const string startMarker = "# DotnetManager";
+        const string endMarker = "# /DotnetManager";
+
         var block = $"""
-                     {StartMarker}
+                     {startMarker}
                      {configuration}
-                     {EndMarker}
+                     {endMarker}
                      """;
 
         var directory = Path.GetDirectoryName(path);
@@ -121,12 +101,12 @@ public class UnixUserEnvironmentConfigurator : IUserEnvironmentConfiguratorServi
         if (content.Contains(configuration, StringComparison.Ordinal))
             return;
 
-        var start = content.IndexOf(StartMarker, StringComparison.Ordinal);
-        var end = content.IndexOf(EndMarker, StringComparison.Ordinal);
+        var start = content.IndexOf(startMarker, StringComparison.Ordinal);
+        var end = content.IndexOf(endMarker, StringComparison.Ordinal);
 
         if (start >= 0 && end > start)
         {
-            end += EndMarker.Length;
+            end += endMarker.Length;
 
             content = string.Concat(content.AsSpan(0, start), block, content.AsSpan(end));
 
@@ -136,42 +116,5 @@ public class UnixUserEnvironmentConfigurator : IUserEnvironmentConfiguratorServi
         }
 
         await File.AppendAllTextAsync(path, Environment.NewLine + block + Environment.NewLine, cancellationToken);
-    }
-
-    private static async Task RemoveShellConfigurationAsync(
-        string path,
-        string dotnetRoot,
-        CancellationToken cancellationToken)
-    {
-        if (!File.Exists(path))
-            return;
-
-        var content = await File.ReadAllTextAsync(path, cancellationToken);
-        var start = content.IndexOf(StartMarker, StringComparison.Ordinal);
-        var end = content.IndexOf(EndMarker, StringComparison.Ordinal);
-
-        if (start < 0 || end <= start)
-            return;
-
-        end += EndMarker.Length;
-        var managedBlock = content[start..end];
-
-        if (!managedBlock.Contains($"\"{dotnetRoot}\"", StringComparison.Ordinal))
-            return;
-
-        var removeStart = start;
-        var removeEnd = end;
-
-        if (removeStart > 0 && content[removeStart - 1] == '\n')
-            removeStart--;
-
-        if (removeEnd < content.Length && content[removeEnd] == '\r')
-            removeEnd++;
-
-        if (removeEnd < content.Length && content[removeEnd] == '\n')
-            removeEnd++;
-
-        var updated = string.Concat(content.AsSpan(0, removeStart), content.AsSpan(removeEnd));
-        await File.WriteAllTextAsync(path, updated, cancellationToken);
     }
 }

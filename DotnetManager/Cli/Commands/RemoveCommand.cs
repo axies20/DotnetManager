@@ -27,11 +27,6 @@ public class RemoveCommand : ICommand
         Description = "Remove the ASP.NET Core installation along with the SDK when it is no longer required."
     };
 
-    private readonly Option<bool> _cleanupPath = new("--cleanup-path")
-    {
-        Description = "Remove DotnetManager's PATH configuration when no managed .NET installations remain."
-    };
-
     private readonly Argument<string> _version = new("version")
     {
         Description = "The version to remove."
@@ -52,17 +47,15 @@ public class RemoveCommand : ICommand
         command.Options.Add(_sdk);
         command.Options.Add(_host);
         command.Options.Add(_asp);
-        command.Options.Add(_cleanupPath);
         command.Arguments.Add(_version);
         command.SetAction(Execute);
         return command;
     }
 
-    private async Task Execute(ParseResult result, CancellationToken cancellationToken)
+    private void Execute(ParseResult result)
     {
         var components = GetComponentsToRemove(result);
         var version = result.GetValue(_version);
-        var cleanupPath = result.GetValue(_cleanupPath);
 
         if (string.IsNullOrEmpty(version))
         {
@@ -71,12 +64,13 @@ public class RemoveCommand : ICommand
 
         if (components.Count == 0)
         {
-            await _removalService.RemoveAsync(version, cleanupPath, cancellationToken);
-            return;
+            _removalService.RemoveAsync(version);
         }
 
         foreach (var component in components)
-            await _removalService.RemoveAsync(version, component, cleanupPath, cancellationToken);
+        {
+            _removalService.RemoveAsync(version, component);
+        }
     }
 
     private IReadOnlyCollection<DotnetComponent> GetComponentsToRemove(ParseResult result)
