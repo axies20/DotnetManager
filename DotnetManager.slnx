@@ -1,8 +1,10 @@
 <Solution>
     <Folder Name="/Solution Items/">
-        <File Path="compose.yaml"/>
+        <File Path="compose.yaml" />
     </Folder>
-    <Project Path="DotnetManager/DotnetManager.csproj"/>
-    <Project Path="Tests/DotnetManager.UnitTests/DotnetManager.UnitTests.csproj"/>
-    <Project Path="Tests/DotnetManager.IntegrationTests/DotnetManager.IntegrationTests.csproj"/>
+    <Folder Name="/Tests/">
+        <Project Path="Tests/DotnetManager.IntegrationTests/DotnetManager.IntegrationTests.csproj" />
+        <Project Path="Tests/DotnetManager.UnitTests/DotnetManager.UnitTests.csproj" />
+    </Folder>
+    <Project Path="DotnetManager/DotnetManager.csproj" />
 </Solution>
