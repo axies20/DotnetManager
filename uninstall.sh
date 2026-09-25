@@ -4,8 +4,8 @@ set -eu
 
 INSTALL_DIR="${DOTNET_MANAGER_INSTALL_DIR:-$HOME/.dotnet-manager}"
 BIN_DIR="${DOTNET_MANAGER_BIN_DIR:-$HOME/.local/bin}"
-LINK="$BIN_DIR/dotnet-manager"
-EXECUTABLE="$INSTALL_DIR/bin/dotnet-manager"
+LINK="$BIN_DIR/dnm"
+EXECUTABLE="$INSTALL_DIR/bin/dnm"
 PATH_MARKER_START="# >>> DotnetManager CLI >>>"
 PATH_MARKER_END="# <<< DotnetManager CLI <<<"
 

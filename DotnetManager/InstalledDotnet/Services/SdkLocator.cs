@@ -4,7 +4,7 @@ using NuGet.Versioning;
 
 namespace DotnetManager.InstalledDotnet.Services;
 
-public class SdkLocator(IDotnetRootLocator rootLocator) : IDotnetInstallationLocator<SdkInstallation>
+public class SdkLocator(IDotnetRootLocatorService rootLocator) : IDotnetInstallationLocatorService<SdkInstallation>
 {
     public IReadOnlyCollection<SdkInstallation> Find()
     {
@@ -23,8 +23,7 @@ public class SdkLocator(IDotnetRootLocator rootLocator) : IDotnetInstallationLoc
         if (!Directory.Exists(sdkRoot))
             return [];
 
-        return Directory
-            .EnumerateDirectories(sdkRoot)
+        return Directory.EnumerateDirectories(sdkRoot)
             .Select(path => new SdkInstallation(NuGetVersion.Parse(Path.GetFileName(path)),
                 path));
     }

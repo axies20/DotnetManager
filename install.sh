@@ -5,8 +5,8 @@ set -eu
 REPOSITORY="${DOTNET_MANAGER_REPOSITORY:-axies20/DotnetManager}"
 INSTALL_DIR="${DOTNET_MANAGER_INSTALL_DIR:-$HOME/.dotnet-manager}"
 BIN_DIR="${DOTNET_MANAGER_BIN_DIR:-$HOME/.local/bin}"
-EXECUTABLE="$INSTALL_DIR/bin/dotnet-manager"
-LINK="$BIN_DIR/dotnet-manager"
+EXECUTABLE="$INSTALL_DIR/bin/dnm"
+LINK="$BIN_DIR/dnm"
 PATH_MARKER_START="# >>> DotnetManager CLI >>>"
 PATH_MARKER_END="# <<< DotnetManager CLI <<<"
 
@@ -117,14 +117,14 @@ verify_archive "$archive" "$checksum_file"
 mkdir -p "$staging"
 tar -xzf "$archive" -C "$staging"
 
-[ -f "$staging/dotnet-manager" ] || fail "the release archive does not contain dotnet-manager"
+[ -f "$staging/dnm" ] || fail "the release archive does not contain dnm"
 
 if [ -e "$LINK" ] && [ ! -L "$LINK" ]; then
     fail "$LINK already exists and is not a symbolic link"
 fi
 
 mkdir -p "$INSTALL_DIR/bin" "$BIN_DIR"
-install -m 755 "$staging/dotnet-manager" "$EXECUTABLE"
+install -m 755 "$staging/dnm" "$EXECUTABLE"
 
 if [ -f "$staging/appsettings.json" ]; then
     install -m 644 "$staging/appsettings.json" "$INSTALL_DIR/bin/appsettings.json"
@@ -134,7 +134,7 @@ ln -sfn "$EXECUTABLE" "$LINK"
 configure_path
 
 printf '\nDotnetManager was installed in %s.\n' "$INSTALL_DIR"
-printf 'Run: dotnet-manager --help\n'
+printf 'Run: dnm --help\n'
 
 case ":${PATH:-}:" in
     *:"$BIN_DIR":*) ;;

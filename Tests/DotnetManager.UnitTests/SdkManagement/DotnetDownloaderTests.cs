@@ -1,8 +1,7 @@
-using System.Net;
 using System.Security.Cryptography;
 using DotnetManager.Exception.Installation;
-using DotnetManager.SdkManagement.Models.Downloads;
-using DotnetManager.SdkManagement.Services.Downloads;
+using DotnetManager.Installation.Models.Downloads;
+using DotnetManager.Installation.Services.Downloads;
 
 namespace DotnetManager.UnitTests.SdkManagement;
 
@@ -48,18 +47,6 @@ public class DotnetDownloaderTests
 
     private static DotnetDownloader CreateDownloader(byte[] payload)
     {
-        return new DotnetDownloader(new HttpClient(new StubHandler(payload)));
-    }
-
-    private sealed class StubHandler(byte[] payload) : HttpMessageHandler
-    {
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
-            CancellationToken cancellationToken)
-        {
-            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new ByteArrayContent(payload)
-            });
-        }
+        return new DotnetDownloader(new HttpClient(new DownloaderStubHandler(payload)));
     }
 }
