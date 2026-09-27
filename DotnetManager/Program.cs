@@ -3,6 +3,8 @@ using DotnetManager.Cli;
 using DotnetManager.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 namespace DotnetManager;
 
@@ -15,6 +17,16 @@ internal abstract class Program
             Args = args,
             ContentRootPath = AppContext.BaseDirectory
         });
+        builder.Logging.AddSimpleConsole(options =>
+        {
+            options.ColorBehavior = Console.IsErrorRedirected
+                ? LoggerColorBehavior.Disabled
+                : LoggerColorBehavior.Enabled;
+            options.SingleLine = true;
+            options.TimestampFormat = "HH:mm:ss ";
+        });
+        builder.Services.Configure<ConsoleLoggerOptions>(options =>
+            options.LogToStandardErrorThreshold = LogLevel.Trace);
         builder.Services.AddDotnetManager();
 
         using var host = builder.Build();
