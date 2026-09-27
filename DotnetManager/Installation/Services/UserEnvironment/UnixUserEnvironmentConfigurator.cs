@@ -1,13 +1,25 @@
 using DotnetManager.Installation.Abstractions.UserEnvironment;
+using Microsoft.Extensions.Logging;
 
 namespace DotnetManager.Installation.Services.UserEnvironment;
 
 public class UnixUserEnvironmentConfigurator : IUserEnvironmentConfiguratorService
 {
+    private readonly ILogger<UnixUserEnvironmentConfigurator> _logger;
+
+    public UnixUserEnvironmentConfigurator(ILogger<UnixUserEnvironmentConfigurator> logger)
+    {
+        _logger = logger;
+    }
+
     public async Task ConfigureAsync(string dotnetRoot, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Inspecting shell configuration for .NET root {DotnetRoot}",
+            dotnetRoot);
         var shells = GetInstalledShells().ToHashSet();
+        _logger.LogDebug("Found installed shells: {Shells}", string.Join(", ", shells));
         var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        _logger.LogDebug("User home directory is {HomeDirectory}", home);
 
         if (shells.Contains("bash"))
         {
@@ -22,13 +34,21 @@ public class UnixUserEnvironmentConfigurator : IUserEnvironmentConfiguratorServi
         }
 
         if (shells.Contains("fish"))
+        {
             await ConfigureFishAsync(dotnetRoot, cancellationToken);
+        }
+
+        _logger.LogInformation("Shell configuration inspection completed");
     }
 
-    private static IEnumerable<string?> GetInstalledShells()
+    private IEnumerable<string?> GetInstalledShells()
     {
         if (!File.Exists("/etc/shells"))
+        {
+            _logger.LogWarning("Cannot discover installed shells because {ShellsFile} does not exist",
+                "/etc/shells");
             yield break;
+        }
 
         var shells = File.ReadLines("/etc/shells")
             .Where(x => !string.IsNullOrWhiteSpace(x))
@@ -39,11 +59,12 @@ public class UnixUserEnvironmentConfigurator : IUserEnvironmentConfiguratorServi
 
         foreach (var line in shells)
         {
+            _logger.LogTrace("Discovered shell {Shell}", line);
             yield return line;
         }
     }
 
-    private static Task ConfigurePosixShellAsync(string path, string dotnetRoot, CancellationToken cancellationToken)
+    private Task ConfigurePosixShellAsync(string path, string dotnetRoot, CancellationToken cancellationToken)
     {
         var configuration = $"""
                              export DOTNET_ROOT="{dotnetRoot}"
@@ -56,7 +77,7 @@ public class UnixUserEnvironmentConfigurator : IUserEnvironmentConfiguratorServi
             cancellationToken);
     }
 
-    private static Task ConfigureFishAsync(string dotnetRoot, CancellationToken cancellationToken)
+    private Task ConfigureFishAsync(string dotnetRoot, CancellationToken cancellationToken)
     {
         var home = Environment.GetFolderPath(
             Environment.SpecialFolder.UserProfile);
@@ -71,7 +92,7 @@ public class UnixUserEnvironmentConfigurator : IUserEnvironmentConfiguratorServi
         return ConfigureShellAsync(path, configuration, cancellationToken);
     }
 
-    private static async Task ConfigureShellAsync(string path,
+    private async Task ConfigureShellAsync(string path,
         string configuration,
         CancellationToken cancellationToken)
     {
@@ -87,19 +108,27 @@ public class UnixUserEnvironmentConfigurator : IUserEnvironmentConfiguratorServi
         var directory = Path.GetDirectoryName(path);
 
         if (directory is not null)
+        {
+            _logger.LogDebug("Ensuring shell configuration directory {Directory}", directory);
             Directory.CreateDirectory(directory);
+        }
+
+        _logger.LogInformation("Checking shell configuration file {Path}", path);
 
         if (!File.Exists(path))
         {
             await File.WriteAllTextAsync(path, block + Environment.NewLine, cancellationToken);
-
+            _logger.LogInformation("Created shell configuration file {Path}", path);
             return;
         }
 
         var content = await File.ReadAllTextAsync(path, cancellationToken);
 
         if (content.Contains(configuration, StringComparison.Ordinal))
+        {
+            _logger.LogDebug("Shell configuration file {Path} is already up to date", path);
             return;
+        }
 
         var start = content.IndexOf(startMarker, StringComparison.Ordinal);
         var end = content.IndexOf(endMarker, StringComparison.Ordinal);
@@ -111,10 +140,12 @@ public class UnixUserEnvironmentConfigurator : IUserEnvironmentConfiguratorServi
             content = string.Concat(content.AsSpan(0, start), block, content.AsSpan(end));
 
             await File.WriteAllTextAsync(path, content, cancellationToken);
+            _logger.LogInformation("Updated managed block in {Path}", path);
 
             return;
         }
 
         await File.AppendAllTextAsync(path, Environment.NewLine + block + Environment.NewLine, cancellationToken);
+        _logger.LogInformation("Added managed block to {Path}", path);
     }
 }
