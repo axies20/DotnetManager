@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using DotnetManager.Exception.Installation;
 using DotnetManager.Installation.Models.Downloads;
 using DotnetManager.Installation.Services.Downloads;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace DotnetManager.UnitTests.SdkManagement;
 
@@ -47,6 +48,7 @@ public class DotnetDownloaderTests
 
     private static DotnetDownloader CreateDownloader(byte[] payload)
     {
-        return new DotnetDownloader(new HttpClient(new DownloaderStubHandler(payload)));
+        return new DotnetDownloader(new HttpClient(new DownloaderStubHandler(payload)),
+            NullLogger<DotnetDownloader>.Instance);
     }
 }
