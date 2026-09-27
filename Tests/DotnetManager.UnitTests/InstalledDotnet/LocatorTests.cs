@@ -1,5 +1,6 @@
 using DotnetManager.InstalledDotnet.Abstractions;
 using DotnetManager.InstalledDotnet.Services;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace DotnetManager.UnitTests.InstalledDotnet;
 
@@ -16,7 +17,8 @@ public class LocatorTests
             new LocatorStubRootSource(Path.Combine(directory.Path, "missing"))
         ];
 
-        var roots = new DotnetRootLocator(sources).GetRoots();
+        var roots = new DotnetRootLocator(sources,
+            NullLogger<DotnetRootLocator>.Instance).GetRoots();
 
         Assert.Equal([Path.GetFullPath(existing)], roots);
     }
@@ -39,5 +41,4 @@ public class LocatorTests
         Assert.Equal("10.0.1", runtime.Version.ToString());
         Assert.Equal("10.0.1", host.Version.ToString());
     }
-
 }
