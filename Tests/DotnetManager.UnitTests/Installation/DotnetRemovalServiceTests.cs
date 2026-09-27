@@ -1,5 +1,6 @@
 using DotnetManager.Installation.Services.Removal;
 using DotnetManager.InstalledDotnet.Models;
+using Microsoft.Extensions.Logging.Abstractions;
 using NuGet.Versioning;
 
 namespace DotnetManager.UnitTests.Installation;
@@ -40,6 +41,7 @@ public class DotnetRemovalServiceTests
         return new DotnetRemovalService(
             new RemovalInstallationLocator<HostInstallation>([], x => x.Path),
             new RemovalInstallationLocator<RuntimeInstallation>([], x => x.Path),
-            new RemovalInstallationLocator<SdkInstallation>(sdks, x => x.Path));
+            new RemovalInstallationLocator<SdkInstallation>(sdks, x => x.Path),
+            NullLogger<DotnetRemovalService>.Instance);
     }
 }
