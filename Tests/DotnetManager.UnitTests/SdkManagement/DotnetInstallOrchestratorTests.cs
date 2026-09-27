@@ -3,6 +3,7 @@ using DotnetManager.Installation.Models.Downloads;
 using DotnetManager.Installation.Models.Installation.Requests;
 using DotnetManager.Installation.Models.Installation.Targets;
 using DotnetManager.Installation.Services.Installation;
+using Microsoft.Extensions.Logging.Abstractions;
 using NuGet.Versioning;
 
 namespace DotnetManager.UnitTests.SdkManagement;
@@ -23,7 +24,8 @@ public class DotnetInstallOrchestratorTests
         var extractor = new OrchestratorRecordingExtractor();
         var finalizer = new OrchestratorRecordingFinalizer();
         var orchestrator = new DotnetInstallOrchestrator(resolver, downloader, extractor,
-            new OrchestratorStubPathProvider("/managed/dotnet"), finalizer);
+            new OrchestratorStubPathProvider("/managed/dotnet"), finalizer,
+            NullLogger<DotnetInstallOrchestrator>.Instance);
 
         await orchestrator.InstallAsync(CreateRequest(), CancellationToken.None);
 
@@ -47,5 +49,4 @@ public class DotnetInstallOrchestratorTests
             }
         };
     }
-
 }
