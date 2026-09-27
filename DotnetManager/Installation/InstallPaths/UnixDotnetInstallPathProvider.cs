@@ -1,20 +1,26 @@
 using System.Runtime.InteropServices;
 using DotnetManager.Installation.Abstractions.InstallPaths;
+using Microsoft.Extensions.Logging;
 
 namespace DotnetManager.Installation.InstallPaths;
 
-public partial class UnixDotnetInstallPathProvider : IDotnetInstallPathProviderService
+public partial class UnixDotnetInstallPathProvider(ILogger<UnixDotnetInstallPathProvider> logger)
+    : IDotnetInstallPathProviderService
 {
     public string GetInstallDirectory()
     {
         if (IsRoot())
         {
+            logger.LogDebug("Root user detected; using install directory {InstallDirectory}",
+                "/usr/local/share/dotnet");
             return "/usr/local/share/dotnet";
         }
 
         var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-
-        return Path.Combine(home, ".dotnet");
+        var installDirectory = Path.Combine(home, ".dotnet");
+        logger.LogDebug("Non-root user detected; using install directory {InstallDirectory}",
+            installDirectory);
+        return installDirectory;
     }
 
     public string? GetExecutableLinkPath()
