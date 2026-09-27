@@ -71,5 +71,4 @@ public class SdkReleaseServiceTests
             Releases = []
         };
     }
-
 }

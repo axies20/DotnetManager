@@ -4,7 +4,8 @@ using NuGet.Versioning;
 
 namespace DotnetManager.InstalledDotnet.Services;
 
-public class RuntimeLocator(IDotnetRootLocatorService rootLocator) : IDotnetInstallationLocatorService<RuntimeInstallation>
+public class RuntimeLocator(IDotnetRootLocatorService rootLocator)
+    : IDotnetInstallationLocatorService<RuntimeInstallation>
 {
     public IReadOnlyCollection<RuntimeInstallation> Find()
     {
