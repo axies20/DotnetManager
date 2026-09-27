@@ -1,16 +1,20 @@
 using System.CommandLine;
 using DotnetManager.Cli.Abstractions;
 using DotnetManager.Installation.Abstractions.Installation;
+using Microsoft.Extensions.Logging;
 
 namespace DotnetManager.Cli.Commands.Install;
 
 public partial class InstallCommand : ICommand
 {
     private readonly IDotnetInstallOrchestratorService _dotnetInstallOrchestrator;
+    private readonly ILogger<InstallCommand> _logger;
 
-    public InstallCommand(IDotnetInstallOrchestratorService dotnetInstallOrchestrator)
+    public InstallCommand(IDotnetInstallOrchestratorService dotnetInstallOrchestrator,
+        ILogger<InstallCommand> logger)
     {
         _dotnetInstallOrchestrator = dotnetInstallOrchestrator;
+        _logger = logger;
     }
 
     public Command Initialize()

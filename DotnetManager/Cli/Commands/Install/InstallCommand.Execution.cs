@@ -3,6 +3,7 @@ using DotnetManager.Exception.Installation;
 using DotnetManager.Installation.Models;
 using DotnetManager.Installation.Models.Installation.Requests;
 using DotnetManager.Installation.Models.Installation.Targets;
+using Microsoft.Extensions.Logging;
 using NuGet.Versioning;
 
 namespace DotnetManager.Cli.Commands.Install;
@@ -73,7 +74,7 @@ public partial class InstallCommand
 
         if (!NuGetVersion.TryParse(value, out var version))
         {
-            Console.Error.WriteLine($"Invalid version: {value}");
+            _logger.LogError("Invalid .NET version: {Version}", value);
             return Task.FromResult(1);
         }
 
@@ -100,12 +101,12 @@ public partial class InstallCommand
         }
         catch (DotnetInstallException exception)
         {
-            await Console.Error.WriteLineAsync(GetErrorMessage(exception));
+            _logger.LogError("Installation failed: {ErrorMessage}", GetErrorMessage(exception));
             return 1;
         }
         catch (HttpRequestException exception)
         {
-            await Console.Error.WriteLineAsync($"Unable to download .NET files: {exception.Message}");
+            _logger.LogError(exception, "Unable to download .NET files");
             return 1;
         }
     }
