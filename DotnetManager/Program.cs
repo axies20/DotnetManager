@@ -25,6 +25,21 @@ internal abstract class Program
         var commandRegistration = host.Services.GetRequiredService<CommandRegistration>();
         commandRegistration.AddSubCommands(rootCommand);
 
-        return await rootCommand.Parse(args).InvokeAsync();
+        var logger = host.Services.GetRequiredService<ILogger<Program>>();
+
+        try
+        {
+            return await rootCommand.Parse(args).InvokeAsync();
+        }
+        catch (OperationCanceledException)
+        {
+            logger.LogWarning("Command execution was canceled");
+            return 130;
+        }
+        catch (global::System.Exception exception)
+        {
+            logger.LogError(exception, "Command execution failed");
+            return 1;
+        }
     }
 }
