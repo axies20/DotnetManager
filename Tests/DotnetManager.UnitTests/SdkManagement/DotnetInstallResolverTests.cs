@@ -6,6 +6,7 @@ using DotnetManager.Installation.Services.Resolver;
 using DotnetManager.ReleaseMetadata.Models;
 using DotnetManager.ReleaseMetadata.Models.Index;
 using DotnetManager.ReleaseMetadata.Models.Releases;
+using Microsoft.Extensions.Logging.Abstractions;
 using NuGet.Versioning;
 
 namespace DotnetManager.UnitTests.SdkManagement;
@@ -42,7 +43,8 @@ public class DotnetInstallResolverTests
                     CreateRelease("10.0.2", false)),
                 [sts.ReleasesUri] = CreateManifest("11.0", CreateRelease("11.0.1", true))
             });
-        var resolver = new DotnetInstallResolver(provider);
+        var resolver = new DotnetInstallResolver(provider,
+            NullLogger<DotnetInstallResolver>.Instance);
 
         var sources = await resolver.ResolveAsync(CreateRequest(
             new LatestSelector(ReleaseTypes.Lts, SupportPhases.Active, true),
@@ -109,11 +111,12 @@ public class DotnetInstallResolverTests
     private static DotnetInstallResolver CreateResolver(SdkChannel channel, params SdkRelease[] releases)
     {
         return new DotnetInstallResolver(new InstallResolverStubManifestProvider(
-            new SdkReleaseIndex([channel]),
-            new Dictionary<Uri, SdkReleaseManifest>
-            {
-                [channel.ReleasesUri] = CreateManifest(channel.ChannelVersion.ToString(), releases)
-            }));
+                new SdkReleaseIndex([channel]),
+                new Dictionary<Uri, SdkReleaseManifest>
+                {
+                    [channel.ReleasesUri] = CreateManifest(channel.ChannelVersion.ToString(), releases)
+                }),
+            NullLogger<DotnetInstallResolver>.Instance);
     }
 
     private static InstallRequest CreateRequest(InstallTarget target,
@@ -201,5 +204,4 @@ public class DotnetInstallResolverTests
             ]
         };
     }
-
 }

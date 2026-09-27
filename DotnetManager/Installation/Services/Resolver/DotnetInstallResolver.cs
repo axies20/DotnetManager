@@ -8,6 +8,7 @@ using DotnetManager.Installation.Models.Installation.Targets;
 using DotnetManager.ReleaseMetadata.Abstractions;
 using DotnetManager.ReleaseMetadata.Models.Index;
 using DotnetManager.ReleaseMetadata.Models.Releases;
+using Microsoft.Extensions.Logging;
 using NuGet.Versioning;
 
 namespace DotnetManager.Installation.Services.Resolver;
@@ -15,18 +16,23 @@ namespace DotnetManager.Installation.Services.Resolver;
 public class DotnetInstallResolver : IDotnetInstallResolverService
 {
     private readonly ISdkManifestProviderService _provider;
+    private readonly ILogger<DotnetInstallResolver> _logger;
 
-    public DotnetInstallResolver(ISdkManifestProviderService provider)
+    public DotnetInstallResolver(ISdkManifestProviderService provider,
+        ILogger<DotnetInstallResolver> logger)
     {
         _provider = provider;
+        _logger = logger;
     }
 
     public async Task<IReadOnlyCollection<DotnetDownloadSource>> ResolveAsync(InstallRequest request,
         CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Resolving .NET artifacts for {TargetType}",
+            request.Target.GetType().Name);
         var index = await _provider.GetReleaseIndexAsync(cancellationToken);
         IEnumerable<SdkChannel> channels = index.Releases;
-        return request.Target switch
+        var sources = request.Target switch
         {
             LatestSelector latestSelector => await CreateLatestAsync(
                 channels,
@@ -40,6 +46,10 @@ public class DotnetInstallResolver : IDotnetInstallResolverService
                 cancellationToken),
             _ => throw new ArgumentOutOfRangeException(nameof(request.Target))
         };
+
+        _logger.LogInformation("Resolved {ArtifactCount} artifact(s) for download",
+            sources.Count);
+        return sources;
     }
 
 
@@ -47,9 +57,12 @@ public class DotnetInstallResolver : IDotnetInstallResolverService
         SdkRelease release,
         InstallOptions options)
     {
-        var rid = string.IsNullOrWhiteSpace(options.RuntimeIdentifier)
-            ? RuntimeInformation.RuntimeIdentifier
-            : options.RuntimeIdentifier;
+        string rid;
+
+        if (string.IsNullOrWhiteSpace(options.RuntimeIdentifier))
+            rid = RuntimeInformation.RuntimeIdentifier;
+        else
+            rid = options.RuntimeIdentifier;
 
         return options.Components
             .Select(component => ResolveFile(release, component, rid))
@@ -83,8 +96,7 @@ public class DotnetInstallResolver : IDotnetInstallResolverService
         return ResolveArtifact(sdk, rid, "SDK", "dotnet-sdk");
     }
 
-    private static ReleaseFile ResolveArtifact(
-        DotnetVersion version,
+    private static ReleaseFile ResolveArtifact(DotnetVersion version,
         string rid,
         string componentName,
         string archiveName)
@@ -92,11 +104,16 @@ public class DotnetInstallResolver : IDotnetInstallResolverService
         var tarGzName = $"{archiveName}-{rid}.tar.gz";
         var zipName = $"{archiveName}-{rid}.zip";
 
-        return version.Artifacts.FirstOrDefault(x =>
-                   x.Rid == rid &&
-                   (x.FileName.Equals(tarGzName, StringComparison.OrdinalIgnoreCase) ||
-                    x.FileName.Equals(zipName, StringComparison.OrdinalIgnoreCase))) ??
-               throw new InstallArtifactNotFoundException(componentName, version.Version, rid);
+        var first = version.Artifacts.Where(file => file.Rid == rid)
+            .FirstOrDefault(file =>
+            {
+                if (file.FileName.Equals(tarGzName, StringComparison.OrdinalIgnoreCase))
+                    return true;
+
+                return file.FileName.Equals(zipName, StringComparison.OrdinalIgnoreCase);
+            });
+
+        return first ?? throw new InstallArtifactNotFoundException(componentName, version.Version, rid);
     }
 
     private Task<IReadOnlyCollection<DotnetDownloadSource>> CreateVersionAsync(
@@ -110,8 +127,12 @@ public class DotnetInstallResolver : IDotnetInstallResolverService
         var channelVersion = new NuGetVersion(version.Major, version.Minor, 0);
 
         var channel = channels.FirstOrDefault(x =>
-            x.ChannelVersion.Major == channelVersion.Major &&
-            x.ChannelVersion.Minor == channelVersion.Minor);
+        {
+            if (x.ChannelVersion.Major != channelVersion.Major)
+                return false;
+
+            return x.ChannelVersion.Minor == channelVersion.Minor;
+        });
 
         if (channel is null)
             throw new InstallChannelNotFoundException(channelVersion);
@@ -119,9 +140,16 @@ public class DotnetInstallResolver : IDotnetInstallResolverService
 
         return CreateDownloadsAsync(channel.ReleasesUri, options,
             releases =>
-                releases.FirstOrDefault(x => x.ReleaseVersion == version) ??
-                throw new InstallReleaseNotFoundException(version),
-            cancellationToken);
+            {
+                var sdkRelease = releases.FirstOrDefault(x => x.ReleaseVersion == version);
+
+                if (sdkRelease == null)
+                {
+                    throw new InstallReleaseNotFoundException(version);
+                }
+
+                return sdkRelease;
+            }, cancellationToken);
     }
 
 
@@ -137,9 +165,7 @@ public class DotnetInstallResolver : IDotnetInstallResolverService
         if (latestSelector.ReleaseType is not null)
             channels = channels.Where(x => x.ReleaseTypes == latestSelector.ReleaseType);
 
-        var latestChannel = channels.MaxBy(
-            x => x.ChannelVersion,
-            VersionComparer.VersionRelease);
+        var latestChannel = channels.MaxBy(x => x.ChannelVersion, VersionComparer.VersionRelease);
 
         if (latestChannel is null)
             throw new InstallChannelNotFoundException(
@@ -153,8 +179,7 @@ public class DotnetInstallResolver : IDotnetInstallResolverService
                     releases = releases.Where(x => x.Security);
 
                 return releases.MaxBy(x => x.ReleaseVersion, VersionComparer.VersionRelease) ??
-                       throw new InstallReleaseNotFoundException(
-                           latestChannel.ChannelVersion,
+                       throw new InstallReleaseNotFoundException(latestChannel.ChannelVersion,
                            latestSelector.SecurityOnly);
             },
             cancellationToken);
@@ -170,6 +195,13 @@ public class DotnetInstallResolver : IDotnetInstallResolverService
         var manifest = await _provider.GetReleasesAsync(releaseUri, cancellationToken);
 
         var release = selectRelease(manifest.Releases);
+
+        _logger.LogInformation("Selected .NET release {ReleaseVersion}", release.ReleaseVersion);
+        _logger.LogDebug("Resolving artifacts for runtime identifier {RuntimeIdentifier}",
+            string.IsNullOrWhiteSpace(options.RuntimeIdentifier)
+                ? RuntimeInformation.RuntimeIdentifier
+                : options.RuntimeIdentifier);
+
 
         return CreateDownloadSources(release, options);
     }
