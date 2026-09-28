@@ -1,6 +1,6 @@
 using System.CommandLine;
 using DotnetManager.Cli.Abstractions;
-using DotnetManager.Installation.Abstractions.Removal;
+using DotnetManager.Removal.Abstractions;
 
 namespace DotnetManager.Cli.Commands.Remove;
 
