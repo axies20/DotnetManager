@@ -8,26 +8,26 @@ using DotnetManager.Cli.Commands.Install;
 using DotnetManager.Cli.Commands.List;
 using DotnetManager.Cli.Commands.Remove;
 using DotnetManager.Cli.Commands.Update;
-using DotnetManager.Configuration;
+using DotnetManager.Core.Configuration;
 using DotnetManager.Installation.Abstractions.Archives;
 using DotnetManager.Installation.Abstractions.Downloads;
 using DotnetManager.Installation.Abstractions.Installation;
 using DotnetManager.Installation.Abstractions.InstallPaths;
-using DotnetManager.Installation.Abstractions.Removal;
 using DotnetManager.Installation.Abstractions.Resolver;
-using DotnetManager.Installation.Abstractions.UserEnvironment;
 using DotnetManager.Installation.Services.Archives;
 using DotnetManager.Installation.Services.Downloads;
 using DotnetManager.Installation.Services.Installation;
-using DotnetManager.Installation.Services.Removal;
 using DotnetManager.Installation.Services.Resolver;
-using DotnetManager.Installation.Services.UserEnvironment;
 using DotnetManager.InstalledDotnet.Abstractions;
 using DotnetManager.InstalledDotnet.Models;
 using DotnetManager.InstalledDotnet.RootSources;
 using DotnetManager.InstalledDotnet.Services;
 using DotnetManager.ReleaseMetadata.Abstractions;
 using DotnetManager.ReleaseMetadata.Services;
+using DotnetManager.Removal.Abstractions;
+using DotnetManager.Removal.Services;
+using DotnetManager.UserEnvironment.Abstractions;
+using DotnetManager.UserEnvironment.Services;
 using Microsoft.Extensions.DependencyInjection;
 using UnixDotnetInstallPathProvider = DotnetManager.Installation.InstallPaths.UnixDotnetInstallPathProvider;
 
@@ -39,8 +39,10 @@ public static class ServiceCollectionExtensions
     {
         AddConfiguration(services);
         AddReleaseMetadata(services);
-        AddSdkManagement(services);
+        AddUserEnvironment(services);
+        AddInstallation(services);
         AddInstalledDotnet(services);
+        AddRemoval(services);
         AddCli(services);
 
         return services;
@@ -59,16 +61,19 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ISdkReleaseService, SdkReleaseService>();
     }
 
-    private static void AddSdkManagement(IServiceCollection services)
+    private static void AddUserEnvironment(IServiceCollection services)
+    {
+        services.AddSingleton<IUserEnvironmentConfiguratorService, UnixUserEnvironmentConfigurator>();
+    }
+
+    private static void AddInstallation(IServiceCollection services)
     {
         services.AddHttpClient<IDotnetDownloaderService, DotnetDownloader>();
         services.AddSingleton<IArchiveExtractorService, ArchiveExtractor>();
         services.AddSingleton<IDotnetInstallPathProviderService, UnixDotnetInstallPathProvider>();
-        services.AddSingleton<IUserEnvironmentConfiguratorService, UnixUserEnvironmentConfigurator>();
         services.AddSingleton<IDotnetInstallationFinalizerService, DotnetInstallationFinalizer>();
         services.AddTransient<IDotnetInstallResolverService, DotnetInstallResolver>();
         services.AddTransient<IDotnetInstallOrchestratorService, DotnetInstallOrchestrator>();
-        services.AddTransient<IDotnetRemovalService, DotnetRemovalService>();
     }
 
     private static void AddInstalledDotnet(IServiceCollection services)
@@ -82,6 +87,11 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IDotnetInstallationLocatorService<SdkInstallation>, SdkLocator>();
         services.AddSingleton<IDotnetInstallationLocatorService<RuntimeInstallation>, RuntimeLocator>();
         services.AddSingleton<IDotnetInstallationLocatorService<HostInstallation>, HostLocator>();
+    }
+
+    private static void AddRemoval(IServiceCollection services)
+    {
+        services.AddTransient<IDotnetRemovalService, DotnetRemovalService>();
     }
 
     private static void AddCli(IServiceCollection services)
