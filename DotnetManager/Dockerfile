@@ -5,7 +5,16 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+COPY ["Directory.Build.props", "."]
+COPY ["Directory.Packages.props", "."]
+COPY ["global.json", "."]
 COPY ["DotnetManager/DotnetManager.csproj", "DotnetManager/"]
+COPY ["DotnetManager.Core/DotnetManager.Core.csproj", "DotnetManager.Core/"]
+COPY ["DotnetManager.Installation/DotnetManager.Installation.csproj", "DotnetManager.Installation/"]
+COPY ["DotnetManager.InstalledDotnet/DotnetManager.InstalledDotnet.csproj", "DotnetManager.InstalledDotnet/"]
+COPY ["DotnetManager.ReleaseMetadata/DotnetManager.ReleaseMetadata.csproj", "DotnetManager.ReleaseMetadata/"]
+COPY ["DotnetManager.Removal/DotnetManager.Removal.csproj", "DotnetManager.Removal/"]
+COPY ["DotnetManager.UserEnvironment/DotnetManager.UserEnvironment.csproj", "DotnetManager.UserEnvironment/"]
 RUN dotnet restore "DotnetManager/DotnetManager.csproj"
 COPY . .
 WORKDIR "/src/DotnetManager"
