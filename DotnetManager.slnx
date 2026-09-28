@@ -7,4 +7,10 @@
         <Project Path="Tests/DotnetManager.UnitTests/DotnetManager.UnitTests.csproj"/>
     </Folder>
     <Project Path="DotnetManager/DotnetManager.csproj"/>
+    <Project Path="DotnetManager.Core/DotnetManager.Core.csproj"/>
+    <Project Path="DotnetManager.Installation/DotnetManager.Installation.csproj"/>
+    <Project Path="DotnetManager.InstalledDotnet/DotnetManager.InstalledDotnet.csproj"/>
+    <Project Path="DotnetManager.ReleaseMetadata/DotnetManager.ReleaseMetadata.csproj"/>
+    <Project Path="DotnetManager.Removal/DotnetManager.Removal.csproj"/>
+    <Project Path="DotnetManager.UserEnvironment/DotnetManager.UserEnvironment.csproj"/>
 </Solution>
