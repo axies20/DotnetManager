@@ -1,5 +1,5 @@
 using System.Runtime.InteropServices;
-using DotnetManager.Installation.Models;
+using DotnetManager.Core.Models;
 using DotnetManager.Installation.Models.Installation.Requests;
 using DotnetManager.Installation.Models.Installation.Targets;
 using Spectre.Console;

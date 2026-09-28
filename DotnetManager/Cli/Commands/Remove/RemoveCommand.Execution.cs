@@ -1,5 +1,5 @@
 using System.CommandLine;
-using DotnetManager.Installation.Models;
+using DotnetManager.Core.Models;
 
 namespace DotnetManager.Cli.Commands.Remove;
 

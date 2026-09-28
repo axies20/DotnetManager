@@ -1,6 +1,6 @@
 using System.CommandLine;
-using DotnetManager.Exception.Installation;
-using DotnetManager.Installation.Models;
+using DotnetManager.Installation.Exceptions;
+using DotnetManager.Core.Models;
 using DotnetManager.Installation.Models.Installation.Requests;
 using DotnetManager.Installation.Models.Installation.Targets;
 using Microsoft.Extensions.Logging;
