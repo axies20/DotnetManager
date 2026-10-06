@@ -2,7 +2,7 @@ using System.Text;
 using DotnetManager.Core.Models;
 using DotnetManager.UserEnvironment.Models;
 
-namespace DotnetManager.UserEnvironment.Services.Configurations;
+namespace DotnetManager.UserEnvironment.Services.UserConfigurations;
 
 internal class OhMyZshUEConfig : UEConfiguratorBase
 {
@@ -15,7 +15,7 @@ internal class OhMyZshUEConfig : UEConfiguratorBase
 
         builder.AppendLine($"export DOTNET_ROOT=\"{path}\"");
         builder.AppendLine($"export PATH=\"{path}:$PATH\"");
-        builder.AppendLine($"export PATH=\"{GetToolsPath(path)}:$PATH\"");
+        builder.AppendLine($"export PATH=\"{GetToolsPath()}:$PATH\"");
 
         return builder.ToString();
     }

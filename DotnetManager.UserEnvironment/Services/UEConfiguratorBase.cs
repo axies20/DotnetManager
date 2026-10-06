@@ -32,8 +32,10 @@ internal abstract class UEConfiguratorBase : IUEConfigurator
 
     protected abstract string BuildContent(string dotnetRoot);
 
-    protected static string GetToolsPath(string dotnetRoot)
+    protected static string GetToolsPath()
     {
-        return Path.Combine(dotnetRoot, "tools");
+        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+        return Path.Combine(home, ".dotnet", "tools");
     }
 }
