@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace DotnetManager.ReleaseMetadata.Contracts.Releases;
 
-public class RawReleasesSDK
+public class RawReleasesSdk
 {
     [JsonPropertyName("version")]
     public string? Version { get; set; }

@@ -23,10 +23,10 @@ public class RawReleases
     public RawReleasesRuntime? Runtime { get; set; }
 
     [JsonPropertyName("sdk")]
-    public RawReleasesSDK? Sdk { get; set; }
+    public RawReleasesSdk? Sdk { get; set; }
 
     [JsonPropertyName("sdks")]
-    public List<RawReleasesSDK>? Sdks { get; set; }
+    public List<RawReleasesSdk>? Sdks { get; set; }
 
     [JsonPropertyName("aspnetcore-runtime")]
     public RawReleasesAspNetCoreRuntime? RawAspNetCoreRuntime { get; set; }

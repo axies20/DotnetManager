@@ -1,6 +1,5 @@
 using DotnetManager.Cli;
 using DotnetManager.Cli.Abstractions;
-using DotnetManager.Cli.Commands;
 using DotnetManager.Cli.Commands.Available;
 using DotnetManager.Cli.Commands.Available.Abstraction;
 using DotnetManager.Cli.Commands.Available.Services;
@@ -26,8 +25,6 @@ using DotnetManager.ReleaseMetadata.Abstractions;
 using DotnetManager.ReleaseMetadata.Services;
 using DotnetManager.Removal.Abstractions;
 using DotnetManager.Removal.Services;
-using DotnetManager.UserEnvironment.Abstractions;
-using DotnetManager.UserEnvironment.Services;
 using Microsoft.Extensions.DependencyInjection;
 using UnixDotnetInstallPathProvider = DotnetManager.Installation.InstallPaths.UnixDotnetInstallPathProvider;
 
@@ -63,7 +60,6 @@ public static class ServiceCollectionExtensions
 
     private static void AddUserEnvironment(IServiceCollection services)
     {
-        services.AddSingleton<IUserEnvironmentConfiguratorService, UnixUserEnvironmentConfigurator>();
     }
 
     private static void AddInstallation(IServiceCollection services)

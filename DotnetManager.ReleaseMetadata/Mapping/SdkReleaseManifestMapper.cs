@@ -52,7 +52,7 @@ public static class SdkReleaseManifestMapper
         };
     }
 
-    private static DotnetVersion MapSdk(RawReleasesSDK rawReleasesSdk)
+    private static DotnetVersion MapSdk(RawReleasesSdk rawReleasesSdk)
     {
         var artifacts = MappingGuard.Required(rawReleasesSdk.Files)
             .Select(MapArtifact).ToList();
@@ -64,7 +64,7 @@ public static class SdkReleaseManifestMapper
         };
     }
 
-    private static List<DotnetVersion> MapSdks(List<RawReleasesSDK>? rawSdks, RawReleasesSDK rawSdk)
+    private static List<DotnetVersion> MapSdks(List<RawReleasesSdk>? rawSdks, RawReleasesSdk rawSdk)
     {
         var sdks = rawSdks is null
             ? []
