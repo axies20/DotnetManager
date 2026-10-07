@@ -5,18 +5,6 @@ namespace DotnetManager.UserEnvironment.Services.Resolver;
 
 internal partial class UEResolver
 {
-    private UEResolvedConfiguration? ResolveFish()
-    {
-        var fishDir = ResolveFishConfigDirectory();
-
-        if (string.IsNullOrWhiteSpace(fishDir))
-        {
-            return null;
-        }
-
-        var fish = configurators.First(x => x.Kind == UEKind.Fish);
-        return new UEResolvedConfiguration(fish, fishDir);
-    }
 
     private static string? ResolveFishConfigDirectory()
     {
@@ -53,5 +41,18 @@ internal partial class UEResolver
         }
 
         return false;
+    }
+
+    private UEResolvedConfiguration? ResolveFish()
+    {
+        var fishDir = ResolveFishConfigDirectory();
+
+        if (string.IsNullOrWhiteSpace(fishDir))
+        {
+            return null;
+        }
+
+        var fish = configurators.First(x => x.Kind == UEKind.Fish);
+        return new UEResolvedConfiguration(fish, fishDir);
     }
 }

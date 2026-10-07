@@ -5,19 +5,6 @@ namespace DotnetManager.UserEnvironment.Services.Resolver;
 
 internal partial class UEResolver
 {
-    private UEResolvedConfiguration? ResolveZsh()
-    {
-        var zshDir = ResolveOhMyZshCustomDirectory();
-
-        if (string.IsNullOrEmpty(zshDir))
-        {
-            return null;
-        }
-
-        var zsh = configurators.First(x => x.Kind == UEKind.OhMyZsh);
-        return new UEResolvedConfiguration(zsh, zshDir);
-
-    }
 
     private static string? ResolveOhMyZshCustomDirectory()
     {
@@ -34,5 +21,19 @@ internal partial class UEResolver
         var ohMyZsh = Path.Combine(UserPaths.Home, ".oh-my-zsh");
 
         return Directory.Exists(ohMyZsh) ? Path.Combine(ohMyZsh, "custom") : null;
+    }
+
+    private UEResolvedConfiguration? ResolveZsh()
+    {
+        var zshDir = ResolveOhMyZshCustomDirectory();
+
+        if (string.IsNullOrEmpty(zshDir))
+        {
+            return null;
+        }
+
+        var zsh = configurators.First(x => x.Kind == UEKind.OhMyZsh);
+        return new UEResolvedConfiguration(zsh, zshDir);
+
     }
 }

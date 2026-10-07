@@ -2,8 +2,6 @@ namespace DotnetManager.Core.Models;
 
 public static class UserPaths
 {
-    private const string XdgConfigHomeVariable = "XDG_CONFIG_HOME";
-    private const string DefaultConfigDirectoryName = ".config";
 
     public static string Home => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
@@ -18,4 +16,7 @@ public static class UserPaths
                 : Path.Combine(Home, DefaultConfigDirectoryName);
         }
     }
+
+    private const string XdgConfigHomeVariable = "XDG_CONFIG_HOME";
+    private const string DefaultConfigDirectoryName = ".config";
 }
