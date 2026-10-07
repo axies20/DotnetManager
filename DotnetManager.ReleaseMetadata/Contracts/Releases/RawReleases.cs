@@ -30,7 +30,4 @@ public class RawReleases
 
     [JsonPropertyName("aspnetcore-runtime")]
     public RawReleasesAspNetCoreRuntime? RawAspNetCoreRuntime { get; set; }
-
-    [JsonPropertyName("windowsdesktop")]
-    public RawReleasesWindowsDesktop? Windowsdesktop { get; set; }
 }
