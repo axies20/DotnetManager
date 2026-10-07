@@ -13,7 +13,6 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IDotnetRootSource, EnvironmentDotnetRootSource>();
         services.AddSingleton<IDotnetRootSource, PathDotnetRootSource>();
         services.AddSingleton<IDotnetRootSource, UnixInstallLocationDotnetRootSource>();
-        services.AddSingleton<IDotnetRootSource, WindowsRegistryDotnetRootSource>();
         services.AddSingleton<IDotnetRootLocatorService, DotnetRootLocator>();
 
         services.AddSingleton<IDotnetInstallationLocatorService<SdkInstallation>, SdkLocator>();
