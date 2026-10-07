@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DotnetManager.Installation.Services.Installation;
 
-public sealed class DotnetInstallOrchestrator : IDotnetInstallOrchestratorService
+internal sealed class DotnetInstallOrchestrator : IDotnetInstallOrchestratorService
 {
     private readonly IDotnetInstallResolverService _resolver;
     private readonly IDotnetDownloaderService _downloader;

@@ -4,7 +4,7 @@ using DotnetManager.Cli.Commands.Available.Abstraction;
 
 namespace DotnetManager.Cli.Commands.Available;
 
-public partial class AvailableCommand(ISdkReleaseService sdkReleaseService) : ICommand
+internal sealed partial class AvailableCommand(ISdkReleaseService sdkReleaseService) : ICommand
 {
     public Command Initialize()
     {

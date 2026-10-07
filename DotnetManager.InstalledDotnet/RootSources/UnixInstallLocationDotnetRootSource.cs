@@ -2,7 +2,7 @@ using DotnetManager.InstalledDotnet.Abstractions;
 
 namespace DotnetManager.InstalledDotnet.RootSources;
 
-public class UnixInstallLocationDotnetRootSource : IDotnetRootSource
+internal sealed class UnixInstallLocationDotnetRootSource : IDotnetRootSource
 {
     private const string DotnetConfigDirectory = "/etc/dotnet";
 

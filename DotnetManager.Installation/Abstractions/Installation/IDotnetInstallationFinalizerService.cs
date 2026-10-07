@@ -1,6 +1,6 @@
 namespace DotnetManager.Installation.Abstractions.Installation;
 
-public interface IDotnetInstallationFinalizerService
+internal interface IDotnetInstallationFinalizerService
 {
     Task FinalizeAsync(CancellationToken cancellationToken);
 }

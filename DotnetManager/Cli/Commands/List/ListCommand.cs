@@ -5,7 +5,7 @@ using DotnetManager.InstalledDotnet.Models;
 
 namespace DotnetManager.Cli.Commands.List;
 
-public sealed partial class ListCommand : ICommand
+internal sealed partial class ListCommand : ICommand
 {
     private readonly IDotnetInstallationLocatorService<HostInstallation> _hostLocator;
     private readonly IDotnetInstallationLocatorService<RuntimeInstallation> _runtimeLocator;

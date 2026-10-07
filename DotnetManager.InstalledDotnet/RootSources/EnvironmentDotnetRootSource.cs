@@ -2,7 +2,7 @@ using DotnetManager.InstalledDotnet.Abstractions;
 
 namespace DotnetManager.InstalledDotnet.RootSources;
 
-public class EnvironmentDotnetRootSource : IDotnetRootSource
+internal sealed class EnvironmentDotnetRootSource : IDotnetRootSource
 {
     private static readonly string[] Variables =
     [

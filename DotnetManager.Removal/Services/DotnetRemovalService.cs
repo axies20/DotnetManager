@@ -7,7 +7,7 @@ using NuGet.Versioning;
 
 namespace DotnetManager.Removal.Services;
 
-public class DotnetRemovalService : IDotnetRemovalService
+internal sealed class DotnetRemovalService : IDotnetRemovalService
 {
     private readonly IDotnetInstallationLocatorService<HostInstallation> _hostLocator;
     private readonly IDotnetInstallationLocatorService<RuntimeInstallation> _runtimeLocator;

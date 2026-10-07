@@ -2,7 +2,7 @@ using System.CommandLine;
 
 namespace DotnetManager.Cli.Commands.List;
 
-public sealed partial class ListCommand
+internal sealed partial class ListCommand
 {
     private readonly Option<bool> _hostOption = new("--host", "-ht")
     {

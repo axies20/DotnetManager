@@ -1,7 +1,6 @@
 namespace DotnetManager.Installation.Abstractions.InstallPaths;
 
-public interface IDotnetInstallPathProviderService
+internal interface IDotnetInstallPathProviderService
 {
     string GetInstallDirectory();
-    string? GetExecutableLinkPath();
 }

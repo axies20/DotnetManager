@@ -4,7 +4,7 @@ using DotnetManager.Removal.Abstractions;
 
 namespace DotnetManager.Cli.Commands.Remove;
 
-public partial class RemoveCommand : ICommand
+internal sealed partial class RemoveCommand : ICommand
 {
     private readonly IDotnetRemovalService _removalService;
 

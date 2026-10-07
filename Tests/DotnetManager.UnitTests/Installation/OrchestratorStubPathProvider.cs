@@ -8,9 +8,4 @@ internal sealed class OrchestratorStubPathProvider(string path) : IDotnetInstall
     {
         return path;
     }
-
-    public string? GetExecutableLinkPath()
-    {
-        return null;
-    }
 }

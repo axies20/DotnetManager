@@ -1,6 +1,7 @@
 ﻿using System.CommandLine;
 using DotnetManager.Cli;
 using DotnetManager.DependencyInjection;
+using DotnetManager.Helper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,12 @@ internal abstract class Program
 {
     private static async Task<int> Main(string[] args)
     {
+        if (UnixHelper.IsRoot())
+        {
+            Console.Error.WriteLine("DotnetManager must not be run as root. Run it as a regular user.");
+            return 1;
+        }
+
         var builder = Host.CreateApplicationBuilder(new HostApplicationBuilderSettings
         {
             Args = args,

@@ -4,7 +4,7 @@ using DotnetManager.ReleaseMetadata.Models.Releases;
 
 namespace DotnetManager.Cli.Commands.Available;
 
-public partial class AvailableCommand
+internal sealed partial class AvailableCommand
 {
     private static void PrintAllReleases(IReadOnlyCollection<SdkChannel> channels)
     {

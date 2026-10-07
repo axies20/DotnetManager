@@ -2,7 +2,7 @@ using DotnetManager.UserEnvironment.Models;
 
 namespace DotnetManager.UserEnvironment.Abstraction;
 
-public interface IUEManager
+internal interface IUEManager
 {
     Task ConfigureEnvironment(UEInstallScope scope);
 }

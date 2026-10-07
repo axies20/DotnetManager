@@ -2,13 +2,12 @@ using System.Text;
 using DotnetManager.Core.Models;
 using DotnetManager.UserEnvironment.Models;
 
-namespace DotnetManager.UserEnvironment.Services.SystemWideConfiguration;
+namespace DotnetManager.UserEnvironment.Services.Configuration;
 
-internal class SystemWidePosixConfig : UEConfiguratorBase
+internal class OhMyZshUEConfig : UEConfiguratorBase
 {
-
-    public override UEKind Kind => UEKind.PosixSystem;
-    protected override string FileName => $"{ApplicationInfo.Name}.sh";
+    public override UEKind Kind => UEKind.OhMyZsh;
+    protected override string FileName => $"60-{ApplicationInfo.Name}.zsh";
 
     protected override string BuildContent(string path)
     {

@@ -3,7 +3,7 @@ using DotnetManager.Cli.Abstractions;
 
 namespace DotnetManager.Cli.Commands.Update;
 
-public class UpdateCommand : ICommand
+internal sealed class UpdateCommand : ICommand
 {
     public Command Initialize()
     {

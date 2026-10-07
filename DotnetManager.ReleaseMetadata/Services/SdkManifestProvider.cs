@@ -11,7 +11,7 @@ using DotnetManifestJsonContext = DotnetManager.ReleaseMetadata.Serialization.Do
 
 namespace DotnetManager.ReleaseMetadata.Services;
 
-public class SdkManifestProvider : ISdkManifestProviderService
+internal sealed class SdkManifestProvider : ISdkManifestProviderService
 {
     private readonly HttpClient _httpClient;
     private readonly DotnetManagerOptions _options;

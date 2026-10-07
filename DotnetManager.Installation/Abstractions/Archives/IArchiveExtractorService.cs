@@ -1,6 +1,6 @@
 namespace DotnetManager.Installation.Abstractions.Archives;
 
-public interface IArchiveExtractorService
+internal interface IArchiveExtractorService
 {
     Task ExtractAsync(string archivePath, string destinationPath, CancellationToken cancellationToken);
 }

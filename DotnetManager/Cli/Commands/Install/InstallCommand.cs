@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DotnetManager.Cli.Commands.Install;
 
-public partial class InstallCommand : ICommand
+internal sealed partial class InstallCommand : ICommand
 {
     private readonly IDotnetInstallOrchestratorService _dotnetInstallOrchestrator;
     private readonly ILogger<InstallCommand> _logger;

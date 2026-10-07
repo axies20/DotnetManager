@@ -4,7 +4,8 @@ using NuGet.Versioning;
 
 namespace DotnetManager.InstalledDotnet.Services;
 
-public class SdkLocator(IDotnetRootLocatorService rootLocator) : IDotnetInstallationLocatorService<SdkInstallation>
+internal sealed class SdkLocator(IDotnetRootLocatorService rootLocator)
+    : IDotnetInstallationLocatorService<SdkInstallation>
 {
     public IReadOnlyCollection<SdkInstallation> Find()
     {

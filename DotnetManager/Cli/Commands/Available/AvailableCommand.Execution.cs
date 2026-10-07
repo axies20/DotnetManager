@@ -2,7 +2,7 @@ using System.CommandLine;
 
 namespace DotnetManager.Cli.Commands.Available;
 
-public partial class AvailableCommand
+internal sealed partial class AvailableCommand
 {
     private async Task Execute(ParseResult result, CancellationToken ct)
     {

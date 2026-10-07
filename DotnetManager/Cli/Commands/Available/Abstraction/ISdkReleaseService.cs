@@ -4,7 +4,7 @@ using NuGet.Versioning;
 
 namespace DotnetManager.Cli.Commands.Available.Abstraction;
 
-public interface ISdkReleaseService
+internal interface ISdkReleaseService
 {
     Task<IReadOnlyCollection<SdkChannel>> GetChannelsAsync(CancellationToken cancellationToken);
 

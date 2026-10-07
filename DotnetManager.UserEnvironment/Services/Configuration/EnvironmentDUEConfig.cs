@@ -2,11 +2,11 @@ using System.Text;
 using DotnetManager.Core.Models;
 using DotnetManager.UserEnvironment.Models;
 
-namespace DotnetManager.UserEnvironment.Services.UserConfigurations;
+namespace DotnetManager.UserEnvironment.Services.Configuration;
 
-internal class SystemdUEConfig : UEConfiguratorBase
+internal class EnvironmentDUEConfig : UEConfiguratorBase
 {
-    public override UEKind Kind => UEKind.SystemdUser;
+    public override UEKind Kind => UEKind.EnvironmentD;
     protected override string FileName => $"60-{ApplicationInfo.Name}.conf";
 
     protected override string BuildContent(string path)

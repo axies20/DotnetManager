@@ -1,6 +1,6 @@
 namespace DotnetManager.UserEnvironment.Helper;
 
-public static class SystemdDetector
+internal static class SystemdDetector
 {
     public static bool IsSystemd()
     {

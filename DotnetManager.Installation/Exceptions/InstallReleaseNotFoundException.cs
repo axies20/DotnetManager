@@ -4,6 +4,13 @@ namespace DotnetManager.Installation.Exceptions;
 
 public sealed class InstallReleaseNotFoundException : DotnetInstallException
 {
+
+    public NuGetVersion? Version { get; }
+
+    public NuGetVersion? ChannelVersion { get; }
+
+    public bool SecurityOnly { get; }
+
     public InstallReleaseNotFoundException(NuGetVersion version)
         : base($".NET release '{version}' was not found.")
     {
@@ -18,10 +25,4 @@ public sealed class InstallReleaseNotFoundException : DotnetInstallException
         ChannelVersion = channelVersion;
         SecurityOnly = securityOnly;
     }
-
-    public NuGetVersion? Version { get; }
-
-    public NuGetVersion? ChannelVersion { get; }
-
-    public bool SecurityOnly { get; }
 }

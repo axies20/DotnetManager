@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DotnetManager.InstalledDotnet.Services;
 
-public class DotnetRootLocator(
+internal sealed class DotnetRootLocator(
     IEnumerable<IDotnetRootSource> sources,
     ILogger<DotnetRootLocator> logger) : IDotnetRootLocatorService
 {

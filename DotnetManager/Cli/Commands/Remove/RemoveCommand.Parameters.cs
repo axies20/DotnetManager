@@ -2,7 +2,7 @@ using System.CommandLine;
 
 namespace DotnetManager.Cli.Commands.Remove;
 
-public partial class RemoveCommand
+internal sealed partial class RemoveCommand
 {
     private readonly Option<bool> _runtime = new("--runtime", "-rt")
     {

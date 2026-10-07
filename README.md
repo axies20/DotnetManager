@@ -126,13 +126,13 @@ Microsoft release metadata
 
 The downloaded .NET SDK/runtime is separate from the DotnetManager utility itself:
 
-| Purpose | Non-root location | Root location |
-| --- | --- | --- |
-| DotnetManager utility | `~/.dotnet-manager` | same; the bootstrap installer is user-scoped |
-| Managed .NET installation | `~/.dotnet` | `/usr/local/share/dotnet` |
-| `dotnet` command entry point | shell configuration | `/usr/local/bin/dotnet` |
+| Purpose | User location |
+| --- | --- |
+| DotnetManager utility | `~/.dotnet-manager` |
+| Managed .NET installation | `~/.dotnet` |
+| `dotnet` command entry point | user environment configuration |
 
-Running DotnetManager without root privileges is recommended. For a user installation it configures `DOTNET_ROOT` and `PATH` in the detected shell configuration. Root installation is intended for an explicitly system-wide .NET installation.
+DotnetManager is user-scoped and must not be run as root. It configures `DOTNET_ROOT` and `PATH` only in supported user environment locations.
 
 ## Uninstall DotnetManager
 

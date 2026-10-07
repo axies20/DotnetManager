@@ -3,7 +3,7 @@ using NuGet.Versioning;
 
 namespace DotnetManager.Cli.Commands.Available;
 
-public partial class AvailableCommand
+internal sealed partial class AvailableCommand
 {
     private readonly Argument<NuGetVersion?> _channelArgument = new("channel")
     {

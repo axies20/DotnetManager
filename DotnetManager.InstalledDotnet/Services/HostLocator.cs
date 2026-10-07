@@ -4,7 +4,8 @@ using NuGet.Versioning;
 
 namespace DotnetManager.InstalledDotnet.Services;
 
-public class HostLocator(IDotnetRootLocatorService rootLocator) : IDotnetInstallationLocatorService<HostInstallation>
+internal sealed class HostLocator(IDotnetRootLocatorService rootLocator)
+    : IDotnetInstallationLocatorService<HostInstallation>
 {
     public IReadOnlyCollection<HostInstallation> Find()
     {

@@ -13,7 +13,7 @@ using NuGet.Versioning;
 
 namespace DotnetManager.Installation.Services.Resolver;
 
-public class DotnetInstallResolver : IDotnetInstallResolverService
+internal sealed class DotnetInstallResolver : IDotnetInstallResolverService
 {
     private readonly ISdkManifestProviderService _provider;
     private readonly ILogger<DotnetInstallResolver> _logger;

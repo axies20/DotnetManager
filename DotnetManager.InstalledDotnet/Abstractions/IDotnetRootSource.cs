@@ -1,6 +1,6 @@
 namespace DotnetManager.InstalledDotnet.Abstractions;
 
-public interface IDotnetRootSource
+internal interface IDotnetRootSource
 {
     IEnumerable<string> DiscoverRoots();
 }

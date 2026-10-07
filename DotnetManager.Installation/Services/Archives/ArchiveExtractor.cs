@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DotnetManager.Installation.Services.Archives;
 
-public class ArchiveExtractor(ILogger<ArchiveExtractor> logger) : IArchiveExtractorService
+internal sealed class ArchiveExtractor(ILogger<ArchiveExtractor> logger) : IArchiveExtractorService
 {
     public async Task ExtractAsync(string archivePath, string destinationPath, CancellationToken cancellationToken)
     {

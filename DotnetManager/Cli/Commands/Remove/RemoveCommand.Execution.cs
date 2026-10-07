@@ -3,7 +3,7 @@ using DotnetManager.Core.Models;
 
 namespace DotnetManager.Cli.Commands.Remove;
 
-public partial class RemoveCommand
+internal sealed partial class RemoveCommand
 {
     private void Execute(ParseResult result)
     {

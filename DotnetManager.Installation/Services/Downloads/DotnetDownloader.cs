@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DotnetManager.Installation.Services.Downloads;
 
-public class DotnetDownloader(HttpClient client, ILogger<DotnetDownloader> logger) : IDotnetDownloaderService
+internal sealed class DotnetDownloader(HttpClient client, ILogger<DotnetDownloader> logger) : IDotnetDownloaderService
 {
     private const int BufferSize = 81920;
     private static readonly TimeSpan ProgressInterval = TimeSpan.FromSeconds(5);

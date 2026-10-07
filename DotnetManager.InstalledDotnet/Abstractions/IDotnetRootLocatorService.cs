@@ -1,6 +1,6 @@
 namespace DotnetManager.InstalledDotnet.Abstractions;
 
-public interface IDotnetRootLocatorService
+internal interface IDotnetRootLocatorService
 {
     IReadOnlyCollection<string> GetRoots();
 }

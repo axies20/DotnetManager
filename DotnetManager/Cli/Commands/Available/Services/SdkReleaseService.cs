@@ -7,7 +7,7 @@ using NuGet.Versioning;
 
 namespace DotnetManager.Cli.Commands.Available.Services;
 
-public class SdkReleaseService : ISdkReleaseService
+internal sealed class SdkReleaseService : ISdkReleaseService
 {
     private readonly ISdkManifestProviderService _manifestProvider;
 

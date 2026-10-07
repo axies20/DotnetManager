@@ -2,7 +2,7 @@ using System.CommandLine;
 
 namespace DotnetManager.Cli.Abstractions;
 
-public interface ICommand
+internal interface ICommand
 {
     Command Initialize();
 }

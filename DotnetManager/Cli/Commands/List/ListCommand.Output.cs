@@ -3,7 +3,7 @@ using DotnetManager.InstalledDotnet.Models;
 
 namespace DotnetManager.Cli.Commands.List;
 
-public sealed partial class ListCommand
+internal sealed partial class ListCommand
 {
     private static void PrintSdks(IReadOnlyCollection<SdkInstallation> sdks)
     {

@@ -1,3 +1,3 @@
 namespace DotnetManager.Installation.Exceptions;
 
-public abstract class DotnetInstallException(string message) : global::System.Exception(message);
+public abstract class DotnetInstallException(string message) : Exception(message);

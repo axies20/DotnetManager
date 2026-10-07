@@ -1,7 +1,7 @@
 using DotnetManager.UserEnvironment.Abstraction;
 using DotnetManager.UserEnvironment.Models;
 
-namespace DotnetManager.UserEnvironment.Services;
+namespace DotnetManager.UserEnvironment.Services.Configuration;
 
 internal abstract class UEConfiguratorBase : IUEConfigurator
 {
@@ -30,12 +30,12 @@ internal abstract class UEConfiguratorBase : IUEConfigurator
         File.Delete(fileName);
     }
 
-    protected abstract string BuildContent(string dotnetRoot);
-
     protected static string GetToolsPath()
     {
         var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
         return Path.Combine(home, ".dotnet", "tools");
     }
+
+    protected abstract string BuildContent(string dotnetRoot);
 }

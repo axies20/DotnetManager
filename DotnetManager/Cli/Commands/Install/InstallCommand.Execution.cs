@@ -8,7 +8,7 @@ using NuGet.Versioning;
 
 namespace DotnetManager.Cli.Commands.Install;
 
-public partial class InstallCommand
+internal sealed partial class InstallCommand
 {
     private static string GetErrorMessage(DotnetInstallException exception)
     {

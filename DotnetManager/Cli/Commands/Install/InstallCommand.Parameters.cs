@@ -3,7 +3,7 @@ using DotnetManager.ReleaseMetadata.Models;
 
 namespace DotnetManager.Cli.Commands.Install;
 
-public partial class InstallCommand
+internal sealed partial class InstallCommand
 {
     private readonly Command _latest = new("latest",
         "Install the latest version of the specified release type and support phase");

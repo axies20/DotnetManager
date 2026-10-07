@@ -3,7 +3,7 @@ using Microsoft.Win32;
 
 namespace DotnetManager.InstalledDotnet.RootSources;
 
-public sealed class WindowsRegistryDotnetRootSource : IDotnetRootSource
+internal sealed class WindowsRegistryDotnetRootSource : IDotnetRootSource
 {
     private const string InstalledVersionsPath = @"SOFTWARE\dotnet\Setup\InstalledVersions";
 

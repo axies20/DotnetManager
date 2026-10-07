@@ -2,7 +2,7 @@ using DotnetManager.InstalledDotnet.Abstractions;
 
 namespace DotnetManager.InstalledDotnet.RootSources;
 
-public class PathDotnetRootSource : IDotnetRootSource
+internal sealed class PathDotnetRootSource : IDotnetRootSource
 {
     private const string PathVariable = "PATH";
 

@@ -6,7 +6,7 @@ using Spectre.Console;
 
 namespace DotnetManager.Cli.Commands.Install;
 
-public partial class InstallCommand
+internal sealed partial class InstallCommand
 {
     private static void PrintInstallRequest(InstallRequest request)
     {

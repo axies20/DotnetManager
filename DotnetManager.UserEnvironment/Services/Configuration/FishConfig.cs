@@ -2,11 +2,11 @@ using System.Text;
 using DotnetManager.Core.Models;
 using DotnetManager.UserEnvironment.Models;
 
-namespace DotnetManager.UserEnvironment.Services;
+namespace DotnetManager.UserEnvironment.Services.Configuration;
 
 internal class FishConfig : UEConfiguratorBase
 {
-    public override UEKind Kind => UEKind.FishUser | UEKind.FishSystem;
+    public override UEKind Kind => UEKind.FishUser;
     protected override string FileName => $"{ApplicationInfo.Name}.fish";
 
     protected override string BuildContent(string dotnetRoot)

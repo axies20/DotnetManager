@@ -5,6 +5,13 @@ namespace DotnetManager.Installation.Exceptions;
 
 public sealed class InstallChannelNotFoundException : DotnetInstallException
 {
+
+    public NuGetVersion? ChannelVersion { get; }
+
+    public ReleaseTypes? ReleaseType { get; }
+
+    public SupportPhases? SupportPhase { get; }
+
     public InstallChannelNotFoundException(NuGetVersion channelVersion)
         : base($".NET channel '{channelVersion}' was not found.")
     {
@@ -19,12 +26,6 @@ public sealed class InstallChannelNotFoundException : DotnetInstallException
         ReleaseType = releaseType;
         SupportPhase = supportPhase;
     }
-
-    public NuGetVersion? ChannelVersion { get; }
-
-    public ReleaseTypes? ReleaseType { get; }
-
-    public SupportPhases? SupportPhase { get; }
 
     private static string CreateMessage(ReleaseTypes? releaseType, SupportPhases? supportPhase)
     {
