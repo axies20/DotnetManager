@@ -1,12 +1,12 @@
 # DotnetManager
 
-DotnetManager is a native command-line tool for discovering and installing .NET SDKs and runtimes from Microsoft's official release metadata. It selects the correct artifact for the current platform, verifies its SHA-512 hash, and configures the installed `dotnet` executable for the current user.
+DotnetManager is a native Unix-focused command-line tool for discovering and installing .NET SDKs and runtimes from Microsoft's official release metadata. It selects the correct artifact for the current platform, verifies its SHA-512 hash, and configures the installed `dotnet` executable for the current user.
 
 > The project is under active development. Browsing, listing, and installation are implemented; `update` and `remove` are currently reserved for future releases.
 
 ## Quick install
 
-Linux and macOS on x64 and ARM64 are supported. The installer does not need `sudo` or an existing .NET installation:
+Linux and macOS on x64 and ARM64 are supported. Windows is not currently supported. The installer does not need `sudo` or an existing .NET installation:
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/axies20/DotnetManager/master/install.sh | sh

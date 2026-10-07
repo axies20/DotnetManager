@@ -11,17 +11,18 @@ internal abstract class UEConfiguratorBase : IUEConfigurator
     public async Task ConfigureAsync(string path, CancellationToken cancellationToken)
     {
         Directory.CreateDirectory(path);
+        var fileName = Path.Combine(path, FileName);
         var content = BuildContent();
 
-        if (File.Exists(FileName))
+        if (File.Exists(fileName))
         {
-            var currentContent = await File.ReadAllTextAsync(FileName, cancellationToken);
+            var currentContent = await File.ReadAllTextAsync(fileName, cancellationToken);
 
             if (currentContent == content)
                 return;
         }
 
-        await File.WriteAllTextAsync(FileName, content, cancellationToken);
+        await File.WriteAllTextAsync(fileName, content, cancellationToken);
     }
 
     public void Remove(string path)
