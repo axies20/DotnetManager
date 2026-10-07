@@ -2,7 +2,9 @@ using DotnetManager.UserEnvironment.Models;
 
 namespace DotnetManager.UserEnvironment.Abstraction;
 
-internal interface IUEManager
+public interface IUEManager
 {
     Task ConfigureEnvironment();
+    void RemoveEnvironment();
+    void RemoveEnvironment(UEKind kind);
 }

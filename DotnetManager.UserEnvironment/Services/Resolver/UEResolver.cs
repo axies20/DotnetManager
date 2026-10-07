@@ -7,32 +7,20 @@ internal partial class UEResolver(IEnumerable<IUEConfigurator> configurators) : 
 {
     public IReadOnlyCollection<UEResolvedConfiguration> Resolve()
     {
-        var configurators = new List<UEResolvedConfiguration>();
+        var resolve = new List<UEResolvedConfiguration>();
 
         var zsh = ResolveZsh();
         if (zsh != null)
-            configurators.Add(zsh);
+            resolve.Add(zsh);
 
         var fish = ResolveFish();
         if (fish != null)
-            configurators.Add(fish);
+            resolve.Add(fish);
 
         var envD = ResolveEnvironmentD();
         if (envD != null)
-            configurators.Add(envD);
+            resolve.Add(envD);
 
-        return configurators;
-    }
-
-    private static string GetXdgConfigHome()
-    {
-        var xdgConfigHome = Environment.GetEnvironmentVariable("XDG_CONFIG_HOME");
-
-        if (!string.IsNullOrWhiteSpace(xdgConfigHome))
-            return xdgConfigHome;
-
-        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-
-        return Path.Combine(home, ".config");
+        return resolve;
     }
 }

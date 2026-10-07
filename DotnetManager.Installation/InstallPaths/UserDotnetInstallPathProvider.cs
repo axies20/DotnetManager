@@ -1,3 +1,4 @@
+using DotnetManager.Core.Models;
 using DotnetManager.Installation.Abstractions.InstallPaths;
 using Microsoft.Extensions.Logging;
 
@@ -8,8 +9,7 @@ internal sealed class UserDotnetInstallPathProvider(ILogger<UserDotnetInstallPat
 {
     public string GetInstallDirectory()
     {
-        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        var installDirectory = Path.Combine(home, ".dotnet");
+        var installDirectory = DotnetPaths.UserInstallRoot;
 
         logger.LogDebug("Using user install directory {InstallDirectory}", installDirectory);
         return installDirectory;

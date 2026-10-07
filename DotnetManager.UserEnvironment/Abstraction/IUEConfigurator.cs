@@ -5,6 +5,6 @@ namespace DotnetManager.UserEnvironment.Abstraction;
 internal interface IUEConfigurator
 {
     UEKind Kind { get; }
-    Task ConfigureAsync(string dotnetRoot, string path, CancellationToken cancellationToken);
-    void Remove(string path, CancellationToken cancellationToken);
+    Task ConfigureAsync(string path, CancellationToken cancellationToken);
+    void Remove(string path);
 }

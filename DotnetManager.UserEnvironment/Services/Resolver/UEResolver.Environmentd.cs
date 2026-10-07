@@ -1,3 +1,4 @@
+using DotnetManager.Core.Models;
 using DotnetManager.UserEnvironment.Helper;
 using DotnetManager.UserEnvironment.Models;
 
@@ -12,7 +13,7 @@ internal partial class UEResolver
             return null;
         }
 
-        var path = Path.Combine(GetXdgConfigHome(), "environment.d");
+        var path = Path.Combine(UserPaths.XdgConfigHome, "environment.d");
         var envD = configurators.First(x => x.Kind == UEKind.EnvironmentD);
         return new UEResolvedConfiguration(envD, path);
     }

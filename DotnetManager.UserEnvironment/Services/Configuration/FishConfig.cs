@@ -9,12 +9,12 @@ internal class FishConfig : UEConfiguratorBase
     public override UEKind Kind => UEKind.Fish;
     protected override string FileName => $"{ApplicationInfo.Name}.fish";
 
-    protected override string BuildContent(string dotnetRoot)
+    protected override string BuildContent()
     {
         var builder = new StringBuilder();
-        builder.AppendLine($"set -gx DOTNET_ROOT \"{dotnetRoot}\"");
-        builder.AppendLine($"set -gx PATH \"{GetToolsPath()}\" $PATH");
-        builder.AppendLine($"set -gx PATH \"{dotnetRoot}\" $PATH");
+        builder.AppendLine($"set -gx DOTNET_ROOT \"{DotnetPaths.UserInstallRoot}\"");
+        builder.AppendLine($"set -gx PATH \"{DotnetPaths.UserToolsRoot}\" $PATH");
+        builder.AppendLine($"set -gx PATH \"{DotnetPaths.UserInstallRoot}\" $PATH");
         return builder.ToString();
     }
 }

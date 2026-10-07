@@ -8,10 +8,10 @@ internal abstract class UEConfiguratorBase : IUEConfigurator
     public abstract UEKind Kind { get; }
     protected abstract string FileName { get; }
 
-    public async Task ConfigureAsync(string dotnetRoot, string path, CancellationToken cancellationToken)
+    public async Task ConfigureAsync(string path, CancellationToken cancellationToken)
     {
         Directory.CreateDirectory(path);
-        var content = BuildContent(dotnetRoot);
+        var content = BuildContent();
 
         if (File.Exists(FileName))
         {
@@ -24,18 +24,11 @@ internal abstract class UEConfiguratorBase : IUEConfigurator
         await File.WriteAllTextAsync(FileName, content, cancellationToken);
     }
 
-    public void Remove(string path, CancellationToken cancellationToken)
+    public void Remove(string path)
     {
         var fileName = Path.Combine(path, FileName);
         File.Delete(fileName);
     }
 
-    protected static string GetToolsPath()
-    {
-        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-
-        return Path.Combine(home, ".dotnet", "tools");
-    }
-
-    protected abstract string BuildContent(string dotnetRoot);
+    protected abstract string BuildContent();
 }

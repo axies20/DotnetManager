@@ -1,3 +1,4 @@
+using DotnetManager.Core.Models;
 using DotnetManager.UserEnvironment.Models;
 
 namespace DotnetManager.UserEnvironment.Services.Resolver;
@@ -24,7 +25,7 @@ internal partial class UEResolver
             return null;
         }
 
-        return Path.Combine(GetXdgConfigHome(), "fish", "conf.d");
+        return Path.Combine(UserPaths.XdgConfigHome, "fish", "conf.d");
     }
 
     private static bool IsFishInstalled()

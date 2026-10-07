@@ -1,3 +1,4 @@
+using DotnetManager.Core.Models;
 using DotnetManager.UserEnvironment.Models;
 
 namespace DotnetManager.UserEnvironment.Services.Resolver;
@@ -30,10 +31,7 @@ internal partial class UEResolver
         if (!string.IsNullOrWhiteSpace(zsh))
             return Path.Combine(zsh, "custom");
 
-        var home = Environment.GetFolderPath(
-            Environment.SpecialFolder.UserProfile);
-
-        var ohMyZsh = Path.Combine(home, ".oh-my-zsh");
+        var ohMyZsh = Path.Combine(UserPaths.Home, ".oh-my-zsh");
 
         return Directory.Exists(ohMyZsh) ? Path.Combine(ohMyZsh, "custom") : null;
     }
