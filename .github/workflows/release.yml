@@ -6,11 +6,47 @@ on:
       - "v*"
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
+  verify:
+    name: Verify release
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+
+      - name: Restore and audit dependencies
+        run: >-
+          dotnet restore DotnetManager.slnx
+          -p:NuGetAudit=true
+          -p:NuGetAuditMode=all
+          -p:NuGetAuditLevel=moderate
+          -warnaserror:NU1900,NU1902,NU1903,NU1904,NU1905
+
+      - name: Verify formatting
+        run: dotnet format DotnetManager.slnx --verify-no-changes --no-restore
+
+      - name: Build
+        run: >-
+          dotnet build DotnetManager.slnx
+          --configuration Release
+          --no-restore
+          --warnaserror
+
+      - name: Test
+        run: >-
+          dotnet test DotnetManager.slnx
+          --configuration Release
+          --no-build
+          --no-restore
+
   publish:
     name: Publish ${{ matrix.rid }}
+    needs: verify
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -26,10 +62,10 @@ jobs:
             rid: osx-arm64
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 10.0.x
+          global-json-file: global.json
 
       - name: Publish native executable
         shell: bash
@@ -40,7 +76,7 @@ jobs:
             --self-contained true \
             --output publish
           tar -czf "dotnet-manager-${{ matrix.rid }}.tar.gz" \
-            -C publish dnm appsettings.json
+            -C publish dnm
           if command -v sha256sum >/dev/null 2>&1; then
             sha256sum "dotnet-manager-${{ matrix.rid }}.tar.gz" > \
               "dotnet-manager-${{ matrix.rid }}.tar.gz.sha256"
@@ -49,7 +85,7 @@ jobs:
               "dotnet-manager-${{ matrix.rid }}.tar.gz.sha256"
           fi
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: dotnet-manager-${{ matrix.rid }}
           path: |
@@ -61,8 +97,10 @@ jobs:
     name: Create GitHub release
     needs: publish
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
           pattern: dotnet-manager-*
           merge-multiple: true

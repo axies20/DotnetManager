@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_NOLOGO: true
+
+jobs:
+  quality:
+    name: Required checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+
+      - name: Restore and audit dependencies
+        run: >-
+          dotnet restore DotnetManager.slnx
+          -p:NuGetAudit=true
+          -p:NuGetAuditMode=all
+          -p:NuGetAuditLevel=moderate
+          -warnaserror:NU1900,NU1902,NU1903,NU1904,NU1905
+
+      - name: Verify formatting
+        run: dotnet format DotnetManager.slnx --verify-no-changes --no-restore
+
+      - name: Check shell script syntax
+        run: sh -n install.sh uninstall.sh
+
+      - name: Build
+        run: >-
+          dotnet build DotnetManager.slnx
+          --configuration Release
+          --no-restore
+          --warnaserror
+
+      - name: Run unit tests with coverage
+        run: >-
+          dotnet test Tests/DotnetManager.UnitTests/DotnetManager.UnitTests.csproj
+          --configuration Release
+          --no-build
+          --no-restore
+          --logger "trx;LogFileName=unit-tests.trx"
+          --results-directory artifacts/test-results/unit
+          --collect "XPlat Code Coverage"
+
+      - name: Upload test results and coverage
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-results
+          path: artifacts/test-results
+          if-no-files-found: error
+          retention-days: 14

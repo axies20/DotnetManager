@@ -6,7 +6,6 @@
         <AssemblyName>dnm</AssemblyName>
         <InvariantGlobalization>true</InvariantGlobalization>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
     </PropertyGroup>
 
     <ItemGroup>
@@ -30,13 +29,6 @@
         <ProjectReference Include="../DotnetManager.ReleaseMetadata/DotnetManager.ReleaseMetadata.csproj"/>
         <ProjectReference Include="../DotnetManager.Removal/DotnetManager.Removal.csproj"/>
         <ProjectReference Include="../DotnetManager.UserEnvironment/DotnetManager.UserEnvironment.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Update="appsettings.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-        </None>
     </ItemGroup>
 
     <ItemGroup>

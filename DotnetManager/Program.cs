@@ -13,17 +13,41 @@ internal abstract class Program
 {
     private static async Task<int> Main(string[] args)
     {
-        if (UnixHelper.IsRoot())
-        {
-            Console.Error.WriteLine("DotnetManager must not be run as root. Run it as a regular user.");
+        if (!CanRun())
             return 1;
-        }
 
+        using var host = CreateHost(args);
+        var rootCommand = CreateRootCommand(host.Services);
+        var logger = host.Services.GetRequiredService<ILogger<Program>>();
+
+        return await RunAsync(rootCommand, args, logger);
+    }
+
+    private static bool CanRun()
+    {
+        if (!UnixHelper.IsRoot())
+            return true;
+
+        Console.Error.WriteLine("DotnetManager must not be run as root. Run it as a regular user.");
+        return false;
+    }
+
+    private static IHost CreateHost(string[] args)
+    {
         var builder = Host.CreateApplicationBuilder(new HostApplicationBuilderSettings
         {
             Args = args,
             ContentRootPath = AppContext.BaseDirectory
         });
+
+        ConfigureLogging(builder);
+        builder.Services.AddDotnetManager();
+
+        return builder.Build();
+    }
+
+    private static void ConfigureLogging(HostApplicationBuilder builder)
+    {
         builder.Logging.AddSimpleConsole(options =>
         {
             options.ColorBehavior = Console.IsErrorRedirected
@@ -34,18 +58,22 @@ internal abstract class Program
         });
         builder.Services.Configure<ConsoleLoggerOptions>(options =>
             options.LogToStandardErrorThreshold = LogLevel.Trace);
-        builder.Services.AddDotnetManager();
+    }
 
-        using var host = builder.Build();
+    private static RootCommand CreateRootCommand(IServiceProvider services)
+    {
         var rootCommand = new RootCommand("Discover, install, update, and remove .NET SDKs from multiple " +
                                           "release channels, while managing tracked channels and pinned SDK versions from a " +
                                           "single command-line interface.");
 
-        var commandRegistration = host.Services.GetRequiredService<CommandRegistration>();
+        var commandRegistration = services.GetRequiredService<CommandRegistration>();
         commandRegistration.AddSubCommands(rootCommand);
 
-        var logger = host.Services.GetRequiredService<ILogger<Program>>();
+        return rootCommand;
+    }
 
+    private static async Task<int> RunAsync(RootCommand rootCommand, string[] args, ILogger<Program> logger)
+    {
         try
         {
             return await rootCommand.Parse(args).InvokeAsync();

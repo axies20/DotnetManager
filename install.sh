@@ -125,10 +125,7 @@ fi
 
 mkdir -p "$INSTALL_DIR/bin" "$BIN_DIR"
 install -m 755 "$staging/dnm" "$EXECUTABLE"
-
-if [ -f "$staging/appsettings.json" ]; then
-    install -m 644 "$staging/appsettings.json" "$INSTALL_DIR/bin/appsettings.json"
-fi
+rm -f "$INSTALL_DIR/bin/appsettings.json"
 
 ln -sfn "$EXECUTABLE" "$LINK"
 configure_path

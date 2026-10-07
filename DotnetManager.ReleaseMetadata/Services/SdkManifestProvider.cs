@@ -1,12 +1,11 @@
 using System.Diagnostics;
 using System.Net.Http.Json;
-using DotnetManager.Core.Configuration;
+using DotnetManager.Core.Models;
 using DotnetManager.ReleaseMetadata.Abstractions;
 using DotnetManager.ReleaseMetadata.Mapping;
 using DotnetManager.ReleaseMetadata.Models.Index;
 using DotnetManager.ReleaseMetadata.Models.Releases;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using DotnetManifestJsonContext = DotnetManager.ReleaseMetadata.Serialization.DotnetManifestJsonContext;
 
 namespace DotnetManager.ReleaseMetadata.Services;
@@ -14,14 +13,11 @@ namespace DotnetManager.ReleaseMetadata.Services;
 internal sealed class SdkManifestProvider : ISdkManifestProviderService
 {
     private readonly HttpClient _httpClient;
-    private readonly DotnetManagerOptions _options;
     private readonly ILogger<SdkManifestProvider> _logger;
 
-    public SdkManifestProvider(IOptions<DotnetManagerOptions> options,
-        HttpClient httpClient,
+    public SdkManifestProvider(HttpClient httpClient,
         ILogger<SdkManifestProvider> logger)
     {
-        _options = options.Value;
         _httpClient = httpClient;
         _logger = logger;
     }
@@ -30,8 +26,8 @@ internal sealed class SdkManifestProvider : ISdkManifestProviderService
     {
         var stopwatch = Stopwatch.StartNew();
         _logger.LogInformation("Fetching .NET release index from {ReleaseIndexUrl}",
-            _options.ReleaseIndexUrl);
-        using var response = await _httpClient.GetAsync(_options.ReleaseIndexUrl, cancellationToken);
+            DotnetEndpoints.ReleaseIndexUrl);
+        using var response = await _httpClient.GetAsync(DotnetEndpoints.ReleaseIndexUrl, cancellationToken);
 
         response.EnsureSuccessStatusCode();
 

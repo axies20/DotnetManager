@@ -11,20 +11,24 @@ public class InstallContainerTests
     {
         var repositoryRoot = FindRepositoryRoot();
         var containerName = $"dotnet-manager-install-test-{Guid.NewGuid():N}";
+        const string installedDotnet = "/home/dnm/.dotnet/dotnet";
 
         try
         {
             await RunAsync("podman", "create", "--name", containerName,
                 "mcr.microsoft.com/dotnet/sdk:10.0", "sleep", "infinity");
             await RunAsync("podman", "start", containerName);
+            await RunAsync("podman", "exec", containerName,
+                "useradd", "--create-home", "--shell", "/bin/bash", "dnm");
             await RunAsync("podman", "cp", $"{repositoryRoot}/.", $"{containerName}:/src");
-            await RunAsync("podman", "exec", containerName, "dotnet", "run",
+            await RunAsync("podman", "exec", containerName, "chown", "-R", "dnm:dnm", "/src");
+            await RunAsync("podman", "exec", "--user", "dnm", "--env", "HOME=/home/dnm",
+                containerName, "dotnet", "run",
                 "--project", "/src/DotnetManager/DotnetManager.csproj",
                 "-p:PublishAot=false", "--", "install", "latest", "--rid", "linux-x64");
-            await RunAsync("podman", "exec", containerName, "test", "-x",
-                "/usr/local/share/dotnet/dotnet");
+            await RunAsync("podman", "exec", containerName, "test", "-x", installedDotnet);
             var info = await RunAsync("podman", "exec", containerName,
-                "/usr/local/share/dotnet/dotnet", "--info");
+                installedDotnet, "--info");
 
             Assert.Contains(".NET SDK", info, StringComparison.Ordinal);
         }

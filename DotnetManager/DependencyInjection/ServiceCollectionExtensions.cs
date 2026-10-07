@@ -1,5 +1,4 @@
 using DotnetManager.Cli.DependencyInjection;
-using DotnetManager.Core.DependencyInjection;
 using DotnetManager.Installation.DependencyInjection;
 using DotnetManager.InstalledDotnet.DependencyInjection;
 using DotnetManager.ReleaseMetadata.DependencyInjection;
@@ -14,7 +13,6 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddDotnetManager(this IServiceCollection services)
     {
         return services
-            .AddCore()
             .AddReleaseMetadata()
             .AddUserEnvironment()
             .AddInstallation()
