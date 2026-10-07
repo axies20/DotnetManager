@@ -4,5 +4,5 @@ namespace DotnetManager.UserEnvironment.Abstraction;
 
 internal interface IUEManager
 {
-    Task ConfigureEnvironment(UEInstallScope scope);
+    Task ConfigureEnvironment();
 }

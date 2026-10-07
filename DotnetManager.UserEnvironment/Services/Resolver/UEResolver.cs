@@ -3,28 +3,30 @@ using DotnetManager.UserEnvironment.Models;
 
 namespace DotnetManager.UserEnvironment.Services.Resolver;
 
-internal partial class UEResolver : IUEResolver
+internal partial class UEResolver(IEnumerable<IUEConfigurator> configurators) : IUEResolver
 {
-    private readonly IEnumerable<IUEConfigurator> _configurators;
-
-    public UEResolver(IEnumerable<IUEConfigurator> configurators)
+    public IReadOnlyCollection<UEResolvedConfiguration> Resolve()
     {
-        _configurators = configurators;
-    }
+        var configurators = new List<UEResolvedConfiguration>();
 
-    public IReadOnlyCollection<IUEConfigurator> Resolve(UEInstallScope scope)
-    {
-        return scope switch
-        {
-            UEInstallScope.User => ResolveUser(),
-            _ => throw new ArgumentOutOfRangeException(nameof(scope), scope, null)
-        };
+        var zsh = ResolveZsh();
+        if (zsh != null)
+            configurators.Add(zsh);
+
+        var fish = ResolveFish();
+        if (fish != null)
+            configurators.Add(fish);
+
+        var envD = ResolveEnvironmentD();
+        if (envD != null)
+            configurators.Add(envD);
+
+        return configurators;
     }
 
     private static string GetXdgConfigHome()
     {
-        var xdgConfigHome =
-            Environment.GetEnvironmentVariable("XDG_CONFIG_HOME");
+        var xdgConfigHome = Environment.GetEnvironmentVariable("XDG_CONFIG_HOME");
 
         if (!string.IsNullOrWhiteSpace(xdgConfigHome))
             return xdgConfigHome;
@@ -32,19 +34,5 @@ internal partial class UEResolver : IUEResolver
         var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
         return Path.Combine(home, ".config");
-    }
-
-    private IReadOnlyCollection<IUEConfigurator> ResolveUser()
-    {
-        var configurators = new List<IUEConfigurator>();
-        var zshDir = ResolveOhMyZshCustomDirectory();
-
-        if (!string.IsNullOrEmpty(zshDir))
-        {
-            var zsh = _configurators.First(x => x.Kind.HasFlag(UEKind.OhMyZsh));
-            configurators.Add(zsh);
-        }
-
-        return configurators;
     }
 }

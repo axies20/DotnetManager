@@ -1,7 +1,23 @@
+using DotnetManager.UserEnvironment.Models;
+
 namespace DotnetManager.UserEnvironment.Services.Resolver;
 
 internal partial class UEResolver
 {
+    private UEResolvedConfiguration? ResolveZsh()
+    {
+        var zshDir = ResolveOhMyZshCustomDirectory();
+
+        if (string.IsNullOrEmpty(zshDir))
+        {
+            return null;
+        }
+
+        var zsh = configurators.First(x => x.Kind == UEKind.OhMyZsh);
+        return new UEResolvedConfiguration(zsh, zshDir);
+
+    }
+
     private static string? ResolveOhMyZshCustomDirectory()
     {
         var zshCustom = Environment.GetEnvironmentVariable("ZSH_CUSTOM");

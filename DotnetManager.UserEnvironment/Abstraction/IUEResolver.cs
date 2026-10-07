@@ -4,5 +4,5 @@ namespace DotnetManager.UserEnvironment.Abstraction;
 
 internal interface IUEResolver
 {
-    IReadOnlyCollection<IUEConfigurator> Resolve(UEInstallScope scope);
+    IReadOnlyCollection<UEResolvedConfiguration> Resolve();
 }

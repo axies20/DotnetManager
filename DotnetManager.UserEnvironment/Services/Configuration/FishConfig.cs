@@ -6,7 +6,7 @@ namespace DotnetManager.UserEnvironment.Services.Configuration;
 
 internal class FishConfig : UEConfiguratorBase
 {
-    public override UEKind Kind => UEKind.FishUser;
+    public override UEKind Kind => UEKind.Fish;
     protected override string FileName => $"{ApplicationInfo.Name}.fish";
 
     protected override string BuildContent(string dotnetRoot)
