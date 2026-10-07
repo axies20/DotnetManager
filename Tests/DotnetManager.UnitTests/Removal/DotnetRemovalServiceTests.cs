@@ -38,10 +38,14 @@ public class DotnetRemovalServiceTests
 
     private static DotnetRemovalService CreateService(params SdkInstallation[] sdks)
     {
-        return new DotnetRemovalService(
+        var resolver = new DotnetRemovalTargetResolver(
             new RemovalInstallationLocator<HostInstallation>([], x => x.Path),
             new RemovalInstallationLocator<RuntimeInstallation>([], x => x.Path),
             new RemovalInstallationLocator<SdkInstallation>(sdks, x => x.Path),
+            NullLogger<DotnetRemovalTargetResolver>.Instance);
+
+        return new DotnetRemovalService(
+            resolver,
             NullLogger<DotnetRemovalService>.Instance);
     }
 }

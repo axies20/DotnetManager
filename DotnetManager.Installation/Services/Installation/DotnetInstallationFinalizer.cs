@@ -1,6 +1,7 @@
 using DotnetManager.Installation.Exceptions;
 using DotnetManager.Installation.Abstractions.Installation;
 using DotnetManager.Installation.Abstractions.InstallPaths;
+using DotnetManager.UserEnvironment.Abstraction;
 using Microsoft.Extensions.Logging;
 
 namespace DotnetManager.Installation.Services.Installation;
@@ -8,16 +9,19 @@ namespace DotnetManager.Installation.Services.Installation;
 internal sealed class DotnetInstallationFinalizer : IDotnetInstallationFinalizerService
 {
     private readonly IDotnetInstallPathProviderService _pathProvider;
+    private readonly IUEManager _ueManager;
     private readonly ILogger<DotnetInstallationFinalizer> _logger;
 
     public DotnetInstallationFinalizer(IDotnetInstallPathProviderService pathProvider,
-        ILogger<DotnetInstallationFinalizer> logger)
+        ILogger<DotnetInstallationFinalizer> logger,
+        IUEManager ueManager)
     {
         _pathProvider = pathProvider;
         _logger = logger;
+        _ueManager = ueManager;
     }
 
-    public Task FinalizeAsync(CancellationToken cancellationToken)
+    public async Task FinalizeAsync(CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -31,7 +35,7 @@ internal sealed class DotnetInstallationFinalizer : IDotnetInstallationFinalizer
             throw new InstalledDotnetExecutableNotFoundException(installRoot);
         }
 
+        await _ueManager.ConfigureEnvironment();
         _logger.LogInformation("Installation finalization completed");
-        return Task.CompletedTask;
     }
 }

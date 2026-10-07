@@ -1,10 +1,11 @@
 using System.Text;
 using DotnetManager.Core.Models;
 using DotnetManager.UserEnvironment.Models;
+using Microsoft.Extensions.Logging;
 
 namespace DotnetManager.UserEnvironment.Services.Configuration;
 
-internal class FishConfig : UEConfiguratorBase
+internal sealed class FishConfig(ILogger<FishConfig> logger) : UEConfiguratorBase(logger)
 {
     public override UEKind Kind => UEKind.Fish;
     protected override string FileName => $"{ApplicationInfo.Name}.fish";

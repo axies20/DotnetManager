@@ -1,10 +1,11 @@
 using System.Text;
 using DotnetManager.Core.Models;
 using DotnetManager.UserEnvironment.Models;
+using Microsoft.Extensions.Logging;
 
 namespace DotnetManager.UserEnvironment.Services.Configuration;
 
-internal class OhMyZshUEConfig : UEConfiguratorBase
+internal sealed class OhMyZshUEConfig(ILogger<OhMyZshUEConfig> logger) : UEConfiguratorBase(logger)
 {
     public override UEKind Kind => UEKind.OhMyZsh;
     protected override string FileName => $"60-{ApplicationInfo.Name}.zsh";

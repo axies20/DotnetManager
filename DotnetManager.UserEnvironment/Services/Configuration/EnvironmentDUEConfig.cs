@@ -1,10 +1,11 @@
 using System.Text;
 using DotnetManager.Core.Models;
 using DotnetManager.UserEnvironment.Models;
+using Microsoft.Extensions.Logging;
 
 namespace DotnetManager.UserEnvironment.Services.Configuration;
 
-internal class EnvironmentDUEConfig : UEConfiguratorBase
+internal sealed class EnvironmentDUEConfig(ILogger<EnvironmentDUEConfig> logger) : UEConfiguratorBase(logger)
 {
     public override UEKind Kind => UEKind.EnvironmentD;
     protected override string FileName => $"60-{ApplicationInfo.Name}.conf";

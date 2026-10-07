@@ -1,4 +1,5 @@
 using DotnetManager.UserEnvironment.Abstraction;
+using DotnetManager.UserEnvironment.Services;
 using DotnetManager.UserEnvironment.Services.Configuration;
 using DotnetManager.UserEnvironment.Services.Resolver;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +14,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IUEConfigurator, OhMyZshUEConfig>();
         services.AddSingleton<IUEConfigurator, EnvironmentDUEConfig>();
         services.AddSingleton<IUEResolver, UEResolver>();
+        services.AddSingleton<IUEManager, UEManager>();
 
         return services;
     }
