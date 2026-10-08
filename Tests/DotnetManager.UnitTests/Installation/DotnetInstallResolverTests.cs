@@ -30,7 +30,7 @@ public class DotnetInstallResolverTests
     }
 
     [Fact]
-    public async Task LatestFiltersChannelAndSecurityRelease()
+    public async Task LatestFiltersChannelAndSelectsNewestReleaseRegardlessOfSecurityMetadata()
     {
         var sts = CreateChannel("11.0", ReleaseTypes.Sts, SupportPhases.Preview);
         var lts = CreateChannel("10.0", ReleaseTypes.Lts, SupportPhases.Active);
@@ -47,10 +47,41 @@ public class DotnetInstallResolverTests
             NullLogger<DotnetInstallResolver>.Instance);
 
         var sources = await resolver.ResolveAsync(CreateRequest(
-            new LatestSelector(ReleaseTypes.Lts, SupportPhases.Active, true),
+            new LatestSelector(ReleaseTypes.Lts, SupportPhases.Active),
             [DotnetComponent.Runtime], "linux-x64"), CancellationToken.None);
 
-        Assert.Contains("10.0.1", Assert.Single(sources).Uri.AbsoluteUri);
+        Assert.Contains("10.0.2", Assert.Single(sources).Uri.AbsoluteUri);
+    }
+
+    [Fact]
+    public async Task LatestRejectsChannelWithoutReleases()
+    {
+        var channel = CreateChannel("10.0", ReleaseTypes.Lts, SupportPhases.Active);
+        var manifest = new SdkReleaseManifest
+        {
+            ChannelVersion = channel.ChannelVersion,
+            LatestSdk = NuGetVersion.Parse("10.0.100"),
+            LatestRelease = NuGetVersion.Parse("10.0.1"),
+            LatestRuntime = NuGetVersion.Parse("10.0.1"),
+            ReleaseType = ReleaseTypes.Lts,
+            SupportPhase = SupportPhases.Active,
+            Releases = []
+        };
+        var resolver = new DotnetInstallResolver(
+            new InstallResolverStubManifestProvider(
+                new SdkReleaseIndex([channel]),
+                new Dictionary<Uri, SdkReleaseManifest>
+                {
+                    [channel.ReleasesUri] = manifest
+                }),
+            NullLogger<DotnetInstallResolver>.Instance);
+
+        var exception = await Assert.ThrowsAsync<InstallReleaseNotFoundException>(() =>
+            resolver.ResolveAsync(CreateRequest(
+                new LatestSelector(ReleaseTypes.Lts, SupportPhases.Active),
+                [DotnetComponent.Sdk], "linux-x64"), CancellationToken.None));
+
+        Assert.Equal(channel.ChannelVersion, exception.ChannelVersion);
     }
 
     [Fact]
@@ -71,20 +102,6 @@ public class DotnetInstallResolverTests
     }
 
     [Fact]
-    public async Task ExactVersionDoesNotRequireSecurityRelease()
-    {
-        var release = CreateRelease("10.0.2", false);
-        var resolver = CreateResolver(CreateChannel("10.0", ReleaseTypes.Lts,
-            SupportPhases.Active), release);
-
-        var sources = await resolver.ResolveAsync(CreateRequest(
-            new VersionSelector(NuGetVersion.Parse("10.0.2")),
-            [DotnetComponent.Sdk], "linux-x64"), CancellationToken.None);
-
-        Assert.Single(sources);
-    }
-
-    [Fact]
     public async Task ResolverRejectsMissingRidArtifact()
     {
         var release = CreateRelease("10.0.2", true);
@@ -94,18 +111,6 @@ public class DotnetInstallResolverTests
         await Assert.ThrowsAsync<InstallArtifactNotFoundException>(() => resolver.ResolveAsync(
             CreateRequest(new VersionSelector(NuGetVersion.Parse("10.0.2")),
                 [DotnetComponent.Sdk], "freebsd-x64"), CancellationToken.None));
-    }
-
-    [Fact]
-    public async Task LatestSecuritySelectionFailsWhenOnlyNonSecurityExists()
-    {
-        var release = CreateRelease("10.0.2", false);
-        var resolver = CreateResolver(CreateChannel("10.0", ReleaseTypes.Lts,
-            SupportPhases.Active), release);
-
-        await Assert.ThrowsAsync<InstallReleaseNotFoundException>(() => resolver.ResolveAsync(
-            CreateRequest(new LatestSelector(null, null, true),
-                [DotnetComponent.Sdk], "linux-x64"), CancellationToken.None));
     }
 
     private static DotnetInstallResolver CreateResolver(SdkChannel channel, params SdkRelease[] releases)

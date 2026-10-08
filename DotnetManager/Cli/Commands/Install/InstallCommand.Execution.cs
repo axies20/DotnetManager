@@ -24,10 +24,6 @@ internal sealed partial class InstallCommand
             InstallReleaseNotFoundException { Version: not null } error =>
                 $"The .NET release '{error.Version}' was not found.",
 
-            InstallReleaseNotFoundException { SecurityOnly: true } error =>
-                $"No security release was found in .NET channel '{error.ChannelVersion}'. " +
-                "Use --include-non-security to allow other releases.",
-
             InstallReleaseNotFoundException error =>
                 $"No release was found in .NET channel '{error.ChannelVersion}'.",
 
@@ -51,7 +47,6 @@ internal sealed partial class InstallCommand
     private Task<int> ExecuteLatest(ParseResult result, CancellationToken cancellationToken)
     {
         var rid = result.GetValue(_rid);
-        var includeNonSecurity = result.GetValue(_includeNonSecurity);
         var release = result.GetValue(_releaseType);
         var phase = result.GetValue(_supportPhase);
         var installRequest = new InstallRequest
@@ -61,7 +56,7 @@ internal sealed partial class InstallCommand
                 Components = GetInstallComponents(result),
                 RuntimeIdentifier = rid
             },
-            Target = new LatestSelector(release, phase, !includeNonSecurity)
+            Target = new LatestSelector(release, phase)
         };
 
         return ExecuteAsync(installRequest, cancellationToken);

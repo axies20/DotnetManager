@@ -173,15 +173,8 @@ internal sealed class DotnetInstallResolver : IDotnetInstallResolverService
                 latestSelector.SupportPhase);
 
         return CreateDownloadsAsync(latestChannel.ReleasesUri, options,
-            releases =>
-            {
-                if (latestSelector.SecurityOnly)
-                    releases = releases.Where(x => x.Security);
-
-                return releases.MaxBy(x => x.ReleaseVersion, VersionComparer.VersionRelease) ??
-                       throw new InstallReleaseNotFoundException(latestChannel.ChannelVersion,
-                           latestSelector.SecurityOnly);
-            },
+            releases => releases.MaxBy(x => x.ReleaseVersion, VersionComparer.VersionRelease) ??
+                        throw InstallReleaseNotFoundException.ForChannel(latestChannel.ChannelVersion),
             cancellationToken);
     }
 

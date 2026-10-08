@@ -62,9 +62,8 @@ internal abstract class Program
 
     private static RootCommand CreateRootCommand(IServiceProvider services)
     {
-        var rootCommand = new RootCommand("Discover, install, update, and remove .NET SDKs from multiple " +
-                                          "release channels, while managing tracked channels and pinned SDK versions from a " +
-                                          "single command-line interface.");
+        var rootCommand = new RootCommand(
+            "Discover, install, list, and remove .NET SDKs and runtimes from a single command-line interface.");
 
         var commandRegistration = services.GetRequiredService<CommandRegistration>();
         commandRegistration.AddSubCommands(rootCommand);

@@ -16,7 +16,7 @@ internal sealed partial class RemoveCommand : ICommand
     public Command Initialize()
     {
         var command = new Command("remove",
-            "Stop tracking a .NET SDK channel or exact pinned version and remove its managed installation when it is no longer required.");
+            "Remove discovered .NET component directories matching a major, major.minor, or exact version.");
         command.Options.Add(_runtime);
         command.Options.Add(_sdk);
         command.Options.Add(_host);

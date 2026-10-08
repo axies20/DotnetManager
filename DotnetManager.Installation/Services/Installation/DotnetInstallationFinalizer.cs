@@ -35,7 +35,7 @@ internal sealed class DotnetInstallationFinalizer : IDotnetInstallationFinalizer
             throw new InstalledDotnetExecutableNotFoundException(installRoot);
         }
 
-        await _ueManager.ConfigureEnvironment();
+        await _ueManager.ConfigureEnvironment(cancellationToken);
         _logger.LogInformation("Installation finalization completed");
     }
 }

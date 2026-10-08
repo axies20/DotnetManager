@@ -9,20 +9,22 @@ public sealed class InstallReleaseNotFoundException : DotnetInstallException
 
     public NuGetVersion? ChannelVersion { get; }
 
-    public bool SecurityOnly { get; }
-
     public InstallReleaseNotFoundException(NuGetVersion version)
-        : base($".NET release '{version}' was not found.")
+        : this(version, null)
     {
-        Version = version;
     }
 
-    public InstallReleaseNotFoundException(NuGetVersion channelVersion, bool securityOnly)
-        : base(securityOnly
-            ? $"No security release was found in .NET channel '{channelVersion}'."
+    private InstallReleaseNotFoundException(NuGetVersion? version, NuGetVersion? channelVersion)
+        : base(version is not null
+            ? $".NET release '{version}' was not found."
             : $"No release was found in .NET channel '{channelVersion}'.")
     {
+        Version = version;
         ChannelVersion = channelVersion;
-        SecurityOnly = securityOnly;
+    }
+
+    public static InstallReleaseNotFoundException ForChannel(NuGetVersion channelVersion)
+    {
+        return new InstallReleaseNotFoundException(null, channelVersion);
     }
 }

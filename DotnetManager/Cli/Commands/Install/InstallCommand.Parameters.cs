@@ -8,7 +8,7 @@ internal sealed partial class InstallCommand
     private readonly Command _latest = new("latest",
         "Install the latest version of the specified release type and support phase");
 
-    private readonly Option<ReleaseTypes?> _releaseType = new("--release-type", "-rt")
+    private readonly Option<ReleaseTypes?> _releaseType = new("--release-type", "-t")
     {
         Description = "Install the latest version of the specified release type"
     };
@@ -18,12 +18,7 @@ internal sealed partial class InstallCommand
         Description = "Install the latest version of the specified support phase"
     };
 
-    private readonly Option<bool> _includeNonSecurity = new("--include-non-security", "-ins")
-    {
-        Description = "Allow installation of non-security releases"
-    };
-
-    private readonly Option<bool> _runtime = new("--runtime", "-rt")
+    private readonly Option<bool> _runtime = new("--runtime", "-r")
     {
         Description = "Install the .NET runtime instead of the SDK",
         Recursive = true

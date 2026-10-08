@@ -10,7 +10,7 @@ internal sealed class UpdateCommand(ILogger<UpdateCommand> logger) : ICommand
     {
         var command = new Command(
             "update",
-            "Check every tracked .NET SDK channel for a newer eligible release and update its managed installation while preserving pinned versions.");
+            "Update support is not implemented yet.");
         command.SetAction(_ =>
         {
             logger.LogWarning("The update command is not implemented yet");

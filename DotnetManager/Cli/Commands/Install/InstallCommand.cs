@@ -30,7 +30,6 @@ internal sealed partial class InstallCommand : ICommand
         command.Options.Add(_rid);
         _latest.Options.Add(_releaseType);
         _latest.Options.Add(_supportPhase);
-        _latest.Options.Add(_includeNonSecurity);
 
         command.SetAction(ExecuteInstall);
         _latest.SetAction(ExecuteLatest);

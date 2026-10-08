@@ -4,5 +4,4 @@ namespace DotnetManager.Installation.Models.Installation.Targets;
 
 public sealed record LatestSelector(
     ReleaseTypes? ReleaseType,
-    SupportPhases? SupportPhase,
-    bool SecurityOnly) : InstallTarget;
+    SupportPhases? SupportPhase) : InstallTarget;

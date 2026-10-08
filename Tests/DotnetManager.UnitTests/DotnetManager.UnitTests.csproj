@@ -24,5 +24,6 @@
         <ProjectReference Include="../../DotnetManager.InstalledDotnet/DotnetManager.InstalledDotnet.csproj"/>
         <ProjectReference Include="../../DotnetManager.ReleaseMetadata/DotnetManager.ReleaseMetadata.csproj"/>
         <ProjectReference Include="../../DotnetManager.Removal/DotnetManager.Removal.csproj"/>
+        <ProjectReference Include="../../DotnetManager.UserEnvironment/DotnetManager.UserEnvironment.csproj"/>
     </ItemGroup>
 </Project>

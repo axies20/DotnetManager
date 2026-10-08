@@ -6,4 +6,7 @@
     <ItemGroup>
         <ProjectReference Include="..\DotnetManager.Core\DotnetManager.Core.csproj"/>
     </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="DotnetManager.UnitTests"/>
+    </ItemGroup>
 </Project>

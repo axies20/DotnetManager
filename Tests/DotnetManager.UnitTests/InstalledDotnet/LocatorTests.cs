@@ -29,16 +29,22 @@ public class LocatorTests
         using var directory = new TestDirectory();
         directory.CreateDirectory("sdk", "10.0.100");
         directory.CreateDirectory("shared", "Microsoft.NETCore.App", "10.0.1");
+        directory.CreateDirectory("shared", "Microsoft.AspNetCore.App", "10.0.1");
         directory.CreateDirectory("host", "fxr", "10.0.1");
         var rootLocator = new LocatorStubRootLocator(directory.Path);
 
         var sdk = Assert.Single(new SdkLocator(rootLocator).Find());
-        var runtime = Assert.Single(new RuntimeLocator(rootLocator).Find());
+        var runtimes = new RuntimeLocator(rootLocator).Find();
         var host = Assert.Single(new HostLocator(rootLocator).Find());
 
         Assert.Equal("10.0.100", sdk.Version.ToString());
-        Assert.Equal("Microsoft.NETCore.App", runtime.Framework);
-        Assert.Equal("10.0.1", runtime.Version.ToString());
+        Assert.Equal(2, runtimes.Count);
+        Assert.Contains(runtimes, runtime =>
+            runtime.Framework == "Microsoft.NETCore.App" &&
+            runtime.Version == NuGet.Versioning.NuGetVersion.Parse("10.0.1"));
+        Assert.Contains(runtimes, runtime =>
+            runtime.Framework == "Microsoft.AspNetCore.App" &&
+            runtime.Version == NuGet.Versioning.NuGetVersion.Parse("10.0.1"));
         Assert.Equal("10.0.1", host.Version.ToString());
     }
 }
