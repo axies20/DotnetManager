@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <ItemGroup>
+        <ProjectReference Include="../../Discovery/DotnetManager.ReleaseMetadata/DotnetManager.ReleaseMetadata.csproj"/>
+        <ProjectReference Include="../../Environment/DotnetManager.UserEnvironment/DotnetManager.UserEnvironment.csproj"/>
+        <ProjectReference Include="../../Shared/DotnetManager.Core/DotnetManager.Core.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Http"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions"/>
+        <PackageReference Include="NuGet.Versioning"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="DotnetManager.UnitTests"/>
+    </ItemGroup>
+</Project>
