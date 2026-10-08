@@ -1,16 +1,31 @@
 <Solution>
+    <Folder Name="/Application/">
+        <Project Path="Application/DotnetManager/DotnetManager.csproj" />
+    </Folder>
+    <Folder Name="/Discovery/">
+        <Project Path="Discovery/DotnetManager.InstalledDotnet/DotnetManager.InstalledDotnet.csproj" />
+        <Project Path="Discovery/DotnetManager.ReleaseMetadata/DotnetManager.ReleaseMetadata.csproj" />
+    </Folder>
+    <Folder Name="/Environment/">
+        <Project Path="Environment/DotnetManager.UserEnvironment/DotnetManager.UserEnvironment.csproj" />
+    </Folder>
+    <Folder Name="/Installation/">
+        <Project Path="Installation/DotnetManager.Installation.Execution/DotnetManager.Installation.Execution.csproj" />
+        <Project Path="Installation/DotnetManager.Installation.Planning/DotnetManager.Installation.Planning.csproj" />
+        <Project Path="Installation/DotnetManager.Installation.Resolver/DotnetManager.Installation.Resolver.csproj" />
+        <Project Path="Installation/DotnetManager.Installation/DotnetManager.Installation.csproj" />
+    </Folder>
+    <Folder Name="/Removal/">
+        <Project Path="Removal/DotnetManager.Removal/DotnetManager.Removal.csproj" />
+    </Folder>
+    <Folder Name="/Shared/">
+        <Project Path="Shared/DotnetManager.Core/DotnetManager.Core.csproj" />
+    </Folder>
     <Folder Name="/Solution Items/">
-        <File Path="compose.yaml"/>
+        <File Path="compose.yaml" />
     </Folder>
     <Folder Name="/Tests/">
-        <Project Path="Tests/DotnetManager.IntegrationTests/DotnetManager.IntegrationTests.csproj"/>
-        <Project Path="Tests/DotnetManager.UnitTests/DotnetManager.UnitTests.csproj"/>
+        <Project Path="Tests/DotnetManager.IntegrationTests/DotnetManager.IntegrationTests.csproj" />
+        <Project Path="Tests/DotnetManager.UnitTests/DotnetManager.UnitTests.csproj" />
     </Folder>
-    <Project Path="DotnetManager/DotnetManager.csproj"/>
-    <Project Path="DotnetManager.Core/DotnetManager.Core.csproj"/>
-    <Project Path="DotnetManager.Installation/DotnetManager.Installation.csproj"/>
-    <Project Path="DotnetManager.InstalledDotnet/DotnetManager.InstalledDotnet.csproj"/>
-    <Project Path="DotnetManager.ReleaseMetadata/DotnetManager.ReleaseMetadata.csproj"/>
-    <Project Path="DotnetManager.Removal/DotnetManager.Removal.csproj"/>
-    <Project Path="DotnetManager.UserEnvironment/DotnetManager.UserEnvironment.csproj"/>
 </Solution>

@@ -43,8 +43,7 @@ public class DotnetInstallResolverTests
                     CreateRelease("10.0.2", false)),
                 [sts.ReleasesUri] = CreateManifest("11.0", CreateRelease("11.0.1", true))
             });
-        var resolver = new DotnetInstallResolver(provider,
-            NullLogger<DotnetInstallResolver>.Instance);
+        var resolver = CreateResolver(provider);
 
         var sources = await resolver.ResolveAsync(CreateRequest(
             new LatestSelector(ReleaseTypes.Lts, SupportPhases.Active),
@@ -67,14 +66,13 @@ public class DotnetInstallResolverTests
             SupportPhase = SupportPhases.Active,
             Releases = []
         };
-        var resolver = new DotnetInstallResolver(
-            new InstallResolverStubManifestProvider(
-                new SdkReleaseIndex([channel]),
-                new Dictionary<Uri, SdkReleaseManifest>
-                {
-                    [channel.ReleasesUri] = manifest
-                }),
-            NullLogger<DotnetInstallResolver>.Instance);
+        var provider = new InstallResolverStubManifestProvider(
+            new SdkReleaseIndex([channel]),
+            new Dictionary<Uri, SdkReleaseManifest>
+            {
+                [channel.ReleasesUri] = manifest
+            });
+        var resolver = CreateResolver(provider);
 
         var exception = await Assert.ThrowsAsync<InstallReleaseNotFoundException>(() =>
             resolver.ResolveAsync(CreateRequest(
@@ -115,12 +113,20 @@ public class DotnetInstallResolverTests
 
     private static DotnetInstallResolver CreateResolver(SdkChannel channel, params SdkRelease[] releases)
     {
-        return new DotnetInstallResolver(new InstallResolverStubManifestProvider(
-                new SdkReleaseIndex([channel]),
-                new Dictionary<Uri, SdkReleaseManifest>
-                {
-                    [channel.ReleasesUri] = CreateManifest(channel.ChannelVersion.ToString(), releases)
-                }),
+        var provider = new InstallResolverStubManifestProvider(
+            new SdkReleaseIndex([channel]),
+            new Dictionary<Uri, SdkReleaseManifest>
+            {
+                [channel.ReleasesUri] = CreateManifest(channel.ChannelVersion.ToString(), releases)
+            });
+        return CreateResolver(provider);
+    }
+
+    private static DotnetInstallResolver CreateResolver(InstallResolverStubManifestProvider provider)
+    {
+        return new DotnetInstallResolver(provider,
+            new LatestInstallResolver(provider),
+            new VersionInstallResolver(provider),
             NullLogger<DotnetInstallResolver>.Instance);
     }
 
