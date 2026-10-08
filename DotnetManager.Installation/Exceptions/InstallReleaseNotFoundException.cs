@@ -10,9 +10,7 @@ public sealed class InstallReleaseNotFoundException : DotnetInstallException
     public NuGetVersion? ChannelVersion { get; }
 
     public InstallReleaseNotFoundException(NuGetVersion version)
-        : this(version, null)
-    {
-    }
+        : this(version, null) {}
 
     private InstallReleaseNotFoundException(NuGetVersion? version, NuGetVersion? channelVersion)
         : base(version is not null

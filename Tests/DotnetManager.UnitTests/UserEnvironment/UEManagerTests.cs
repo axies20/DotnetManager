@@ -46,8 +46,6 @@ public class UEManagerTests
             return Task.CompletedTask;
         }
 
-        public void Remove(string path)
-        {
-        }
+        public void Remove(string path) {}
     }
 }

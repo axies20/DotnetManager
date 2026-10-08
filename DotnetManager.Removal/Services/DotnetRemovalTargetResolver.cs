@@ -77,17 +77,17 @@ internal sealed class DotnetRemovalTargetResolver : IDotnetRemovalTargetResolver
         switch (length)
         {
             case 1:
-                {
-                    var minVersion = new NuGetVersion(version.Major, 0, 0, "0");
-                    var maxVersion = new NuGetVersion(version.Major + 1, 0, 0, "0");
-                    return CreateRange(minVersion, maxVersion);
-                }
+            {
+                var minVersion = new NuGetVersion(version.Major, 0, 0, "0");
+                var maxVersion = new NuGetVersion(version.Major + 1, 0, 0, "0");
+                return CreateRange(minVersion, maxVersion);
+            }
             case 2:
-                {
-                    var minVersion = new NuGetVersion(version.Major, version.Minor, 0, "0");
-                    var maxVersion = new NuGetVersion(version.Major, version.Minor + 1, 0, "0");
-                    return CreateRange(minVersion, maxVersion);
-                }
+            {
+                var minVersion = new NuGetVersion(version.Major, version.Minor, 0, "0");
+                var maxVersion = new NuGetVersion(version.Major, version.Minor + 1, 0, "0");
+                return CreateRange(minVersion, maxVersion);
+            }
             default:
                 return new VersionRange(version, true, version, true);
         }

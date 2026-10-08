@@ -2,7 +2,7 @@
     <ItemGroup>
         <ProjectReference Include="../DotnetManager.Core/DotnetManager.Core.csproj"/>
         <ProjectReference Include="../DotnetManager.ReleaseMetadata/DotnetManager.ReleaseMetadata.csproj"/>
-        <ProjectReference Include="..\DotnetManager.UserEnvironment\DotnetManager.UserEnvironment.csproj" />
+        <ProjectReference Include="..\DotnetManager.UserEnvironment\DotnetManager.UserEnvironment.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
