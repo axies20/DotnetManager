@@ -6,4 +6,4 @@ namespace DotnetManager.ReleaseMetadata.Serialization;
 
 [JsonSerializable(typeof(RawRootIndex))]
 [JsonSerializable(typeof(RawReleasesRoot))]
-internal abstract partial class DotnetManifestJsonContext : JsonSerializerContext;
+internal partial class DotnetManifestJsonContext : JsonSerializerContext;
