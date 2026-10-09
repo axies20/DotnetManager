@@ -9,7 +9,8 @@ namespace DotnetManager.Installation.Services.Resolver;
 internal sealed class LatestInstallResolver(ISdkManifestProviderService provider)
     : IInstallReleaseResolverService<LatestSelector>
 {
-    public async Task<SdkRelease> ResolveAsync(IEnumerable<SdkChannel> channels, LatestSelector selector,
+    public async Task<SdkRelease> ResolveAsync(IEnumerable<SdkChannel> channels,
+        LatestSelector selector,
         CancellationToken cancellationToken)
     {
         if (selector.SupportPhase is not null)

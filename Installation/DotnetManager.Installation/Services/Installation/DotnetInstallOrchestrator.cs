@@ -53,5 +53,4 @@ internal sealed class DotnetInstallOrchestrator : IDotnetInstallOrchestratorServ
         _logger.LogInformation("\nInstallation completed successfully in {ElapsedSeconds:F1} seconds",
             stopwatch.Elapsed.TotalSeconds);
     }
-
 }

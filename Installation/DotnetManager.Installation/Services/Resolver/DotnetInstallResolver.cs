@@ -39,7 +39,8 @@ internal sealed class DotnetInstallResolver
         switch (request.Target)
         {
             case LatestSelector latestSelector:
-                release = await _latestResolver.ResolveAsync(index.Releases,request.Options, latestSelector, cancellationToken);
+                release = await _latestResolver.ResolveAsync(index.Releases, request.Options, latestSelector,
+                    cancellationToken);
                 break;
             case VersionSelector versionSelector:
                 release = await _versionResolver.ResolveAsync(index.Releases, versionSelector, cancellationToken);
@@ -102,7 +103,4 @@ internal sealed class DotnetInstallResolver
 
         return ResolveArtifact(sdk, rid, "SDK", "dotnet-sdk");
     }
-
-
-
 }

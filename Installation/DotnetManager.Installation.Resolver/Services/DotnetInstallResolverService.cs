@@ -25,5 +25,4 @@ public class DotnetInstallResolverService : IDotnetInstallResolverService
             _ => throw new ArgumentOutOfRangeException()
         };
     }
-
 }

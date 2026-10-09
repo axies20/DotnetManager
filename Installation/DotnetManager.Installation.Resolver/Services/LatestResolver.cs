@@ -28,10 +28,10 @@ internal class LatestResolver
         var index = await _provider.GetReleaseIndexAsync(cancellationToken);
         IEnumerable<SdkChannel> channels = index.Releases;
 
-        if (latest.ReleaseType is { } releaseType)
+        if (latest.ReleaseType is {} releaseType)
             channels = channels.Where(x => x.ReleaseTypes == releaseType);
 
-        if (latest.SupportPhase is { } supportPhase)
+        if (latest.SupportPhase is {} supportPhase)
             channels = channels.Where(x => x.SupportPhase == supportPhase);
 
         var sdkChannel = channels.MaxBy(x => x.ChannelVersion);
@@ -43,6 +43,28 @@ internal class LatestResolver
 
         var release = await _provider.GetReleasesAsync(sdkChannel.ReleasesUri, cancellationToken);
         return ResolveLatestReleaseAsync(release, requestComponents, requestRid);
+    }
+
+    private static ReleaseFile ResolveArtifact(DotnetComponent component,
+        DotnetVersion? dotnetVersion,
+        string? rid)
+    {
+        var packageName = component switch
+        {
+            DotnetComponent.Sdk => "dotnet-sdk",
+            DotnetComponent.Runtime => "dotnet-runtime",
+            DotnetComponent.AspNetRuntime => "aspnetcore-runtime",
+            _ => throw new ArgumentOutOfRangeException(nameof(component), component,
+                "Unsupported installation component.")
+        };
+
+        var tarGzName = $"{packageName}-{rid}.tar.gz";
+
+        return dotnetVersion?.Artifacts
+                   .Where(x => x.Rid == rid)
+                   .FirstOrDefault(x =>
+                       x.FileName.Equals(tarGzName, StringComparison.OrdinalIgnoreCase)) ??
+               throw new Exception($"Could not find a {packageName} artifact for RID '{rid}'.");
     }
 
     private ResolvedInstallation ResolveLatestReleaseAsync(SdkReleaseManifest manifest,
@@ -121,27 +143,5 @@ internal class LatestResolver
             FileName = dotnet.FileName,
             Hash = dotnet.Hash
         };
-    }
-
-    private static ReleaseFile ResolveArtifact(DotnetComponent component,
-        DotnetVersion? dotnetVersion,
-        string? rid)
-    {
-        var packageName = component switch
-        {
-            DotnetComponent.Sdk => "dotnet-sdk",
-            DotnetComponent.Runtime => "dotnet-runtime",
-            DotnetComponent.AspNetRuntime => "aspnetcore-runtime",
-            _ => throw new ArgumentOutOfRangeException(nameof(component), component,
-                "Unsupported installation component.")
-        };
-
-        var tarGzName = $"{packageName}-{rid}.tar.gz";
-
-        return dotnetVersion?.Artifacts
-                   .Where(x => x.Rid == rid)
-                   .FirstOrDefault(x =>
-                       x.FileName.Equals(tarGzName, StringComparison.OrdinalIgnoreCase)) ??
-               throw new Exception($"Could not find a {packageName} artifact for RID '{rid}'.");
     }
 }

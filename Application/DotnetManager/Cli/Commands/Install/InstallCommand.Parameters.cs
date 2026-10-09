@@ -36,7 +36,7 @@ internal sealed partial class InstallCommand
         Recursive = true
     };
 
-    private readonly Option<string> _releaseVersion = new Option<string>("--release", "-rl")
+    private readonly Option<string> _releaseVersion = new("--release", "-rl")
     {
         Description = "Exact .NET release version to install",
         Recursive = true

@@ -16,8 +16,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Abstractions\Resolver\" />
-      <Folder Include="Models\Installation\" />
-      <Folder Include="Preflight\" />
+        <Folder Include="Abstractions\Resolver\"/>
+        <Folder Include="Models\Installation\"/>
+        <Folder Include="Preflight\"/>
     </ItemGroup>
 </Project>
