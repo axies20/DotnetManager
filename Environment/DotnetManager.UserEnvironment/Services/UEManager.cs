@@ -26,6 +26,7 @@ internal sealed class UEManager(IUEResolver resolver, ILogger<UEManager> logger)
     public async Task ConfigureEnvironment(CancellationToken cancellationToken)
     {
         var configurations = resolver.Resolve();
+        // TODO: Use IHostPlatformService.IsUnix instead of direct operating-system checks.
         var isUnix = OperatingSystem.IsLinux() || OperatingSystem.IsMacOS();
         var requiresManualShellConfiguration = RequiresManualShellConfiguration(configurations);
 
