@@ -22,14 +22,6 @@ internal sealed class ArchiveExtractor(ILogger<ArchiveExtractor> logger) : IArch
             return;
         }
 
-        if (archivePath.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
-        {
-            await ZipFile.ExtractToDirectoryAsync(archivePath, destinationPath,
-                true, cancellationToken);
-            LogCompleted(archivePath, stopwatch.Elapsed);
-            return;
-        }
-
         logger.LogWarning("Archive format is not supported for {ArchivePath}", archivePath);
         throw new NotSupportedException(
             $"Archive format is not supported: {archivePath}");

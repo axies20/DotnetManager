@@ -12,9 +12,7 @@ internal sealed class DotnetRootLocator(
         var roots = sources.SelectMany(x => x.DiscoverRoots())
             .Where(Directory.Exists)
             .Select(Path.GetFullPath)
-            .Distinct(OperatingSystem.IsWindows()
-                ? StringComparer.OrdinalIgnoreCase
-                : StringComparer.Ordinal)
+            .Distinct(StringComparer.Ordinal)
             .ToList();
 
         logger.LogDebug("Discovered {RootCount} .NET root(s): {Roots}",

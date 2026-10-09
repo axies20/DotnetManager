@@ -1,7 +1,5 @@
 using DotnetManager.Installation.Exceptions;
 using DotnetManager.Core.Models;
-using DotnetManager.Installation.Models.Installation.Requests;
-using DotnetManager.Installation.Models.Installation.Targets;
 using DotnetManager.Installation.Services.Resolver;
 using DotnetManager.ReleaseMetadata.Models;
 using DotnetManager.ReleaseMetadata.Models.Index;
@@ -208,7 +206,7 @@ public class DotnetInstallResolverTests
                 new ReleaseFile
                 {
                     Rid = "linux-x64",
-                    FileName = $"{archiveName}-linux-x64.exe",
+                    FileName = $"dotnet-apphost-pack-{version}-linux-x64.tar.gz",
                     Hash = "wrong-artifact",
                     Url = new Uri("https://example.test/wrong-artifact")
                 }

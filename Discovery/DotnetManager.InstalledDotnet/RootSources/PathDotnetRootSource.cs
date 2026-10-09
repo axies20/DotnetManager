@@ -20,11 +20,9 @@ internal sealed class PathDotnetRootSource : IDotnetRootSource
     {
         var directories = path.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries);
 
-        var executableName = OperatingSystem.IsWindows() ? "dotnet.exe" : "dotnet";
-
         foreach (var directory in directories)
         {
-            var executablePath = Path.Combine(directory, executableName);
+            var executablePath = Path.Combine(directory, "dotnet");
 
             if (!File.Exists(executablePath))
                 continue;
