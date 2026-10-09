@@ -1,6 +1,4 @@
-using DotnetManager.Installation.Abstractions.Resolver;
 using DotnetManager.Installation.Models.Downloads;
-using DotnetManager.Installation.Models.Installation.Requests;
 
 namespace DotnetManager.UnitTests.Installation;
 

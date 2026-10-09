@@ -4,6 +4,5 @@ public enum DotnetComponent
 {
     Sdk,
     Runtime,
-    AspNetRuntime,
-    Host
+    AspNetRuntime
 }

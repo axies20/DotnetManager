@@ -1,15 +1,6 @@
-using DotnetManager.Installation.Abstractions.Resolver;
-using DotnetManager.Installation.Exceptions;
-using DotnetManager.Installation.Models.Installation.Targets;
-using DotnetManager.ReleaseMetadata.Abstractions;
-using DotnetManager.ReleaseMetadata.Models.Index;
-using DotnetManager.ReleaseMetadata.Models.Releases;
-using NuGet.Versioning;
-
 namespace DotnetManager.Installation.Services.Resolver;
-
+/*
 internal sealed class VersionInstallResolver(ISdkManifestProviderService provider)
-    : IInstallReleaseResolverService<VersionSelector>
 {
     public async Task<SdkRelease> ResolveAsync(IEnumerable<SdkChannel> channels,
         VersionSelector selector,
@@ -51,4 +42,4 @@ internal sealed class VersionInstallResolver(ISdkManifestProviderService provide
 
 
     }
-}
+}*/

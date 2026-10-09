@@ -2,7 +2,7 @@ using NuGet.Versioning;
 
 namespace DotnetManager.Installation.Exceptions;
 
-public sealed class InstallReleaseNotFoundException : DotnetInstallException
+public sealed class InstallReleaseNotFoundException : Exception
 {
 
     public NuGetVersion? Version { get; }

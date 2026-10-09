@@ -6,8 +6,7 @@ public sealed class InstallArtifactNotFoundException(
     string componentName,
     NuGetVersion version,
     string runtimeIdentifier)
-    : DotnetInstallException(
-        $"{componentName} {version} is not available for RID '{runtimeIdentifier}'.")
+    : Exception($"{componentName} {version} is not available for RID '{runtimeIdentifier}'.")
 {
     public string ComponentName { get; } = componentName;
 

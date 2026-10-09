@@ -1,9 +1,9 @@
 using DotnetManager.ReleaseMetadata.Models;
 using NuGet.Versioning;
 
-namespace DotnetManager.Installation.Exceptions;
+namespace DotnetManager.Installation.Resolver.Exceptions;
 
-public sealed class InstallChannelNotFoundException : DotnetInstallException
+public sealed class InstallChannelNotFoundException : Exception
 {
 
     public NuGetVersion? ChannelVersion { get; }

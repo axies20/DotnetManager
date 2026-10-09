@@ -33,8 +33,8 @@ internal sealed partial class InstallCommand : ICommand
         _latest.Options.Add(_releaseType);
         _latest.Options.Add(_supportPhase);
 
-        command.SetAction(ExecuteInstall);
-        _latest.SetAction(ExecuteLatest);
+        //command.SetAction(ExecuteInstall);
+        //_latest.SetAction(ExecuteLatest);
         return command;
     }
 }

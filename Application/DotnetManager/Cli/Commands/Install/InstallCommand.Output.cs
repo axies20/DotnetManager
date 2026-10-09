@@ -1,13 +1,7 @@
-using System.Runtime.InteropServices;
-using DotnetManager.Core.Models;
-using DotnetManager.Installation.Models.Installation.Requests;
-using DotnetManager.Installation.Models.Installation.Targets;
-using Spectre.Console;
-
 namespace DotnetManager.Cli.Commands.Install;
 
-internal sealed partial class InstallCommand
-{
+internal sealed partial class InstallCommand;
+    /*
     private static void PrintInstallRequest(InstallRequest request)
     {
         var components = string.Join(", ", request.Options.Components.Select(GetComponentName));
@@ -34,4 +28,4 @@ internal sealed partial class InstallCommand
             _ => throw new ArgumentOutOfRangeException(nameof(component))
         };
     }
-}
+}*/

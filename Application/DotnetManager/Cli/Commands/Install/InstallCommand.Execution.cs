@@ -1,10 +1,4 @@
-using System.CommandLine;
 using DotnetManager.Installation.Exceptions;
-using DotnetManager.Core.Models;
-using DotnetManager.Installation.Models.Installation.Requests;
-using DotnetManager.Installation.Models.Installation.Targets;
-using Microsoft.Extensions.Logging;
-using NuGet.Versioning;
 
 namespace DotnetManager.Cli.Commands.Install;
 
@@ -43,7 +37,8 @@ internal sealed partial class InstallCommand
             _ => "The .NET installation failed."
         };
     }
-
+}
+/*
     private Task<int> ExecuteLatest(ParseResult result, CancellationToken cancellationToken)
     {
         var rid = result.GetValue(_rid);
@@ -121,4 +116,4 @@ internal sealed partial class InstallCommand
 
         return components;
     }
-}
+}*/

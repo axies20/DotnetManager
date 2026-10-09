@@ -1,10 +1,7 @@
 using System.Runtime.InteropServices;
 using DotnetManager.Installation.Exceptions;
-using DotnetManager.Installation.Abstractions.Resolver;
 using DotnetManager.Core.Models;
 using DotnetManager.Installation.Models.Downloads;
-using DotnetManager.Installation.Models.Installation.Requests;
-using DotnetManager.Installation.Models.Installation.Targets;
 using DotnetManager.ReleaseMetadata.Abstractions;
 using DotnetManager.ReleaseMetadata.Models.Releases;
 using Microsoft.Extensions.Logging;
@@ -12,8 +9,9 @@ using NuGet.Versioning;
 
 namespace DotnetManager.Installation.Services.Resolver;
 
-internal sealed class DotnetInstallResolver : IDotnetInstallResolverService
+internal sealed class DotnetInstallResolver
 {
+
     private readonly ISdkManifestProviderService _provider;
     private readonly IInstallReleaseResolverService<LatestSelector> _latestResolver;
     private readonly IInstallReleaseResolverService<VersionSelector> _versionResolver;
@@ -105,24 +103,6 @@ internal sealed class DotnetInstallResolver : IDotnetInstallResolverService
         return ResolveArtifact(sdk, rid, "SDK", "dotnet-sdk");
     }
 
-    private static ReleaseFile ResolveArtifact(DotnetVersion version,
-        string rid,
-        string componentName,
-        string archiveName)
-    {
-        var tarGzName = $"{archiveName}-{rid}.tar.gz";
-        var zipName = $"{archiveName}-{rid}.zip";
 
-        var first = version.Artifacts.Where(file => file.Rid == rid)
-            .FirstOrDefault(file =>
-            {
-                if (file.FileName.Equals(tarGzName, StringComparison.OrdinalIgnoreCase))
-                    return true;
-
-                return file.FileName.Equals(zipName, StringComparison.OrdinalIgnoreCase);
-            });
-
-        return first ?? throw new InstallArtifactNotFoundException(componentName, version.Version, rid);
-    }
 
 }

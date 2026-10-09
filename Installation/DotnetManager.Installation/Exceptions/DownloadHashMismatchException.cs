@@ -4,7 +4,7 @@ public sealed class DownloadHashMismatchException(
     string fileName,
     string expectedHash,
     string actualHash)
-    : DotnetInstallException($"SHA-512 verification failed for '{fileName}'.")
+    : Exception($"SHA-512 verification failed for '{fileName}'.")
 {
     public string FileName { get; } = fileName;
 

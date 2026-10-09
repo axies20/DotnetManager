@@ -1,6 +1,4 @@
-using DotnetManager.Installation.Abstractions.Resolver;
 using DotnetManager.Installation.Exceptions;
-using DotnetManager.Installation.Models.Installation.Targets;
 using DotnetManager.ReleaseMetadata.Abstractions;
 using DotnetManager.ReleaseMetadata.Models.Index;
 using DotnetManager.ReleaseMetadata.Models.Releases;
@@ -11,8 +9,7 @@ namespace DotnetManager.Installation.Services.Resolver;
 internal sealed class LatestInstallResolver(ISdkManifestProviderService provider)
     : IInstallReleaseResolverService<LatestSelector>
 {
-    public async Task<SdkRelease> ResolveAsync(IEnumerable<SdkChannel> channels,
-        LatestSelector selector,
+    public async Task<SdkRelease> ResolveAsync(IEnumerable<SdkChannel> channels, LatestSelector selector,
         CancellationToken cancellationToken)
     {
         if (selector.SupportPhase is not null)

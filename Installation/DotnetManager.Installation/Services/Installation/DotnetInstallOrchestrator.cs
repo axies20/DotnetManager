@@ -3,29 +3,26 @@ using DotnetManager.Installation.Abstractions.Archives;
 using DotnetManager.Installation.Abstractions.Downloads;
 using DotnetManager.Installation.Abstractions.Installation;
 using DotnetManager.Installation.Abstractions.InstallPaths;
-using DotnetManager.Installation.Abstractions.Resolver;
-using DotnetManager.Installation.Models.Installation.Requests;
 using Microsoft.Extensions.Logging;
 
 namespace DotnetManager.Installation.Services.Installation;
 
 internal sealed class DotnetInstallOrchestrator : IDotnetInstallOrchestratorService
 {
-    private readonly IDotnetInstallResolverService _resolver;
+    // private readonly IDotnetInstallResolverService _resolver;
     private readonly IDotnetDownloaderService _downloader;
     private readonly IArchiveExtractorService _extractor;
     private readonly IDotnetInstallPathProviderService _pathProvider;
     private readonly IDotnetInstallationFinalizerService _finalizer;
     private readonly ILogger<DotnetInstallOrchestrator> _logger;
 
-    public DotnetInstallOrchestrator(IDotnetInstallResolverService resolver,
+    public DotnetInstallOrchestrator(
         IDotnetDownloaderService downloader,
         IArchiveExtractorService extractor,
         IDotnetInstallPathProviderService pathProvider,
         IDotnetInstallationFinalizerService finalizer,
         ILogger<DotnetInstallOrchestrator> logger)
     {
-        _resolver = resolver;
         _downloader = downloader;
         _extractor = extractor;
         _pathProvider = pathProvider;
@@ -56,4 +53,5 @@ internal sealed class DotnetInstallOrchestrator : IDotnetInstallOrchestratorServ
         _logger.LogInformation("\nInstallation completed successfully in {ElapsedSeconds:F1} seconds",
             stopwatch.Elapsed.TotalSeconds);
     }
+
 }

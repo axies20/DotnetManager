@@ -14,4 +14,10 @@
     <ItemGroup>
         <InternalsVisibleTo Include="DotnetManager.UnitTests"/>
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Abstractions\Resolver\" />
+      <Folder Include="Models\Installation\" />
+      <Folder Include="Preflight\" />
+    </ItemGroup>
 </Project>
