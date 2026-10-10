@@ -36,9 +36,6 @@ internal sealed partial class RemoveCommand
         if (result.GetValue(_asp))
             components.Add(DotnetComponent.AspNetRuntime);
 
-        if (result.GetValue(_host))
-            components.Add(DotnetComponent.Host);
-
         if (result.GetValue(_sdk))
             components.Add(DotnetComponent.Sdk);
 

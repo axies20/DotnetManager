@@ -17,7 +17,6 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<IDotnetInstallationLocatorService<SdkInstallation>, SdkLocator>();
         services.AddSingleton<IDotnetInstallationLocatorService<RuntimeInstallation>, RuntimeLocator>();
-        services.AddSingleton<IDotnetInstallationLocatorService<HostInstallation>, HostLocator>();
 
         return services;
     }

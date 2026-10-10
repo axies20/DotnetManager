@@ -24,7 +24,6 @@ private static string GetComponentName(DotnetComponent component)
         DotnetComponent.Sdk => ".NET SDK",
         DotnetComponent.Runtime => ".NET Runtime",
         DotnetComponent.AspNetRuntime => "ASP.NET Core Runtime",
-        DotnetComponent.Host => ".NET Host",
         _ => throw new ArgumentOutOfRangeException(nameof(component))
     };
 }

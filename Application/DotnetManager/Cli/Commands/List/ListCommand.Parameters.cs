@@ -4,11 +4,6 @@ namespace DotnetManager.Cli.Commands.List;
 
 internal sealed partial class ListCommand
 {
-    private readonly Option<bool> _hostOption = new("--host", "-ht")
-    {
-        Description = "Show installed .NET hosts"
-    };
-
     private readonly Option<bool> _runtimeOption = new("--runtime", "-rt")
     {
         Description = "Show installed .NET runtimes"

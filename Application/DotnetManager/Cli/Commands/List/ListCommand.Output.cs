@@ -27,15 +27,4 @@ internal sealed partial class ListCommand
 
         TablePrinter.Print("Installed Runtimes", runtimes, columns);
     }
-
-    private static void PrintHosts(IReadOnlyCollection<HostInstallation> hosts)
-    {
-        TableColumn<HostInstallation>[] columns =
-        [
-            new("Version", x => x.Version.ToString()),
-            new("Path", x => x.Path)
-        ];
-
-        TablePrinter.Print("Installed Hosts", hosts, columns);
-    }
 }

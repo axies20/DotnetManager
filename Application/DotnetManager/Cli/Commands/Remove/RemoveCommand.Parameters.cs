@@ -14,11 +14,6 @@ internal sealed partial class RemoveCommand
         Description = "Remove matching .NET SDK installations."
     };
 
-    private readonly Option<bool> _host = new("--host", "-ht")
-    {
-        Description = "Remove matching .NET host installations."
-    };
-
     private readonly Option<bool> _asp = new("--aspnet", "-asp")
     {
         Description = "Remove matching ASP.NET Core runtime installations."

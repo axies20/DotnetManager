@@ -9,18 +9,15 @@ namespace DotnetManager.Removal.Services;
 
 internal sealed class DotnetRemovalTargetResolver : IDotnetRemovalTargetResolverService
 {
-    private readonly IDotnetInstallationLocatorService<HostInstallation> _hostLocator;
     private readonly IDotnetInstallationLocatorService<RuntimeInstallation> _runtimeLocator;
     private readonly IDotnetInstallationLocatorService<SdkInstallation> _sdkLocator;
     private readonly ILogger<DotnetRemovalTargetResolver> _logger;
 
     public DotnetRemovalTargetResolver(
-        IDotnetInstallationLocatorService<HostInstallation> hostLocator,
         IDotnetInstallationLocatorService<RuntimeInstallation> runtimeLocator,
         IDotnetInstallationLocatorService<SdkInstallation> sdkLocator,
         ILogger<DotnetRemovalTargetResolver> logger)
     {
-        _hostLocator = hostLocator;
         _runtimeLocator = runtimeLocator;
         _sdkLocator = sdkLocator;
         _logger = logger;
@@ -52,11 +49,7 @@ internal sealed class DotnetRemovalTargetResolver : IDotnetRemovalTargetResolver
                     .Where(x => version.Satisfies(x.Version))
                     .Select(x => x.Path)
                     .ToList(),
-            DotnetComponent.Host =>
-                _hostLocator.Find()
-                    .Where(x => version.Satisfies(x.Version))
-                    .Select(x => x.Path)
-                    .ToList(),
+
             _ => throw new ArgumentOutOfRangeException(nameof(component), component, null)
         };
 

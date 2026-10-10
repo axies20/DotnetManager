@@ -8,17 +8,12 @@ internal sealed partial class ListCommand
     {
         var showSdk = result.GetValue(_sdkOption);
         var showRuntime = result.GetValue(_runtimeOption);
-        var showHost = result.GetValue(_hostOption);
-
-        var showAll = !showSdk && !showRuntime && !showHost;
+        var showAll = !showSdk && !showRuntime;
 
         if (showAll || showSdk)
             PrintSdks(_sdkLocator.Find());
 
         if (showAll || showRuntime)
             PrintRuntimes(_runtimeLocator.Find());
-
-        if (showAll || showHost)
-            PrintHosts(_hostLocator.Find());
     }
 }

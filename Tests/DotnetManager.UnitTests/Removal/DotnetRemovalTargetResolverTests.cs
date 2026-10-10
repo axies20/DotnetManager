@@ -26,23 +26,20 @@ public class DotnetRemovalTargetResolverTests
     }
 
     [Fact]
-    public void ResolveSeparatesRuntimeFrameworksAndHosts()
+    public void ResolveSeparatesRuntimeFrameworks()
     {
         using var directory = new TestDirectory();
         var runtimePath = directory.CreateDirectory("shared", "Microsoft.NETCore.App", "10.0.1");
         var aspNetPath = directory.CreateDirectory("shared", "Microsoft.AspNetCore.App", "10.0.1");
-        var hostPath = directory.CreateDirectory("host", "fxr", "10.0.1");
         RuntimeInstallation[] runtimes =
         [
             new("Microsoft.NETCore.App", NuGetVersion.Parse("10.0.1"), runtimePath),
             new("Microsoft.AspNetCore.App", NuGetVersion.Parse("10.0.1"), aspNetPath)
         ];
-        HostInstallation[] hosts = [new(NuGetVersion.Parse("10.0.1"), hostPath)];
-        var resolver = CreateResolver(hosts, runtimes);
+        var resolver = CreateResolver(runtimes: runtimes);
 
         Assert.Equal([runtimePath], resolver.Resolve("10", DotnetComponent.Runtime));
         Assert.Equal([aspNetPath], resolver.Resolve("10", DotnetComponent.AspNetRuntime));
-        Assert.Equal([hostPath], resolver.Resolve("10", DotnetComponent.Host));
     }
 
     [Fact]
@@ -63,12 +60,10 @@ public class DotnetRemovalTargetResolverTests
     }
 
     private static DotnetRemovalTargetResolver CreateResolver(
-        IReadOnlyCollection<HostInstallation>? hosts = null,
         IReadOnlyCollection<RuntimeInstallation>? runtimes = null,
         IReadOnlyCollection<SdkInstallation>? sdks = null)
     {
         return new DotnetRemovalTargetResolver(
-            new RemovalInstallationLocator<HostInstallation>(hosts ?? [], x => x.Path),
             new RemovalInstallationLocator<RuntimeInstallation>(runtimes ?? [], x => x.Path),
             new RemovalInstallationLocator<SdkInstallation>(sdks ?? [], x => x.Path),
             NullLogger<DotnetRemovalTargetResolver>.Instance);
