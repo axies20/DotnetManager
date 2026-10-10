@@ -1,6 +1,5 @@
-using DotnetManager.Installation.Exceptions;
+using DotnetManager.Installation.Resolver.Exceptions;
 using DotnetManager.Core.Models;
-using DotnetManager.Installation.Services.Resolver;
 using DotnetManager.ReleaseMetadata.Models;
 using DotnetManager.ReleaseMetadata.Models.Index;
 using DotnetManager.ReleaseMetadata.Models.Releases;

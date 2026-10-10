@@ -1,16 +1,17 @@
 using NuGet.Versioning;
 
-namespace DotnetManager.Installation.Exceptions;
+namespace DotnetManager.Installation.Resolver.Exceptions;
 
 public sealed class InstallReleaseNotFoundException : Exception
 {
-
     public NuGetVersion? Version { get; }
 
     public NuGetVersion? ChannelVersion { get; }
 
     public InstallReleaseNotFoundException(NuGetVersion version)
-        : this(version, null) {}
+        : this(version, null)
+    {
+    }
 
     private InstallReleaseNotFoundException(NuGetVersion? version, NuGetVersion? channelVersion)
         : base(version is not null

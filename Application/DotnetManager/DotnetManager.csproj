@@ -27,6 +27,7 @@
         <ProjectReference Include="../../Discovery/DotnetManager.ReleaseMetadata/DotnetManager.ReleaseMetadata.csproj"/>
         <ProjectReference Include="../../Environment/DotnetManager.UserEnvironment/DotnetManager.UserEnvironment.csproj"/>
         <ProjectReference Include="../../Installation/DotnetManager.Installation/DotnetManager.Installation.csproj"/>
+        <ProjectReference Include="../../Installation/DotnetManager.Installation.Resolver/DotnetManager.Installation.Resolver.csproj"/>
         <ProjectReference Include="../../Removal/DotnetManager.Removal/DotnetManager.Removal.csproj"/>
         <ProjectReference Include="../../Shared/DotnetManager.Core/DotnetManager.Core.csproj"/>
     </ItemGroup>
