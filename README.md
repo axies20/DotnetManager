@@ -1,3 +1,5 @@
+![DotnetManager](dnm.png)
+
 # DotnetManager
 
 DotnetManager (`dnm`) is a native Unix-focused command-line tool for browsing official Microsoft
