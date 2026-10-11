@@ -39,7 +39,7 @@ internal sealed class LatestResolver(ISdkManifestProviderService provider, IHost
         var latestRelease = release.Releases.MaxBy(x => x.ReleaseVersion) ??
                             throw InstallReleaseNotFoundException.ForChannel(release.ChannelVersion);
 
-        return ResolveLatestReleaseAsync(release, requestComponents, latestRelease, requestRid);
+        return ResolveRelease(release, requestComponents, latestRelease, requestRid);
     }
 
 

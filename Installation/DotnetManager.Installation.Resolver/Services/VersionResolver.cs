@@ -37,35 +37,42 @@ public class VersionResolver : InstallResolverBase, IInstallResolver<VersionSele
             throw new InstallChannelNotFoundException(version);
 
         var manifest = await _provider.GetReleasesAsync(channel.ReleasesUri, cancellationToken);
-        var latest = FindLatestVersion(manifest, version) ?? throw new InstallReleaseNotFoundException(version);
+        var latest = FindLatestVersion(manifest, selector) ?? throw new InstallReleaseNotFoundException(version);
 
 
-        return ResolveLatestReleaseAsync(manifest, components, latest, rid);
+        return ResolveRelease(manifest, components, latest, rid);
 
     }
 
 
-    private SdkRelease? FindLatestVersion(SdkReleaseManifest manifest, NuGetVersion version)
+    private static SdkRelease? FindLatestVersion(SdkReleaseManifest manifest, VersionSelector selector)
     {
-        if (version.Major != 0 && version is { Minor: 0, Patch: 0 })
+        var range = CreateRange(selector);
+
+        return manifest.Releases
+            .Where(x => range.Satisfies(x.ReleaseVersion))
+            .MaxBy(x => x.ReleaseVersion);
+    }
+
+    private static VersionRange CreateRange(VersionSelector selector)
+    {
+        var version = selector.Version;
+
+        return selector.Precision switch
         {
-            return manifest.Releases.FirstOrDefault(x =>
-                x.ReleaseVersion == manifest.LatestRelease);
-        }
+            1 => new VersionRange(
+                new NuGetVersion(version.Major, 0, 0, "0"),
+                true,
+                new NuGetVersion(version.Major + 1, 0, 0, "0"),
+                false),
 
-        if (version.Major != 0 && version.Minor != 0)
-        {
-            var range = new VersionRange(
-                new NuGetVersion(version.Major, version.Minor, 0),
-                includeMinVersion: true,
-                new NuGetVersion(version.Major, version.Minor + 1, 0),
-                includeMaxVersion: true);
+            2 => new VersionRange(
+                new NuGetVersion(version.Major, version.Minor, 0, "0"),
+                true,
+                new NuGetVersion(version.Major, version.Minor + 1, 0, "0"),
+                false),
 
-            return manifest.Releases
-                .Where(x => range.Satisfies(x.ReleaseVersion))
-                .MaxBy(x => x.ReleaseVersion);
-        }
-
-        return manifest.Releases.FirstOrDefault(x => x.ReleaseVersion == version);
+            _ => new VersionRange(version, true, version, true)
+        };
     }
 }

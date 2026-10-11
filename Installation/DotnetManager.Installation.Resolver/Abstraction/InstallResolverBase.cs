@@ -9,7 +9,6 @@ namespace DotnetManager.Installation.Resolver.Abstraction;
 
 public abstract class InstallResolverBase
 {
-
     private readonly IHostPlatformService _platform;
 
     protected InstallResolverBase(IHostPlatformService platform)
@@ -17,7 +16,7 @@ public abstract class InstallResolverBase
         _platform = platform;
     }
 
-    protected ResolvedInstallation ResolveLatestReleaseAsync(SdkReleaseManifest manifest,
+    protected ResolvedInstallation ResolveRelease(SdkReleaseManifest manifest,
         IEnumerable<DotnetComponent> components,
         SdkRelease release,
         string? rid)
@@ -31,17 +30,17 @@ public abstract class InstallResolverBase
                 case DotnetComponent.Sdk:
                     var sdk = release.Sdks.FirstOrDefault(x => x.Version == manifest.LatestSdk) ??
                               throw new InstallSdkNotFoundException(release.ReleaseVersion);
-                    result.Add(SharedResolvedComponent(dotnetComponent, sdk, rid));
+                    result.Add(ResolveComponent(dotnetComponent, sdk, rid));
                     break;
 
                 case DotnetComponent.Runtime:
                     var runtime = release.Runtime;
-                    result.Add(SharedResolvedComponent(dotnetComponent, runtime, rid));
+                    result.Add(ResolveComponent(dotnetComponent, runtime, rid));
                     break;
 
                 case DotnetComponent.AspNetRuntime:
                     var asp = release.AspNetCoreRuntime;
-                    result.Add(SharedResolvedComponent(dotnetComponent, asp, rid));
+                    result.Add(ResolveComponent(dotnetComponent, asp, rid));
                     break;
 
                 default:
@@ -53,9 +52,10 @@ public abstract class InstallResolverBase
         return new ResolvedInstallation(result);
     }
 
-    private string GetRid(string? rid) => string.IsNullOrWhiteSpace(rid) ? _platform.RuntimeIdentifier : rid;
+    private string GetRid(string? rid) => 
+        string.IsNullOrWhiteSpace(rid) ? _platform.RuntimeIdentifier : rid;
 
-    protected ResolvedComponent SharedResolvedComponent(DotnetComponent dotnetComponent,
+    private ResolvedComponent ResolveComponent(DotnetComponent dotnetComponent,
         DotnetVersion dotnetVersion,
         string? rid)
     {
